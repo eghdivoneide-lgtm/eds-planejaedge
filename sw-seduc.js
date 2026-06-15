@@ -1,8 +1,7 @@
-const CACHE_NAME = 'assistente-pedagogico-seduc-v1';
+const CACHE_NAME = 'assistente-pedagogico-seduc-v2';
 const APP_SHELL = [
   './',
   './index.html',
-  './monitor-seduc-pro.html',
   './manifest-seduc.webmanifest',
   './icons/icon-192.svg',
   './icons/icon-512.svg',
