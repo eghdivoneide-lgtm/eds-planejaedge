@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="EDS Shield Badge">
+  <defs>
+    <linearGradient id="bgE" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d2f28"/>
+      <stop offset="100%" stop-color="#061813"/>
+    </linearGradient>
+    <linearGradient id="stE" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57d7bb"/>
+      <stop offset="100%" stop-color="#13a385"/>
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="464" height="464" rx="96" fill="url(#bgE)"/>
+  <path d="M256 84 L382 136 V254 C382 330 331 399 256 432 C181 399 130 330 130 254 V136 Z" fill="#103a32" stroke="url(#stE)" stroke-width="14"/>
+  <circle cx="256" cy="226" r="112" fill="none" stroke="rgba(83,209,182,0.35)" stroke-width="8"/>
+  <path d="M182 186 H276" stroke="#e9faf5" stroke-width="16" stroke-linecap="round"/>
+  <path d="M182 226 H258" stroke="#e9faf5" stroke-width="16" stroke-linecap="round"/>
+  <path d="M182 266 H276" stroke="#e9faf5" stroke-width="16" stroke-linecap="round"/>
+  <path d="M286 186 V266" stroke="#9be9d7" stroke-width="14" stroke-linecap="round"/>
+  <path d="M286 186 Q336 186 336 226 Q336 266 286 266" fill="none" stroke="#9be9d7" stroke-width="14" stroke-linecap="round"/>
+  <path d="M186 316 C214 334, 242 344, 272 334 C300 324, 322 326, 338 344" fill="none" stroke="#13a385" stroke-width="13" stroke-linecap="round"/>
+</svg>

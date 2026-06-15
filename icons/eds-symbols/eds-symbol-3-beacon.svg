@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="EDS Beacon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b231e"/>
+      <stop offset="100%" stop-color="#081a16"/>
+    </linearGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#13a385" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#13a385" stop-opacity="0.45"/>
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="464" height="464" rx="96" fill="url(#bg)"/>
+  <path d="M256 106 L382 178 L256 214 L130 178 Z" fill="url(#beam)"/>
+  <path d="M256 106 L130 178" stroke="#13a385" stroke-width="10" stroke-linecap="round"/>
+  <path d="M256 106 L382 178" stroke="#13a385" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="256" cy="106" r="20" fill="#f2c94c"/>
+  <rect x="232" y="154" width="48" height="174" rx="20" fill="#0f3a32" stroke="#13a385" stroke-width="10"/>
+  <path d="M206 360 H306" stroke="#9fe8d8" stroke-width="16" stroke-linecap="round"/>
+  <path d="M178 392 H334" stroke="#13a385" stroke-width="16" stroke-linecap="round"/>
+  <path d="M214 266 C238 244, 274 244, 298 266" fill="none" stroke="#e9faf5" stroke-width="10" stroke-linecap="round"/>
+  <path d="M220 294 C240 278, 272 278, 292 294" fill="none" stroke="#e9faf5" stroke-width="9" stroke-linecap="round"/>
+</svg>

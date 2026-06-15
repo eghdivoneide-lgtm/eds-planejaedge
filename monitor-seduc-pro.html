@@ -1,0 +1,1526 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#173a63">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Assistente Pedagogico SEDUC-PE">
+    <link rel="manifest" href="manifest-seduc.webmanifest">
+    <link rel="icon" href="icons/icon-192.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icons/icon-512.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <title>Assistente Pedagogico SEDUC-PE - EDS Solucoes Inteligentes</title>
+    <style>
+        :root {
+            --eds-green-900: #081a16;
+            --eds-green-850: #0b231e;
+            --eds-green-800: #103029;
+            --eds-green-700: #0f4d41;
+            --eds-green-600: #0f7763;
+            --eds-green-500: #13a385;
+            --eds-text-100: #e9faf5;
+            --eds-text-200: #c7efe3;
+            --eds-muted: #9dc9bc;
+            --eds-border: rgba(34, 176, 144, 0.34);
+        }
+        body {
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            margin: 0;
+            background:
+                radial-gradient(80% 65% at 10% 10%, rgba(19, 163, 133, 0.18), transparent 65%),
+                radial-gradient(60% 55% at 90% 0%, rgba(22, 108, 91, 0.2), transparent 70%),
+                linear-gradient(180deg, #061310 0%, #081a16 45%, #0b231e 100%);
+            min-height: 100vh;
+            color: var(--eds-text-100);
+        }
+        .login-container {
+            max-width: 560px;
+            margin: 46px auto;
+            background: linear-gradient(180deg, rgba(16, 48, 41, 0.92), rgba(11, 35, 30, 0.95));
+            border-radius: 28px;
+            box-shadow: 0 28px 44px rgba(0, 0, 0, 0.42);
+            padding: 34px;
+            text-align: center;
+            border: 1px solid var(--eds-border);
+            backdrop-filter: blur(6px);
+        }
+        .login-logo {
+            width: min(100%, 360px);
+            display: block;
+            margin: 0 auto 12px;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 207, 98, 0.18);
+            box-shadow: 0 16px 28px rgba(0, 0, 0, 0.24);
+            background: rgba(7, 28, 24, 0.55);
+        }
+        .login-container h2 {
+            color: #e6fff8;
+            margin: 0 0 14px;
+            font-size: 2.15em;
+            letter-spacing: 0.4px;
+        }
+        .login-container p {
+            color: var(--eds-text-200);
+        }
+        .login-container input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid rgba(40, 178, 147, 0.55);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-size: 18px;
+            background: rgba(7, 28, 24, 0.72);
+            color: #ecfff9;
+            box-sizing: border-box;
+        }
+        .login-container input::placeholder {
+            color: rgba(182, 228, 216, 0.7);
+        }
+        .login-container button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #13a385, #0f7763);
+            color: #f4fffc;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            cursor: pointer;
+            font-weight: 800;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+        .login-container button:hover { transform: translateY(-1px); filter: brightness(1.06); }
+        .login-container .info {
+            font-size: 15px;
+            color: #d8f8ef;
+            margin-top: 18px;
+            background: rgba(7, 27, 23, 0.66);
+            border-radius: 14px;
+            padding: 14px;
+            border: 1px solid rgba(34, 176, 144, 0.3);
+        }
+        .login-container .emoji {
+            font-size: 2.5em;
+            margin: 12px 0 4px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.28));
+        }
+        .login-brand {
+            font-size: 13px;
+            color: var(--eds-text-100);
+            letter-spacing: 2.8px;
+            text-transform: uppercase;
+            margin: 0 auto 12px;
+            padding: 8px 18px;
+            border: 1px solid rgba(34, 176, 144, 0.7);
+            border-radius: 999px;
+            background: rgba(15, 119, 99, 0.2);
+            max-width: fit-content;
+        }
+        .login-section-title {
+            margin: 24px 0 18px;
+            padding: 0 0 8px;
+            text-align: left;
+            font-size: 1.58rem;
+            color: #6fd4bd;
+            letter-spacing: 0.06em;
+            border-bottom: 1px solid rgba(34, 176, 144, 0.28);
+            font-weight: 800;
+        }
+        .key-row { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; }
+        .key-row input { margin-bottom: 0; }
+        .key-toggle-btn {
+            width: auto !important;
+            min-width: 58px;
+            padding: 14px 12px !important;
+            border-radius: 12px;
+            background: rgba(8, 26, 22, 0.95) !important;
+            color: #dffaf2 !important;
+            border: 1px solid rgba(34, 176, 144, 0.45) !important;
+            font-size: 18px !important;
+        }
+        #chat-section { display: none; }
+        .header { background: #102024; color: #fff; padding: 16px 18px; border-bottom: 1px solid rgba(22, 199, 154, 0.35); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .header-title { display: flex; align-items: center; gap: 12px; font-size: 1.08rem; font-weight: 700; color: #dffbf4; }
+        .header-title-text { display: flex; flex-direction: column; gap: 2px; }
+        .header-title-text strong { color: #f5fffc; font-size: 1rem; }
+        .header-title-text span { color: #ffd680; font-size: 0.76rem; letter-spacing: 0.14em; text-transform: uppercase; }
+        .header-logo { width: 42px; height: 42px; border-radius: 12px; flex: 0 0 auto; border: 1px solid rgba(255, 207, 98, 0.18); background: rgba(7, 28, 24, 0.55); }
+        .header-right { position: relative; display: inline-flex; align-items: center; }
+        .profile-trigger { width: 44px; height: 44px; border-radius: 999px; border: 2px solid rgba(22, 199, 154, 0.55); background: linear-gradient(180deg, #1e4b53, #11353b); color: #e7fff8; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; cursor: pointer; }
+        .profile-trigger:hover { background: linear-gradient(180deg, #245962, #154249); }
+        .profile-menu { position: absolute; top: 52px; right: 0; background: #ffffff; border: 1px solid #d7ece6; border-radius: 12px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18); min-width: 170px; padding: 8px; display: none; z-index: 20; }
+        .profile-menu.open { display: block; }
+        .profile-menu button { width: 100%; text-align: left; background: transparent; color: #133238; border: none; border-radius: 8px; padding: 9px 10px; font-size: 14px; font-weight: 700; }
+        .profile-menu button:hover { background: #ecf6f3; color: #0d7f68; }
+        #chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; background: #10272d; }
+        .profile-box { margin: 12px 20px 0; background: linear-gradient(180deg, rgba(231, 243, 246, 0.96), rgba(214, 230, 238, 0.96)); border: 1px solid #a7c6da; border-radius: 14px; padding: 12px; display: none; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .profile-box.open { display: flex; }
+        .profile-box label { font-weight: bold; color: #143759; }
+        .profile-box input { width: 120px; padding: 8px; border: 1px solid #7fa4c8; border-radius: 10px; font-size: 16px; background: #163252; color: #f2f8ff; }
+        .profile-box input::placeholder { color: rgba(210, 228, 246, 0.72); }
+        .profile-box input:focus { outline: 2px solid rgba(231, 201, 111, 0.45); border-color: #d1a64f; box-shadow: 0 0 0 3px rgba(209, 166, 79, 0.14); }
+        .profile-box .tool-btn { background: linear-gradient(90deg, #173a63, #245f90); color: #eef6ff; border: 1px solid rgba(36, 95, 144, 0.45); font-weight: 800; }
+        .profile-box .tool-btn:hover { background: linear-gradient(90deg, #1b4677, #2c72ac); color: #ffffff; border-color: rgba(44, 114, 172, 0.62); }
+        #student-name { width: 170px; }
+        .profile-summary { margin: 10px 20px 0; background: #edf7f3; color: #123238; border: 1px solid #b5ddd2; border-radius: 12px; padding: 10px 12px; font-size: 14px; display: none; }
+        .profile-summary.visible { display: block; }
+        .message { padding: 13px 15px; border-radius: 16px; max-width: 84%; font-size: 0.99rem; line-height: 1.52; letter-spacing: 0.01em; word-break: break-word; }
+        .message .msg-text { white-space: normal; line-height: 1.6; }
+        .message .msg-text + .msg-text { margin-top: 14px; }
+        .message table { margin: 14px 0; border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+        .message table thead { background: linear-gradient(90deg, rgba(19, 163, 133, 0.22), rgba(15, 119, 99, 0.18)); }
+        .message table th { padding: 11px 10px; text-align: left; font-weight: 700; color: #a8f5e6; border-bottom: 2px solid rgba(19, 163, 133, 0.4); }
+        .message table td { padding: 9px 10px; border-bottom: 1px solid rgba(19, 163, 133, 0.2); }
+        .message table tr:hover { background: rgba(19, 163, 133, 0.08); }
+        .message table tr:last-child td { border-bottom: none; }
+        .diagram-block { margin: 14px 0; padding: 12px 13px; border-radius: 12px; background: rgba(6, 18, 22, 0.55); border: 1px solid rgba(126, 190, 176, 0.38); color: #d9f8f0; font-family: Consolas, 'Courier New', monospace; font-size: 0.92rem; line-height: 1.4; overflow-x: auto; }
+        .msg-text strong { color: #a8f5e6; font-weight: 700; }
+        .msg-text em { color: #c8eee5; font-style: italic; }
+        .message-enter { animation: messageIn 220ms ease-out both; }
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .message-enter { animation: none; }
+        }
+        .user-message { background: linear-gradient(135deg, #14b493, #0d7f68); color: #effffb; align-self: flex-end; border: 1px solid rgba(22,199,154,0.38); box-shadow: 0 6px 16px rgba(8, 54, 48, 0.28); border-bottom-right-radius: 7px; }
+        .bot-message { background: #173841; color: #e8fbf6; align-self: flex-start; box-shadow: 0 8px 18px rgba(0,0,0,0.22); border: 1px solid rgba(126, 190, 176, 0.28); border-bottom-left-radius: 7px; }
+        #input-container { padding: 14px 16px 18px; background-color: #0d1c20; border-top: 1px solid rgba(22,199,154,0.25); display: flex; flex-direction: column; gap: 10px; }
+        .action-toolbar { display: flex; gap: 6px; flex-wrap: wrap; }
+        .composer-row { display: flex; gap: 8px; align-items: center; }
+        #preview-area { width: 100%; margin-top: 2px; }
+        .file-chip { background: rgba(255,255,255,0.08); border: 1px solid rgba(22,199,154,0.35); color: #c8eee5; padding: 8px 10px; border-radius: 10px; font-size: 14px; }
+        .tool-btn { background: rgba(255,255,255,0.07); color: #a8ede0; border: 1px solid rgba(22,199,154,0.3); box-shadow: none; }
+        .tool-btn:hover { background: rgba(22,199,154,0.18); color: #dffbf4; border-color: rgba(22,199,154,0.6); }
+        .danger-btn { background: rgba(240,80,80,0.10); color: #f0a0a0; border: 1px solid rgba(240,80,80,0.3); box-shadow: none; }
+        .danger-btn:hover { background: rgba(240,80,80,0.22); color: #ffbbbb; border-color: rgba(240,80,80,0.5); }
+        input[type=text], input[type=number] { flex: 1; padding: 11px 12px; border: 1px solid #cde0dc; border-radius: 12px; font-size: 16px; background: #11253e; color: #eef6ff; }
+        .model-select { background: rgba(255,255,255,0.08); color: #d6f5ee; border: 1px solid rgba(22,199,154,0.35); border-radius: 12px; padding: 10px 12px; font-size: 14px; min-width: 158px; }
+        .model-select option { background: #123238; color: #dffbf4; }
+        .response-type-select { background: rgba(255,255,255,0.08); color: #d6f5ee; border: 1px solid rgba(22,199,154,0.35); border-radius: 12px; padding: 10px 12px; font-size: 14px; min-width: 140px; }
+        .response-type-select option { background: #123238; color: #dffbf4; }
+        #user-input { background: #11253e; border-color: #315780; color: #eef6ff; }
+        #user-input::placeholder { color: rgba(210, 228, 246, 0.72); }
+        button { padding: 9px 12px; background-color: #1976d2; color: #fff; border: none; border-radius: 11px; cursor: pointer; font-size: 14px; font-weight: 650; line-height: 1.2; }
+        button:hover { filter: brightness(1.06); }
+        .action-toolbar button { border-radius: 999px; width: 46px; height: 46px; padding: 0; font-size: 1.25rem; display: inline-flex; align-items: center; justify-content: center; }
+        .send-btn { min-width: 78px; padding: 10px 14px; border-radius: 12px; font-size: 14px; background: linear-gradient(90deg,#00a884,#0d7f68); }
+
+        @media (max-width: 600px) {
+            .login-container { margin: 22px 12px; padding: 22px; border-radius: 22px; }
+            .login-brand { font-size: 11px; letter-spacing: 2px; }
+            .login-logo { margin-bottom: 10px; }
+            .login-section-title { font-size: 1.25rem; margin: 18px 0 14px; }
+            .login-container h2 { font-size: 1.9em; }
+            .header { padding: 14px; }
+            .header-title { font-size: 0.98rem; }
+            .header-logo { width: 38px; height: 38px; }
+            .profile-box { margin: 10px 12px 0; }
+            .profile-summary { margin: 10px 12px 0; }
+            #chat-container { padding: 14px; }
+            .message { max-width: 90%; font-size: 1rem; }
+            .composer-row { align-items: stretch; gap: 6px; }
+            .action-toolbar { gap: 6px; }
+            .action-toolbar button { font-size: 1.1rem; width: 42px; height: 42px; padding: 0; }
+            .model-select { min-width: 126px; font-size: 13px; }
+            .send-btn { min-width: 68px; padding: 10px 10px; }
+        }
+    </style>
+    <style>
+        :root {
+            --pro-bg-1: #071424;
+            --pro-bg-2: #0b1d33;
+            --pro-bg-3: #112b48;
+            --pro-card-1: #11253e;
+            --pro-card-2: #173252;
+            --pro-border-1: #2f537f;
+            --pro-border-2: #3f6ea6;
+            --pro-gold-1: #d1a64f;
+            --pro-gold-2: #f1cc75;
+            --pro-jade-1: #5fc7c5;
+            --pro-jade-2: #2f8fa7;
+            --pro-text-1: #eef5fb;
+            --pro-text-2: #a7bfd8;
+            --pro-text-3: #6e89a7;
+            --pro-danger: #e85050;
+            --pro-radius-sm: 10px;
+            --pro-radius-md: 14px;
+            --pro-radius-lg: 20px;
+        }
+        body {
+            font-family: 'Syne', 'Segoe UI', sans-serif;
+            background:
+                radial-gradient(70% 60% at 5% 2%, rgba(76, 186, 122, 0.16), transparent 65%),
+                radial-gradient(65% 48% at 92% 0%, rgba(201, 168, 76, 0.16), transparent 70%),
+                linear-gradient(180deg, var(--pro-bg-1), var(--pro-bg-2));
+        }
+        #chat-section {
+            min-height: 100vh;
+            display: none;
+            flex-direction: column;
+        }
+        .login-container {
+            background: linear-gradient(180deg, rgba(17, 37, 62, 0.96), rgba(9, 21, 37, 0.97));
+            border: 1px solid var(--pro-border-1);
+            border-radius: 30px;
+            box-shadow: 0 28px 44px rgba(3, 12, 28, 0.42);
+        }
+        .login-brand {
+            border: 1px solid rgba(209, 166, 79, 0.5);
+            background: rgba(209, 166, 79, 0.1);
+            color: var(--pro-gold-2);
+        }
+        .wej-pill {
+            margin: 0 auto 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(95, 199, 197, 0.45);
+            background: rgba(95, 199, 197, 0.08);
+            color: #d1f6f5;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .header {
+            background: linear-gradient(180deg, #143459, #102846);
+            border-bottom: 1px solid var(--pro-border-1);
+        }
+        .header-title {
+            align-items: center;
+        }
+        .header-title-text strong {
+            font-size: 1.02rem;
+            letter-spacing: 0.02em;
+        }
+        .header-title-text span {
+            font-family: 'DM Mono', Consolas, monospace;
+            letter-spacing: 0.12em;
+            color: var(--pro-gold-2);
+        }
+        .status-chip {
+            font-family: 'DM Mono', Consolas, monospace;
+            font-size: 11px;
+            color: #d9f8f7;
+            border: 1px solid rgba(95, 199, 197, 0.38);
+            border-radius: 999px;
+            padding: 5px 9px;
+            background: rgba(95, 199, 197, 0.12);
+            margin-right: 8px;
+            white-space: nowrap;
+        }
+        .tabbar {
+            display: flex;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #102846;
+            border-bottom: 1px solid var(--pro-border-1);
+            overflow-x: auto;
+        }
+        .tabbar::-webkit-scrollbar { height: 4px; }
+        .tab-btn {
+            border: 1px solid #2d537f;
+            background: #173252;
+            color: var(--pro-text-2);
+            font-family: 'DM Mono', Consolas, monospace;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-radius: 999px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .tab-btn.active {
+            background: rgba(201, 168, 76, 0.15);
+            border-color: rgba(201, 168, 76, 0.65);
+            color: var(--pro-gold-2);
+            box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.1) inset;
+        }
+        .panel-stack {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        .app-panel {
+            display: none;
+            flex: 1;
+            min-height: 0;
+            animation: panelIn 0.22s ease;
+        }
+        .app-panel.active {
+            display: flex;
+            flex-direction: column;
+        }
+        .quick-panel,
+        .settings-panel {
+            padding: 16px;
+            gap: 12px;
+            overflow-y: auto;
+            background: linear-gradient(180deg, #102846, #0c1d33);
+        }
+        .quick-card,
+        .settings-card {
+            border: 1px solid var(--pro-border-1);
+            border-radius: var(--pro-radius-md);
+            background: linear-gradient(180deg, var(--pro-card-1), #10223b);
+            padding: 14px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        }
+        .quick-card h4,
+        .settings-card h4 {
+            margin: 0 0 10px;
+            color: var(--pro-gold-2);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-family: 'DM Mono', Consolas, monospace;
+        }
+        .quick-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .quick-action {
+            border: 1px solid #315780;
+            border-radius: var(--pro-radius-sm);
+            background: #163252;
+            color: var(--pro-text-1);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: transform 0.12s ease, border-color 0.2s ease;
+        }
+        .quick-action:hover {
+            transform: translateY(-1px);
+            border-color: rgba(201, 168, 76, 0.6);
+        }
+        .muted {
+            color: var(--pro-text-2);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        #chat-container {
+            background: linear-gradient(180deg, #102846, #0d1f35);
+        }
+        .bot-message {
+            border: 1px solid rgba(209, 166, 79, 0.25);
+            background: linear-gradient(180deg, #18375a, #132b45);
+        }
+        .bot-message,
+        .bot-message .msg-text,
+        .bot-message table,
+        .bot-message th,
+        .bot-message td {
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+        }
+        .user-message {
+            background: linear-gradient(135deg, #2f8fa7, #245f90);
+        }
+        .model-select,
+        .response-type-select,
+        #user-input,
+        .profile-box input {
+            border-color: #315780;
+            background: #11253e;
+            color: #eef6ff;
+        }
+        .model-select:focus,
+        .response-type-select:focus,
+        #user-input:focus {
+            outline: 2px solid rgba(231, 201, 111, 0.42);
+            border-color: #d1a64f;
+            box-shadow: 0 0 0 3px rgba(209, 166, 79, 0.12);
+        }
+        .model-select option,
+        .response-type-select option {
+            background: #173252;
+            color: #eef6ff;
+        }
+        #user-input::placeholder {
+            color: rgba(210, 228, 246, 0.72);
+        }
+        .send-btn {
+            background: linear-gradient(90deg, var(--pro-gold-1), var(--pro-gold-2));
+            color: #10130f;
+            font-weight: 800;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.12s ease;
+        }
+        .send-btn:hover { transform: translateY(-1px); }
+        .send-btn.is-loading {
+            color: #202015;
+            pointer-events: none;
+            opacity: 0.92;
+        }
+        .send-btn.is-loading::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.42) 50%, transparent 80%);
+            animation: shimmer 1.15s linear infinite;
+        }
+        .info-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 1px solid rgba(201, 168, 76, 0.5);
+            border-radius: 999px;
+            color: var(--pro-gold-2);
+            background: rgba(201, 168, 76, 0.08);
+            font-family: 'DM Mono', Consolas, monospace;
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .ui-toast {
+            position: fixed;
+            bottom: 18px;
+            right: 16px;
+            z-index: 70;
+            background: rgba(10, 30, 23, 0.96);
+            border: 1px solid rgba(76, 186, 122, 0.55);
+            color: #c9efd8;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 13px;
+            transform: translateY(16px);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        .ui-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .settings-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .settings-actions button {
+            border-radius: 999px;
+            border: 1px solid rgba(201, 168, 76, 0.45);
+            background: rgba(201, 168, 76, 0.1);
+            color: #ffe5ae;
+            font-size: 12px;
+            width: auto;
+            height: auto;
+            padding: 8px 12px;
+        }
+        @keyframes panelIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shimmer {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
+        }
+        @media (max-width: 700px) {
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+            .status-chip {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container" id="login-section">
+        <img class="login-logo" src="icons/eds-symbols/eds-brand-horizontal.svg" alt="EDS Solucoes Inteligentes">
+        <div class="login-brand">EDS Solucoes Inteligentes</div>
+        <div class="wej-pill">SEDUC-PE • Professores e Coordenadores</div>
+        <div style="color:#8ec7f0;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;font-size:13px;">Parceria SEDUC-PE + EDS</div>
+        <div class="login-section-title">⚙ CONFIGURACAO</div>
+        <h2>Chave de Acesso</h2>
+        <p style="font-size:1.08em; line-height:1.6; margin:0 0 16px;">Bem-vindo ao Assistente Pedagogico SEDUC-PE, desenvolvido pela EDS Solucoes Inteligentes.<br>Insira sua chave Google Gemini para iniciar com apoio a planos de aula, avaliacoes, inclusao, BNCC e orientacao pedagogica.<br>Seus dados ficam apenas neste dispositivo.</p>
+        <div class="key-row">
+            <input type="password" id="api-key-input" placeholder="Cole sua chave Gemini aqui..." autocomplete="off">
+            <button type="button" class="key-toggle-btn" onclick="toggleApiKeyVisibility()">👁</button>
+        </div>
+        <button onclick="login()">Entrar no Assistente Pedagogico SEDUC-PE 🚀</button>
+        <div class="info">
+            <b>Como obter sua chave:</b><br>
+            1. Acesse <a href="https://console.cloud.google.com/apis/credentials" target="_blank">console.cloud.google.com</a><br>
+            2. Crie uma API Key e copie<br>
+            3. Cole aqui e clique em Entrar <span style="font-size:1.2em;">🔒</span><br>
+        </div>
+    </div>
+
+    <div id="chat-section">
+        <div class="header">
+            <div class="header-title">
+                <img class="header-logo" src="icons/eds-symbols/eds-brand-app-icon.svg" alt="EDS">
+                <div class="header-title-text">
+                    <strong>Assistente Pedagogico SEDUC-PE</strong>
+                    <span>Planejamento, BNCC e inclusao</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="status-chip">rede pedagogica online</span>
+                <button type="button" id="profile-trigger" class="profile-trigger" onclick="toggleProfileMenu(event)">👤</button>
+                <div id="profile-menu" class="profile-menu">
+                    <button type="button" onclick="editProfileFromMenu()">✏️ Editar perfil</button>
+                    <button type="button" onclick="switchKeyFromMenu()">🔑 Trocar chave</button>
+                    <button type="button" onclick="logoutFromMenu()">🚪 Sair</button>
+                </div>
+            </div>
+        </div>
+        <div class="tabbar">
+            <button type="button" class="tab-btn active" data-panel="chat" onclick="switchPanel('chat')">Assistente</button>
+            <button type="button" class="tab-btn" data-panel="quick" onclick="switchPanel('quick')">Atalhos</button>
+            <button type="button" class="tab-btn" data-panel="settings" onclick="switchPanel('settings')">Config pro</button>
+        </div>
+        <div class="panel-stack">
+            <section id="panel-chat" class="app-panel active" aria-label="Painel do assistente">
+                <div id="profile-summary" class="profile-summary"></div>
+                <div id="profile-box" class="profile-box open">
+                    <label for="student-name">Como quer ser chamado(a):</label>
+                    <input type="text" id="student-name" placeholder="Ex: Ana">
+                    <label for="student-age">Etapa/segmento:</label>
+                    <input type="text" id="student-age" placeholder="Ex: Anos finais do Fundamental">
+                    <label for="student-grade">Necessidade principal:</label>
+                    <input type="text" id="student-grade" placeholder="Ex: Plano de aula com inclusao e avaliacao">
+                    <button class="tool-btn" onclick="saveStudentProfile()">Salvar perfil</button>
+                </div>
+                <div id="chat-container">
+                    <div class="message bot-message">
+                        👋 Ola! Eu sou o <b>Assistente Pedagogico SEDUC-PE</b>, desenvolvido pela EDS Solucoes Inteligentes.<br>
+                        Posso apoiar professores e coordenadores com planejamento pedagogico, BNCC, inclusao, avaliacoes e sequencias didaticas.<br>
+                        <b>Antes de comecarmos, me diga como voce quer ser chamado(a), sua etapa de ensino e sua principal necessidade pedagogica.</b><br>
+                        Assim eu adapto as orientacoes ao seu contexto profissional.
+                    </div>
+                </div>
+                <div id="input-container">
+                    <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="handleFile(event)">
+                    <input type="file" id="file-input" accept="image/*,application/pdf,text/plain,.csv,.json,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="display:none" onchange="handleFile(event)">
+                    <div class="action-toolbar">
+                        <button class="tool-btn" title="Câmera" onclick="document.getElementById('camera-input').click()">📷</button>
+                        <button class="tool-btn" title="Arquivo" onclick="document.getElementById('file-input').click()">📎</button>
+                        <button class="tool-btn" title="Exportar conversa" onclick="exportChatHistory()">📝</button>
+                        <button class="danger-btn" title="Limpar anexo" onclick="clearSelectedFile()">🧹</button>
+                        <button class="danger-btn" title="Limpar conversa" onclick="clearChatHistory()">🗑</button>
+                    </div>
+                    <div class="composer-row">
+                        <select id="model-select" class="model-select" title="Modelo Gemini">
+                            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                        </select>
+                        <select id="response-type-select" class="response-type-select" title="Tipo de resposta">
+                            <option value="balanced">Resposta Balanceada</option>
+                            <option value="direct">Direto ao Ponto</option>
+                            <option value="expanded">Expandido com Detalhes</option>
+                        </select>
+                        <input type="text" id="user-input" placeholder="Descreva sua demanda pedagogica...">
+                        <button id="send-btn" class="send-btn" onclick="sendMessage()">Enviar</button>
+                    </div>
+                    <div id="preview-area"></div>
+                </div>
+            </section>
+            <section id="panel-quick" class="app-panel quick-panel" aria-label="Painel de atalhos">
+                <div class="quick-card">
+                    <h4>Prompts de ensino</h4>
+                    <div class="quick-grid">
+                        <button type="button" class="quick-action" onclick="quickFillPrompt('Monte um plano de aula completo com objetivo, habilidades da BNCC, metodologia, recursos e avaliacao formativa.')">Plano de aula completo</button>
+                        <button type="button" class="quick-action" onclick="quickFillPrompt('Crie uma sequencia didatica de 4 aulas com progressao pedagogica, estrategias ativas e criterios de avaliacao.')">Sequencia didatica</button>
+                        <button type="button" class="quick-action" onclick="quickFillPrompt('Sugira adaptacoes inclusivas para um plano de aula considerando estudantes com diferentes ritmos e necessidades de aprendizagem.')">Adaptacoes inclusivas</button>
+                        <button type="button" class="quick-action" onclick="quickFillPrompt('Crie uma avaliacao diagnostica com gabarito comentado e orientacoes de intervencao pedagogica a partir dos resultados.')">Avaliacao diagnostica</button>
+                    </div>
+                </div>
+                <div class="quick-card">
+                    <h4>Padrao pedagogico</h4>
+                    <p class="muted">Use este painel para acelerar sua rotina pedagogica. Ao clicar, o prompt vai para o campo principal no painel Assistente. Depois, basta ajustar e enviar.</p>
+                </div>
+            </section>
+            <section id="panel-settings" class="app-panel settings-panel" aria-label="Painel de configuracoes">
+                <div class="settings-card">
+                    <h4>Stack do produto</h4>
+                    <p class="muted">Assistente Pedagogico SEDUC-PE com foco em BNCC, diretrizes curriculares, inclusao, avaliacao e planejamento docente.</p>
+                    <div class="info-chip">SEDUC-PE + EDS</div>
+                </div>
+                <div class="settings-card">
+                    <h4>Acoes rapidas</h4>
+                    <div class="settings-actions">
+                        <button type="button" onclick="switchPanel('chat'); editProfileFromMenu();">Editar perfil</button>
+                        <button type="button" onclick="switchPanel('chat'); exportChatHistory();">Exportar conversa</button>
+                        <button type="button" onclick="switchPanel('chat'); clearChatHistory();">Limpar conversa</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="ui-toast" class="ui-toast" role="status" aria-live="polite"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
+    <script>
+        if (window.pdfjsLib) {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+
+        // LOGIN
+        function login() {
+            const key = document.getElementById('api-key-input').value.trim();
+            if (!key) {
+                alert('Por favor, informe sua chave Gemini!');
+                return;
+            }
+            localStorage.setItem('seduc_gemini_api_key', key);
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('chat-section').style.display = 'flex';
+            window.API_KEY = key;
+            markSessionActivity();
+            switchPanel('chat');
+            showToast('Ambiente SEDUC-PE iniciado.');
+        }
+        window.onload = function() {
+            const savedKey = localStorage.getItem('seduc_gemini_api_key');
+            if (savedKey) {
+                if (isSessionExpired()) {
+                    clearSession(false);
+                    return;
+                }
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('chat-section').style.display = 'flex';
+                window.API_KEY = savedKey;
+                markSessionActivity();
+                switchPanel('chat');
+            }
+        }
+
+        // CHAT
+        const DEFAULT_MODEL_NAME = 'gemini-2.5-flash';
+        const MODEL_STORAGE_KEY = 'seduc_monitor_model_name';
+        const SYSTEM_PROMPT_BASE = [
+            'Voce e o Assistente Pedagogico SEDUC-PE, desenvolvido pela EDS Solucoes Inteligentes em parceria com a Secretaria de Educacao de Pernambuco.',
+            'Seu foco principal e apoiar professores e coordenadores pedagogicos com orientacoes baseadas na BNCC, nas diretrizes curriculares de Pernambuco e nas melhores praticas de ensino.',
+            'Ajude na elaboracao de planos de aula, sequencias didaticas, avaliacoes, estrategias de inclusao e intervencoes pedagogicas, de forma objetiva e aplicavel.',
+            '',
+            'IMPORTANTE - Formatacao de respostas:',
+            '- Use TABELAS MARKDOWN quando listar multiplos itens, tópicos ou comparacoes (melhora legibilidade).',
+            'Exemplo de tabela:',
+            '| Aspecto | Descricao | Aplicacao |',
+            '|--------|-----------|-----------|',
+            '| Item 1 | Detalhes | Contexto |',
+            '',
+            'Ao responder estruturado, utilize este formato quando fizer sentido:',
+            '1) Diagnostico pedagogico da demanda',
+            '2) Proposta pratica de aplicacao em sala ou gestao',
+            '3) Ajustes inclusivos e diferenciacao',
+            '4) Sugestao de avaliacao ou acompanhamento',
+            '',
+            'Quando for util para visualizacao de conteudo, inclua um mini esquema ASCII em bloco de codigo ou tabelas.',
+            'Mantenha tom acolhedor, claro, profissional, executivo e fundamentado em evidencias pedagogicas.'
+        ].join('\n');
+        const CHAT_HISTORY_KEY = 'seduc_monitor_chat_history_v1';
+        const MAX_HISTORY_ITEMS = 80;
+        const SESSION_LAST_ACTIVITY_KEY = 'seduc_monitor_last_activity';
+        const SESSION_TIMEOUT_MINUTES = 30;
+        const SESSION_TIMEOUT_MS = SESSION_TIMEOUT_MINUTES * 60 * 1000;
+        const RESPONSE_TYPE_KEY = 'seduc_response_type_preference';
+        let selectedFile = null;
+        let studentProfile = {
+            name: '',
+            age: '',
+            grade: ''
+        };
+
+        function markSessionActivity() {
+            if (window.API_KEY || localStorage.getItem('seduc_gemini_api_key')) {
+                localStorage.setItem(SESSION_LAST_ACTIVITY_KEY, String(Date.now()));
+            }
+        }
+
+        function switchPanel(panelName) {
+            const panelMap = {
+                chat: 'panel-chat',
+                quick: 'panel-quick',
+                settings: 'panel-settings'
+            };
+            const panelId = panelMap[panelName] || panelMap.chat;
+
+            document.querySelectorAll('.app-panel').forEach((panel) => {
+                panel.classList.toggle('active', panel.id === panelId);
+            });
+
+            document.querySelectorAll('.tab-btn').forEach((btn) => {
+                btn.classList.toggle('active', btn.dataset.panel === panelName);
+            });
+        }
+
+        function quickFillPrompt(text) {
+            switchPanel('chat');
+            const input = document.getElementById('user-input');
+            if (!input) return;
+            input.value = text;
+            input.focus();
+            showToast('Prompt aplicado no assistente.');
+        }
+
+        function showToast(text) {
+            const toast = document.getElementById('ui-toast');
+            if (!toast) return;
+            toast.textContent = text;
+            toast.classList.add('show');
+            clearTimeout(showToast._timer);
+            showToast._timer = setTimeout(() => toast.classList.remove('show'), 1700);
+        }
+
+        function toggleApiKeyVisibility() {
+            const input = document.getElementById('api-key-input');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function updateProfileSummary() {
+            const summary = document.getElementById('profile-summary');
+            const trigger = document.getElementById('profile-trigger');
+            if (!studentProfile.name || !studentProfile.age || !studentProfile.grade) {
+                summary.classList.remove('visible');
+                summary.innerHTML = '';
+                if (trigger) trigger.textContent = '👤';
+                return;
+            }
+
+            const initial = studentProfile.name.charAt(0).toUpperCase();
+            if (trigger) trigger.textContent = initial;
+            summary.innerHTML = `<b>${escapeHtml(studentProfile.name)}</b> • ${studentProfile.age} anos • ${escapeHtml(studentProfile.grade)}`;
+            summary.classList.add('visible');
+        }
+
+        function toggleProfileBox(forceOpen) {
+            const box = document.getElementById('profile-box');
+            if (!box) return;
+            if (typeof forceOpen === 'boolean') {
+                box.classList.toggle('open', forceOpen);
+                return;
+            }
+            box.classList.toggle('open');
+        }
+
+        function closeProfileMenu() {
+            const menu = document.getElementById('profile-menu');
+            if (menu) menu.classList.remove('open');
+        }
+
+        function toggleProfileMenu(event) {
+            if (event) event.stopPropagation();
+            const menu = document.getElementById('profile-menu');
+            if (!menu) return;
+            menu.classList.toggle('open');
+        }
+
+        function editProfileFromMenu() {
+            toggleProfileBox(true);
+            const firstInput = document.getElementById('student-name');
+            if (firstInput) firstInput.focus();
+            closeProfileMenu();
+        }
+
+        function switchKeyFromMenu() {
+            closeProfileMenu();
+            clearSession(false);
+            alert('Chave removida. Informe a nova chave para continuar.');
+            showToast('Chave removida.');
+        }
+
+        function logoutFromMenu() {
+            closeProfileMenu();
+            clearSession(false);
+        }
+
+        function clearSession(showMessage = false) {
+            localStorage.removeItem('seduc_gemini_api_key');
+            localStorage.removeItem(SESSION_LAST_ACTIVITY_KEY);
+            window.API_KEY = null;
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('chat-section').style.display = 'none';
+            document.getElementById('api-key-input').value = '';
+            toggleProfileBox(true);
+            switchPanel('chat');
+            if (showMessage) {
+                alert(`Sua sessao expirou apos ${SESSION_TIMEOUT_MINUTES} minutos de inatividade. Faca login novamente.`);
+            }
+        }
+
+        function isSessionExpired() {
+            const lastActivity = Number(localStorage.getItem(SESSION_LAST_ACTIVITY_KEY));
+            if (!lastActivity) return false;
+            return Date.now() - lastActivity > SESSION_TIMEOUT_MS;
+        }
+
+        function checkSessionExpiry() {
+            const savedKey = localStorage.getItem('seduc_gemini_api_key');
+            if (!savedKey) return;
+            if (isSessionExpired()) {
+                clearSession(true);
+            }
+        }
+
+        function saveStudentProfile() {
+            markSessionActivity();
+            const nameValue = document.getElementById('student-name').value.trim();
+            const ageValue = document.getElementById('student-age').value.trim();
+            const gradeValue = document.getElementById('student-grade').value.trim();
+
+            if (!nameValue || !ageValue || !gradeValue) {
+                addMessage('🧩 Para eu personalizar bem, preencha nome, etapa/segmento e necessidade principal.', 'bot-message');
+                return;
+            }
+
+            studentProfile = {
+                name: nameValue,
+                age: ageValue,
+                grade: gradeValue
+            };
+
+            localStorage.setItem('seduc_teacher_profile', JSON.stringify(studentProfile));
+            updateProfileSummary();
+            toggleProfileBox(false);
+            addMessage(`✅ Perfil salvo, ${escapeHtml(nameValue)}! Vou orientar suas demandas considerando o segmento ${escapeHtml(ageValue)} e foco em ${escapeHtml(gradeValue)}.`, 'bot-message');
+            showToast('Perfil pedagogico atualizado.');
+        }
+
+        function loadStudentProfile() {
+            const saved = localStorage.getItem('seduc_teacher_profile');
+            if (!saved) return;
+            try {
+                const parsed = JSON.parse(saved);
+                if (parsed && parsed.name && parsed.age && parsed.grade) {
+                    studentProfile = parsed;
+                    document.getElementById('student-name').value = parsed.name;
+                    document.getElementById('student-age').value = String(parsed.age);
+                    document.getElementById('student-grade').value = parsed.grade;
+                    updateProfileSummary();
+                    toggleProfileBox(false);
+                }
+            } catch (_) {
+                // ignora perfil invalido
+            }
+        }
+
+        function getPedagogicGuideByAge(stage) {
+            const normalized = String(stage || '').toLowerCase();
+            if (normalized.includes('infantil')) {
+                return 'Priorize ludicidade, rotinas curtas, linguagem concreta, observacao do desenvolvimento e avaliacao descritiva.';
+            }
+            if (normalized.includes('anos iniciais') || normalized.includes('fundamental i')) {
+                return 'Use linguagem clara, progressao gradual, atividades guiadas e avaliacao formativa com devolutivas simples.';
+            }
+            if (normalized.includes('anos finais') || normalized.includes('fundamental ii')) {
+                return 'Traga autonomia crescente, contextualizacao, habilidades da BNCC e estrategias de recuperacao de aprendizagem.';
+            }
+            if (normalized.includes('medio')) {
+                return 'Adote linguagem objetiva, interdisciplinaridade, protagonismo juvenil e avaliacao orientada por competencias.';
+            }
+            return 'Adapte a orientacao ao contexto informado, com foco em aplicabilidade, inclusao e acompanhamento pedagogico.';
+        }
+
+        function setPreview(html) {
+            document.getElementById('preview-area').innerHTML = html;
+        }
+
+        function getActiveModel() {
+            const selected = document.getElementById('model-select')?.value || '';
+            return selected || localStorage.getItem(MODEL_STORAGE_KEY) || DEFAULT_MODEL_NAME;
+        }
+
+        function getResponseType() {
+            const selected = document.getElementById('response-type-select')?.value || '';
+            return selected || localStorage.getItem(RESPONSE_TYPE_KEY) || 'balanced';
+        }
+
+        function getResponseTypeInstruction() {
+            const type = getResponseType();
+            switch(type) {
+                case 'direct':
+                    return '\n⚡ **MODO: DIRETO AO PONTO** ⚡\nResponda de forma MUITO SUCINTA e CONCISA. Máximo 2-3 parágrafos curtos OU 1 tabela pequena com informações essenciais. Vá direto ao resultado, sem explicações prolongadas. O professor tem pressa. NÃO use estruturas numeradas longas, NÃO expanda demais em exemplos.';
+                case 'expanded':
+                    return '\n📚 **MODO: EXPANDIDO COM DETALHES** 📚\nResponda de forma COMPLETA e DETALHADA. Use múltiplas tabelas se necessário (cada tópico principal em uma tabela clara). Inclua exemplos práticos, contextualizações, múltiplas perspectivas, casos de uso. Estruture bem com títulos e subtítulos. O professor quer profundidade, aplicabilidade máxima e orientações robustas para não deixar dúvidas.';
+                case 'balanced':
+                default:
+                    return '\n⚖️ **MODO: BALANCEADO** ⚖️\nEncontre EQUILÍBRIO entre concisão e completude. Use 2-3 ideias principais com tabelas para organizar (máximo 2 tabelas). Cada tabela com 3-4 linhas no máximo. Seja claro, estruturado, com bom tempo de leitura (3-5 minutos). Exemplos práticos mas não excessivos.';
+            }
+        }
+
+        function syncResponseTypeSelector() {
+            const selector = document.getElementById('response-type-select');
+            if (!selector) return;
+            const saved = localStorage.getItem(RESPONSE_TYPE_KEY) || 'balanced';
+            selector.value = saved;
+            selector.addEventListener('change', function() {
+                localStorage.setItem(RESPONSE_TYPE_KEY, this.value);
+                showToast(`Modo de resposta: ${this.options[this.selectedIndex].text}`);
+            });
+        }
+
+        function syncModelSelector() {
+            const selector = document.getElementById('model-select');
+            if (!selector) return;
+            const saved = localStorage.getItem(MODEL_STORAGE_KEY) || DEFAULT_MODEL_NAME;
+            selector.value = saved;
+        }
+
+        function getHistory() {
+            const raw = localStorage.getItem(CHAT_HISTORY_KEY);
+            if (!raw) return [];
+            try {
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (_) {
+                return [];
+            }
+        }
+
+        function saveHistory(items) {
+            localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(items.slice(-MAX_HISTORY_ITEMS)));
+        }
+
+        function appendHistory(role, text) {
+            const items = getHistory();
+            items.push({ role, text });
+            saveHistory(items);
+        }
+
+        function loadChatHistory() {
+            const items = getHistory();
+            if (!items.length) return;
+
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.innerHTML = '';
+
+            for (const item of items) {
+                const cls = item.role === 'user' ? 'user-message' : 'bot-message';
+                addMessage(item.text, cls, false);
+            }
+        }
+
+        function clearChatHistory() {
+            markSessionActivity();
+            localStorage.removeItem(CHAT_HISTORY_KEY);
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.innerHTML = `
+                <div class="message bot-message">
+                    👋 Ola! Historico limpo com sucesso.<br>
+                    Vamos continuar: qual demanda pedagogica voce quer resolver agora?
+                </div>
+            `;
+            showToast('Historico limpo.');
+        }
+
+        function exportChatHistory() {
+            markSessionActivity();
+            const items = getHistory();
+            if (!items.length) {
+                alert('Nao ha mensagens para exportar ainda.');
+                return;
+            }
+
+            const dateTag = new Date().toISOString().slice(0, 10);
+            const title = `Historico do Assistente Pedagogico SEDUC-PE (${dateTag})`;
+            const transcript = items
+                .map((item) => `${item.role === 'user' ? 'Professor(a)' : 'Assistente'}: ${item.text}`)
+                .join('\n\n');
+            const profileLine = studentProfile.name
+                ? `Perfil: ${studentProfile.name}, Segmento: ${studentProfile.age}, Foco: ${studentProfile.grade}`
+                : 'Perfil: nao informado';
+
+            const content = `${title}\n${profileLine}\nModelo: ${getActiveModel()}\n\n${transcript}`;
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `historico-assistente-pedagogico-seduc-pe-${dateTag}.txt`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+            showToast('Historico exportado.');
+        }
+
+        function clearSelectedFile() {
+            markSessionActivity();
+            selectedFile = null;
+            document.getElementById('camera-input').value = '';
+            document.getElementById('file-input').value = '';
+            setPreview('');
+            showToast('Anexo removido.');
+        }
+
+        async function handleFile(event) {
+            markSessionActivity();
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            try {
+                if (file.type.startsWith('image/')) {
+                    const dataUrl = await readFileAsDataURL(file);
+                    const base64 = dataUrl.split(',')[1];
+                    selectedFile = {
+                        kind: 'image',
+                        name: file.name,
+                        mimeType: file.type,
+                        data: base64
+                    };
+                    setPreview(`
+                        <div class="file-chip">Imagem pronta para envio: <b>${escapeHtml(file.name)}</b></div>
+                        <img src="${dataUrl}" alt="Prévia" style="max-width:220px;margin-top:8px;border-radius:12px;border:2px solid #ffd600;" />
+                    `);
+                    return;
+                }
+
+                if (file.type === 'application/pdf') {
+                    const buffer = await file.arrayBuffer();
+                    const pdfText = await extractPdfText(buffer, 5);
+                    selectedFile = {
+                        kind: 'text',
+                        name: file.name,
+                        content: pdfText
+                    };
+                    setPreview(`<div class="file-chip">PDF lido: <b>${escapeHtml(file.name)}</b> (texto extraído para contexto)</div>`);
+                    return;
+                }
+
+                if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.name.toLowerCase().endsWith('.docx')) {
+                    const arrayBuffer = await file.arrayBuffer();
+                    if (!window.mammoth) {
+                        throw new Error('Biblioteca DOCX nao carregou.');
+                    }
+                    const result = await window.mammoth.extractRawText({ arrayBuffer });
+                    selectedFile = {
+                        kind: 'text',
+                        name: file.name,
+                        content: result.value.slice(0, 20000)
+                    };
+                    setPreview(`<div class="file-chip">DOCX lido: <b>${escapeHtml(file.name)}</b> (texto extraido para contexto)</div>`);
+                    return;
+                }
+
+                if (file.type === 'text/plain' || file.name.endsWith('.csv') || file.name.endsWith('.json')) {
+                    const text = await file.text();
+                    selectedFile = {
+                        kind: 'text',
+                        name: file.name,
+                        content: text.slice(0, 20000)
+                    };
+                    setPreview(`<div class="file-chip">Arquivo lido: <b>${escapeHtml(file.name)}</b> (primeiros 20.000 caracteres)</div>`);
+                    return;
+                }
+
+                selectedFile = null;
+                setPreview('<div class="file-chip">Formato ainda nao suportado. Use imagem, PDF, DOCX, TXT, CSV ou JSON.</div>');
+            } catch (err) {
+                console.error('Erro ao processar arquivo:', err);
+                selectedFile = null;
+                setPreview('<div class="file-chip">Não consegui ler esse arquivo. Tente outro formato.</div>');
+            }
+        }
+
+        function readFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function extractPdfText(arrayBuffer, maxPages) {
+            if (!window.pdfjsLib) {
+                throw new Error('Biblioteca PDF não carregou.');
+            }
+            const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            const limit = Math.min(pdf.numPages, maxPages);
+            let fullText = '';
+            for (let i = 1; i <= limit; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                const pageText = content.items.map((item) => item.str).join(' ');
+                fullText += `\n[Página ${i}] ${pageText}`;
+            }
+            return fullText.slice(0, 20000);
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+        }
+
+        function formatInlineMarkdown(text) {
+            const escaped = escapeHtml(String(text || ''));
+            return escaped
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>');
+        }
+
+        function splitTableLikeColumns(line) {
+            const cells = line
+                .split(/\t+|\s{2,}/)
+                .map((cell) => cell.trim())
+                .filter(Boolean);
+            return cells.length >= 2 ? cells : null;
+        }
+
+        function normalizeTableLikeText(raw) {
+            const lines = String(raw || '').split('\n');
+            const normalized = [];
+
+            for (let i = 0; i < lines.length; ) {
+                const currentCols = splitTableLikeColumns(lines[i]);
+                if (!currentCols) {
+                    normalized.push(lines[i]);
+                    i += 1;
+                    continue;
+                }
+
+                const originalBlock = [];
+                const rows = [];
+                while (i < lines.length) {
+                    const cols = splitTableLikeColumns(lines[i]);
+                    if (!cols) break;
+                    originalBlock.push(lines[i]);
+                    rows.push(cols);
+                    i += 1;
+                }
+
+                if (rows.length < 2) {
+                    normalized.push(...originalBlock);
+                    continue;
+                }
+
+                const maxCols = rows.reduce((acc, row) => Math.max(acc, row.length), 0);
+                const normalizeRow = (row) => {
+                    const padded = row.slice();
+                    while (padded.length < maxCols) padded.push('');
+                    return `| ${padded.join(' | ')} |`;
+                };
+
+                normalized.push(normalizeRow(rows[0]));
+                normalized.push(`| ${Array(maxCols).fill('---').join(' | ')} |`);
+                rows.slice(1).forEach((row) => normalized.push(normalizeRow(row)));
+            }
+
+            return normalized.join('\n');
+        }
+
+        function renderTextBlock(text) {
+            const cleaned = String(text || '').trim();
+            if (!cleaned) return '';
+            return `<div class="msg-text">${formatInlineMarkdown(cleaned).replaceAll('\n', '<br>')}</div>`;
+        }
+
+        function renderMessageHtml(text, className) {
+            const raw = normalizeTableLikeText(String(text || ''));
+            
+            if (className !== 'bot-message') {
+                return renderTextBlock(raw);
+            }
+
+            let html = '';
+            const lines = raw.split('\n');
+            let inTable = false;
+            let tableLines = [];
+            let currentSection = [];
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const isTableLine = /^\s*\|.*\|\s*$/.test(line);
+
+                if (isTableLine) {
+                    if (!inTable && currentSection.length > 0) {
+                        html += renderTextBlock(currentSection.join('\n'));
+                        currentSection = [];
+                    }
+                    inTable = true;
+                    tableLines.push(line);
+                } else {
+                    if (inTable && tableLines.length > 0) {
+                        html += renderMarkdownTable(tableLines);
+                        tableLines = [];
+                        inTable = false;
+                    }
+                    if (line.trim() || currentSection.length > 0) {
+                        currentSection.push(line);
+                    } else if (currentSection.length > 0) {
+                        currentSection.push('');
+                    }
+                }
+            }
+
+            if (currentSection.length > 0) {
+                html += renderTextBlock(currentSection.join('\n'));
+            }
+            if (inTable && tableLines.length > 0) {
+                html += renderMarkdownTable(tableLines);
+            }
+
+            const fenceRegex = /```([\s\S]*?)```/g;
+            html = html.replace(fenceRegex, (match, content) => {
+                const blockText = content.replace(/^txt\s*\n/i, '').trim();
+                return blockText ? `<pre class="diagram-block">${escapeHtml(blockText)}</pre>` : '';
+            });
+
+            return html || renderTextBlock(raw);
+        }
+
+        function renderMarkdownTable(lines) {
+            if (lines.length < 2) return '';
+
+            const parseRow = (line) => line.split('|').map(cell => cell.trim()).filter(cell => cell !== '');
+            const headerCells = parseRow(lines[0]);
+            const hasSeperator = lines[1] && /^\s*\|[\s\-:| ]*\|\s*$/.test(lines[1]);
+            const startIdx = hasSeperator ? 2 : 1;
+
+            if (headerCells.length === 0) return '';
+
+            let html = '<table>';
+            html += '<thead><tr>';
+            headerCells.forEach(cell => {
+                html += `<th>${formatInlineMarkdown(cell)}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            for (let i = startIdx; i < lines.length; i++) {
+                const cells = parseRow(lines[i]);
+                if (cells.length > 0) {
+                    html += '<tr>';
+                    for (let j = 0; j < headerCells.length; j++) {
+                        html += `<td>${formatInlineMarkdown(cells[j] || '')}</td>`;
+                    }
+                    html += '</tr>';
+                }
+            }
+
+            html += '</tbody></table>';
+            return html;
+        }
+
+        function extractGeminiText(data) {
+            const parts = data?.candidates?.[0]?.content?.parts;
+            if (!Array.isArray(parts) || !parts.length) {
+                return '';
+            }
+
+            return parts
+                .map((part) => {
+                    if (typeof part?.text === 'string') {
+                        return part.text;
+                    }
+                    return '';
+                })
+                .filter(Boolean)
+                .join('\n\n')
+                .trim();
+        }
+
+        function extractGeminiErrorMessage(status, data, fallbackText) {
+            const apiMessage = data?.error?.message;
+            if (apiMessage) {
+                return apiMessage;
+            }
+
+            if (status === 400) {
+                return 'A requisicao para o Gemini foi recusada. Revise a chave e os dados enviados.';
+            }
+            if (status === 401 || status === 403) {
+                return 'Sua chave Gemini foi rejeitada. Verifique se ela esta correta e ativa.';
+            }
+            if (status === 404) {
+                return 'O modelo Gemini selecionado nao foi encontrado para esta chave.';
+            }
+            if (status === 429) {
+                return 'A cota do Gemini foi atingida. Aguarde um pouco e tente novamente.';
+            }
+            if (status >= 500) {
+                return 'O servico Gemini ficou indisponivel no momento. Tente novamente em instantes.';
+            }
+
+            return fallbackText || 'Erro inesperado ao consultar o Gemini.';
+        }
+
+        async function parseGeminiResponse(response) {
+            const rawText = await response.text();
+            let data = null;
+
+            try {
+                data = rawText ? JSON.parse(rawText) : null;
+            } catch (_) {
+                data = null;
+            }
+
+            if (!response.ok) {
+                throw new Error(extractGeminiErrorMessage(response.status, data, rawText));
+            }
+
+            const answerText = extractGeminiText(data);
+            if (!answerText) {
+                throw new Error('O Gemini respondeu sem texto utilizavel. Tente novamente com outra pergunta ou modelo.');
+            }
+
+            return answerText;
+        }
+
+        function formatUserFacingError(error) {
+            const message = String(error?.message || 'Erro inesperado.');
+            if (message.length <= 180) {
+                return `❌ ${message}`;
+            }
+            return `❌ ${message.slice(0, 177)}...`;
+        }
+
+        async function sendMessage() {
+            checkSessionExpiry();
+            const inputField = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            const userText = inputField.value.trim();
+            if (!userText) return;
+
+            if (!studentProfile.name || !studentProfile.age || !studentProfile.grade) {
+                addMessage('👋 Antes da pergunta, preencha como quer ser chamado(a), etapa/segmento e necessidade principal no quadro de perfil e clique em "Salvar perfil".', 'bot-message');
+                return;
+            }
+
+            addMessage(userText, 'user-message');
+            inputField.value = '';
+            markSessionActivity();
+            if (sendBtn) {
+                sendBtn.classList.add('is-loading');
+                sendBtn.disabled = true;
+            }
+
+            const typingDiv = addMessage('...', 'bot-message');
+
+            try {
+                const apiKey = window.API_KEY || localStorage.getItem('seduc_gemini_api_key');
+                if (!apiKey) {
+                    throw new Error('Nao encontrei sua chave Gemini ativa. Clique no menu de perfil e informe a chave novamente.');
+                }
+
+                const modelName = getActiveModel();
+                const parts = [];
+
+                if (selectedFile && selectedFile.kind === 'image') {
+                    parts.push({
+                        inline_data: {
+                            mime_type: selectedFile.mimeType,
+                            data: selectedFile.data
+                        }
+                    });
+                }
+
+                const ageGuide = getPedagogicGuideByAge(studentProfile.age);
+                const responseTypeInstruction = getResponseTypeInstruction();
+                const systemWithProfile = `${SYSTEM_PROMPT_BASE}${responseTypeInstruction}\n\nPerfil profissional:\n- Nome preferido: ${studentProfile.name}\n- Etapa/segmento: ${studentProfile.age}\n- Necessidade principal: ${studentProfile.grade}\n- Guia de orientacao: ${ageGuide}`;
+                let promptFinal = `${systemWithProfile}\n\nSolicitacao de ${studentProfile.name}: ${userText}`;
+                if (selectedFile && selectedFile.kind === 'text') {
+                    promptFinal += `\n\nContexto do arquivo (${selectedFile.name}):\n${selectedFile.content}`;
+                }
+                parts.push({ text: promptFinal });
+
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelName)}:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts
+                        }]
+                    })
+                });
+
+                const answerText = await parseGeminiResponse(response);
+                typingDiv.remove();
+                addMessage(answerText, 'bot-message');
+                clearSelectedFile();
+                showToast('Resposta gerada com sucesso.');
+
+            } catch (error) {
+                console.error("Erro:", error);
+                typingDiv.remove();
+                addMessage(formatUserFacingError(error), 'bot-message');
+            } finally {
+                if (sendBtn) {
+                    sendBtn.classList.remove('is-loading');
+                    sendBtn.disabled = false;
+                }
+            }
+        }
+
+        function addMessage(text, className, persist = true, animate = true) {
+            const chatContainer = document.getElementById('chat-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            if (animate && persist) {
+                messageDiv.classList.add('message-enter');
+            }
+            messageDiv.innerHTML = renderMessageHtml(text, className);
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            if (persist) {
+                const role = className === 'user-message' ? 'user' : 'bot';
+                appendHistory(role, text);
+            }
+
+            return messageDiv;
+        }
+
+        document.getElementById('user-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        const modelSelector = document.getElementById('model-select');
+        if (modelSelector) {
+            modelSelector.addEventListener('change', function (e) {
+                localStorage.setItem(MODEL_STORAGE_KEY, e.target.value);
+                markSessionActivity();
+                showToast(`Modelo ativo: ${e.target.value}`);
+            });
+        }
+
+        document.addEventListener('click', function (e) {
+            const menu = document.getElementById('profile-menu');
+            const trigger = document.getElementById('profile-trigger');
+            if (!menu || !trigger) return;
+            if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+                menu.classList.remove('open');
+            }
+        });
+
+        ['click', 'keydown', 'touchstart'].forEach((eventName) => {
+            document.addEventListener(eventName, markSessionActivity, { passive: true });
+        });
+
+        if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw-seduc.js').catch((error) => {
+                    console.error('Falha ao registrar service worker:', error);
+                });
+            });
+        }
+
+        setInterval(checkSessionExpiry, 60000);
+
+        loadStudentProfile();
+        loadChatHistory();
+        syncModelSelector();
+        syncResponseTypeSelector();
+        updateProfileSummary();
+    </script>
+</body>
+</html>

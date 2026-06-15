@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="EDS Shield Mono">
+  <rect x="24" y="24" width="464" height="464" rx="98" fill="#0f7763"/>
+  <path d="M256 82 L382 134 V252 C382 329 331 398 256 432 C181 398 130 329 130 252 V134 Z"
+        fill="none" stroke="#ffffff" stroke-width="18"/>
+
+  <path d="M186 172 H300" stroke="#ffffff" stroke-width="20" stroke-linecap="round"/>
+  <path d="M186 224 H280" stroke="#ffffff" stroke-width="20" stroke-linecap="round"/>
+  <path d="M186 276 H300" stroke="#ffffff" stroke-width="20" stroke-linecap="round"/>
+
+  <path d="M304 170 V280" stroke="#ffffff" stroke-width="16" stroke-linecap="round"/>
+  <path d="M304 170 Q354 170 354 225 Q354 280 304 280" fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round"/>
+
+  <path d="M186 338 C208 364, 232 378, 256 378 C280 378, 304 364, 326 338"
+        fill="none" stroke="#ffffff" stroke-width="15" stroke-linecap="round"/>
+</svg>

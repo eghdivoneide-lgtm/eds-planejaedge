@@ -1,0 +1,12 @@
+ASSISTENTE PEDAGOGICO SEDUC-PE — Desenvolvido por EDS Solucoes Inteligentes
+
+Arquivos: index.html, monitor-seduc-pro.html, manifest-seduc.webmanifest, sw-seduc.js
+
+Instalacao:
+1) Execute via localhost ou HTTPS (PWA nao instala por file://)
+2) Abra index.html no navegador
+3) Informe sua chave Gemini e use normalmente
+4) Para instalar como app: menu do navegador > Instalar app
+
+Foco: professores e coordenadores pedagogicos
+Contexto: BNCC, diretrizes curriculares, inclusao, avaliacao e planejamento docente

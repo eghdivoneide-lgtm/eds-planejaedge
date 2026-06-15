@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 620" role="img" aria-label="EDS interlaced seal 1H">
+  <defs>
+    <linearGradient id="bgH" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d2f28"/>
+      <stop offset="100%" stop-color="#071a15"/>
+    </linearGradient>
+    <linearGradient id="lineH" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#66dfc4"/>
+      <stop offset="100%" stop-color="#13a385"/>
+    </linearGradient>
+  </defs>
+  <rect x="28" y="28" width="764" height="564" rx="54" fill="url(#bgH)"/>
+  <path d="M410 86 L548 142 V280 C548 366 492 443 410 482 C328 443 272 366 272 280 V142 Z" fill="#0f342c" stroke="url(#lineH)" stroke-width="14"/>
+  <circle cx="410" cy="252" r="118" fill="none" stroke="rgba(102,223,196,0.22)" stroke-width="10"/>
+  <path d="M324 190 H430" stroke="#e9faf5" stroke-width="18" stroke-linecap="round"/>
+  <path d="M324 244 H412" stroke="#e9faf5" stroke-width="18" stroke-linecap="round"/>
+  <path d="M324 298 H430" stroke="#e9faf5" stroke-width="18" stroke-linecap="round"/>
+  <path d="M438 188 V302" stroke="#9ce9d8" stroke-width="15" stroke-linecap="round"/>
+  <path d="M438 188 Q494 188 494 245 Q494 302 438 302" fill="none" stroke="#9ce9d8" stroke-width="15" stroke-linecap="round"/>
+  <path d="M320 350 C352 320, 390 314, 430 330 C464 342, 494 336, 524 308" fill="none" stroke="#13a385" stroke-width="14" stroke-linecap="round"/>
+  <text x="410" y="526" text-anchor="middle" font-size="86" font-family="Trebuchet MS, Segoe UI, sans-serif" font-weight="800" letter-spacing="10" fill="#f0fffb">EDS</text>
+  <text x="410" y="566" text-anchor="middle" font-size="28" font-family="Trebuchet MS, Segoe UI, sans-serif" letter-spacing="4.5" fill="#a3e6d8">SOLUCOES INTELIGENTES</text>
+</svg>

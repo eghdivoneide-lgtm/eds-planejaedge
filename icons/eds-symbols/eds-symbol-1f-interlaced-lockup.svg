@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 620" role="img" aria-label="EDS interlaced lockup 1F">
+  <defs>
+    <linearGradient id="bgF" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d2f28"/>
+      <stop offset="100%" stop-color="#071914"/>
+    </linearGradient>
+    <linearGradient id="lineF" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#64e0c4"/>
+      <stop offset="100%" stop-color="#13a385"/>
+    </linearGradient>
+  </defs>
+  <rect x="28" y="28" width="764" height="564" rx="54" fill="url(#bgF)"/>
+  <path d="M410 86 L548 142 V280 C548 366 492 443 410 482 C328 443 272 366 272 280 V142 Z" fill="#0f342c" stroke="url(#lineF)" stroke-width="14"/>
+  <path d="M322 188 H434" stroke="#e9faf5" stroke-width="18" stroke-linecap="round"/>
+  <path d="M322 242 H414" stroke="#e9faf5" stroke-width="18" stroke-linecap="round"/>
+  <path d="M322 296 H434" stroke="#e9faf5" stroke-width="18" stroke-linecap="round"/>
+  <path d="M442 186 V302" stroke="#9be9d7" stroke-width="15" stroke-linecap="round"/>
+  <path d="M442 186 Q500 186 500 244 Q500 302 442 302" fill="none" stroke="#9be9d7" stroke-width="15" stroke-linecap="round"/>
+  <path d="M324 352 C354 322, 390 314, 430 328 C462 340, 488 338, 514 316" fill="none" stroke="#13a385" stroke-width="14" stroke-linecap="round"/>
+  <path d="M312 344 C338 374, 366 394, 404 400 C444 406, 486 388, 522 350" fill="none" stroke="#64e0c4" stroke-width="10" stroke-linecap="round" opacity="0.9"/>
+  <text x="410" y="540" text-anchor="middle" font-size="40" font-family="Trebuchet MS, Segoe UI, sans-serif" letter-spacing="6" fill="#a3e6d8">SOLUCOES INTELIGENTES</text>
+</svg>

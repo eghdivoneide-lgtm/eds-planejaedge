@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-label="Logo horizontal EDS Solucoes Inteligentes">
+  <defs>
+    <linearGradient id="bgHori" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d2f28"/>
+      <stop offset="100%" stop-color="#071914"/>
+    </linearGradient>
+    <linearGradient id="shieldHori" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#17483f"/>
+      <stop offset="100%" stop-color="#0d2c25"/>
+    </linearGradient>
+    <linearGradient id="lineHori" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffcf62"/>
+      <stop offset="100%" stop-color="#ef9a2f"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="1168" height="388" rx="34" fill="url(#bgHori)"/>
+  <g transform="translate(42 34)">
+    <path d="M180 28 L286 70 V176 C286 241 242 299 180 328 C118 299 74 241 74 176 V70 Z" fill="url(#shieldHori)" stroke="url(#lineHori)" stroke-width="10"/>
+    <path d="M114 108 H202" stroke="#f7fcfb" stroke-width="14" stroke-linecap="round"/>
+    <path d="M114 150 H184" stroke="#f7fcfb" stroke-width="14" stroke-linecap="round"/>
+    <path d="M114 192 H202" stroke="#f7fcfb" stroke-width="14" stroke-linecap="round"/>
+    <path d="M206 106 V196" stroke="#ffd680" stroke-width="12" stroke-linecap="round"/>
+    <path d="M206 106 Q250 106 250 151 Q250 196 206 196" fill="none" stroke="#ffd680" stroke-width="12" stroke-linecap="round"/>
+    <path d="M114 226 C142 204, 172 202, 205 216 C231 226, 255 222, 275 204" fill="none" stroke="#ef9a2f" stroke-width="11" stroke-linecap="round"/>
+    <rect x="110" y="244" width="140" height="40" rx="12" fill="rgba(247,188,79,0.16)" stroke="rgba(255,207,98,0.55)" stroke-width="2"/>
+    <text x="180" y="262" text-anchor="middle" font-size="12.5" font-family="Trebuchet MS, Segoe UI, sans-serif" letter-spacing="1.8" fill="#ffe3a7">SOLUCOES</text>
+    <text x="180" y="277" text-anchor="middle" font-size="12.5" font-family="Trebuchet MS, Segoe UI, sans-serif" letter-spacing="1.8" fill="#ffe3a7">INTELIGENTES</text>
+  </g>
+  <text x="400" y="178" font-size="108" font-family="Trebuchet MS, Segoe UI, sans-serif" font-weight="800" letter-spacing="8" fill="#f5fffc">EDS</text>
+  <text x="404" y="230" font-size="34" font-family="Trebuchet MS, Segoe UI, sans-serif" letter-spacing="6" fill="#ffcf62">SOLUCOES INTELIGENTES</text>
+  <text x="404" y="284" font-size="25" font-family="Trebuchet MS, Segoe UI, sans-serif" letter-spacing="2" fill="#a7ddd0">Tecnologia, educacao e inteligencia aplicada</text>
+</svg>

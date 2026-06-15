@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="EDS Shield">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b231e"/>
+      <stop offset="100%" stop-color="#081a16"/>
+    </linearGradient>
+    <linearGradient id="stroke" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#13a385"/>
+      <stop offset="100%" stop-color="#0f7763"/>
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="464" height="464" rx="96" fill="url(#bg)"/>
+  <path d="M256 86 L378 136 V248 C378 322 329 389 256 424 C183 389 134 322 134 248 V136 Z"
+        fill="#0f312a" stroke="url(#stroke)" stroke-width="14"/>
+  <path d="M198 186 H284" stroke="#e9faf5" stroke-width="16" stroke-linecap="round"/>
+  <path d="M198 224 H266" stroke="#e9faf5" stroke-width="16" stroke-linecap="round"/>
+  <path d="M198 262 H284" stroke="#e9faf5" stroke-width="16" stroke-linecap="round"/>
+  <path d="M290 184 V264" stroke="#9fe8d8" stroke-width="14" stroke-linecap="round"/>
+  <path d="M290 184 Q334 184 334 224 Q334 264 290 264" fill="none" stroke="#9fe8d8" stroke-width="14" stroke-linecap="round"/>
+  <path d="M320 312 Q286 292 255 312 Q224 332 191 312" fill="none" stroke="#13a385" stroke-width="14" stroke-linecap="round"/>
+</svg>
