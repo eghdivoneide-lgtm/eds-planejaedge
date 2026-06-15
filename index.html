@@ -680,6 +680,15 @@
                     <div class="info-chip">SEDUC-PE + EDS</div>
                 </div>
                 <div class="settings-card">
+                    <h4>🔊 Voz Neural — Google Cloud TTS</h4>
+                    <p class="muted">Cole aqui sua chave Google Cloud TTS para ativar a voz natural do Prof. Eg em pt-BR (Neural2). <a href="https://console.cloud.google.com/apis/library/texttospeech.googleapis.com" target="_blank" rel="noopener" style="color:#f1cc75;text-decoration:underline">Ativar a API aqui</a> e criar uma chave em <em>Credenciais</em>.</p>
+                    <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+                        <input type="password" id="tts-key-input" placeholder="AIza..." autocomplete="off" style="flex:1;padding:9px 11px;border:1px solid rgba(40,178,147,0.4);border-radius:8px;background:rgba(7,28,24,0.72);color:#ecfff9;font-size:13px;outline:none;">
+                        <button type="button" onclick="saveTtsKey()" style="padding:9px 16px;background:#13a385;border:none;border-radius:8px;color:#fff;cursor:pointer;font-weight:700;font-size:13px;white-space:nowrap;">Salvar</button>
+                    </div>
+                    <p class="muted" style="margin-top:8px;font-size:11px;">Free tier: 1 milhão de caracteres/mês. Nenhum custo para uso educacional típico.</p>
+                </div>
+                <div class="settings-card">
                     <h4>Acoes rapidas</h4>
                     <div class="settings-actions">
                         <button type="button" onclick="switchPanel('chat'); editProfileFromMenu();">Editar perfil</button>
@@ -717,6 +726,9 @@
             showToast('Ambiente SEDUC-PE iniciado.');
         }
         window.onload = function() {
+            const savedTtsKey = localStorage.getItem('seduc_tts_key');
+            if (savedTtsKey) window.TTS_KEY = savedTtsKey;
+
             const savedKey = localStorage.getItem('seduc_gemini_api_key');
             if (savedKey) {
                 if (isSessionExpired()) {
@@ -1596,19 +1608,28 @@
 
         let _ttsActiveBtn = null;
         let _ttsActiveVw = null;
+        let _ttsAudio = null;
+
+        function _ttsReset(btn, videoWrap) {
+            if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '<span class="tts-icon">🔊</span> Ouvir'; }
+            if (videoWrap) videoWrap.classList.remove('speaking-active');
+            _ttsActiveBtn = null; _ttsActiveVw = null; _ttsAudio = null;
+        }
 
         function speakText(text, btn, videoWrap) {
-            if (!window.speechSynthesis) {
-                showToast('Seu navegador não suporta síntese de voz.');
+            if (_ttsActiveBtn === btn && _ttsAudio && !_ttsAudio.paused) {
+                _ttsAudio.pause();
+                _ttsReset(btn, videoWrap);
                 return;
             }
-            if (_ttsActiveBtn === btn && window.speechSynthesis.speaking) {
-                window.speechSynthesis.cancel();
+            if (_ttsAudio) { _ttsAudio.pause(); }
+            _ttsReset(_ttsActiveBtn, _ttsActiveVw);
+
+            const ttsKey = window.TTS_KEY || localStorage.getItem('seduc_tts_key');
+            if (!ttsKey) {
+                showToast('Configure sua chave Google TTS em ⚙ Config Pro.');
                 return;
             }
-            window.speechSynthesis.cancel();
-            if (_ttsActiveBtn) { _ttsActiveBtn.classList.remove('speaking'); _ttsActiveBtn.innerHTML = '<span class="tts-icon">🔊</span> Ouvir'; }
-            if (_ttsActiveVw) { _ttsActiveVw.classList.remove('speaking-active'); }
 
             const clean = text
                 .replace(/```[\s\S]*?```/g, 'bloco de código.')
@@ -1622,37 +1643,49 @@
                 .replace(/\n/g, ' ')
                 .trim();
 
-            const utter = new SpeechSynthesisUtterance(clean);
-            utter.lang = 'pt-BR';
-            utter.rate = 1.0;
-            utter.pitch = 1.05;
+            btn.classList.add('speaking');
+            btn.innerHTML = '<span class="tts-icon">⏳</span> Gerando...';
+            videoWrap.classList.add('speaking-active');
+            _ttsActiveBtn = btn;
+            _ttsActiveVw = videoWrap;
 
-            const trySpeak = () => {
-                const voices = window.speechSynthesis.getVoices();
-                const v = voices.find(v => v.lang === 'pt-BR') || voices.find(v => v.lang.startsWith('pt'));
-                if (v) utter.voice = v;
-                btn.classList.add('speaking');
+            fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${ttsKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    input: { text: clean },
+                    voice: { languageCode: 'pt-BR', name: 'pt-BR-Neural2-B', ssmlGender: 'MALE' },
+                    audioConfig: { audioEncoding: 'MP3', speakingRate: 1.05, pitch: 0.0, effectsProfileId: ['headphone-class-device'] }
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    showToast('Erro TTS: ' + (data.error.message || 'verifique sua chave.'));
+                    _ttsReset(btn, videoWrap);
+                    return;
+                }
+                const audio = new Audio('data:audio/mp3;base64,' + data.audioContent);
+                _ttsAudio = audio;
                 btn.innerHTML = '<span class="tts-icon">⏹</span> Parar';
-                videoWrap.classList.add('speaking-active');
-                _ttsActiveBtn = btn;
-                _ttsActiveVw = videoWrap;
-                const done = () => {
-                    btn.classList.remove('speaking');
-                    btn.innerHTML = '<span class="tts-icon">🔊</span> Ouvir';
-                    videoWrap.classList.remove('speaking-active');
-                    if (_ttsActiveBtn === btn) { _ttsActiveBtn = null; _ttsActiveVw = null; }
-                };
-                utter.onend = done;
-                utter.onerror = done;
-                window.speechSynthesis.speak(utter);
-            };
+                const done = () => _ttsReset(btn, videoWrap);
+                audio.onended = done;
+                audio.onerror = done;
+                audio.play();
+            })
+            .catch(() => {
+                showToast('Erro ao conectar ao serviço de voz.');
+                _ttsReset(btn, videoWrap);
+            });
+        }
 
-            if (window.speechSynthesis.getVoices().length > 0) {
-                trySpeak();
-            } else {
-                window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.onvoiceschanged = null; trySpeak(); };
-                window.speechSynthesis.getVoices();
-            }
+        function saveTtsKey() {
+            const k = document.getElementById('tts-key-input').value.trim();
+            if (!k) { showToast('Digite a chave Google Cloud TTS.'); return; }
+            localStorage.setItem('seduc_tts_key', k);
+            window.TTS_KEY = k;
+            document.getElementById('tts-key-input').value = '';
+            showToast('✅ Chave de voz salva! Clique em "Ouvir" para testar.');
         }
 
         function addMessage(text, className, persist = true, animate = true) {
