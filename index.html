@@ -697,6 +697,106 @@
             .att-btn { font-size: 10px; padding: 4px 8px; }
         }
     </style>
+    <style>
+        /* ===== PAINEL AVALIAÇÕES ===== */
+        .av-panel { overflow-y: auto; background: linear-gradient(180deg,#102846,#0c1d33); }
+        .av-subnav {
+            display: flex; gap: 6px; padding: 10px 14px;
+            background: #0d1f35; border-bottom: 1px solid rgba(47,83,127,0.5);
+            overflow-x: auto; scrollbar-width: none; flex-shrink: 0;
+        }
+        .av-subnav::-webkit-scrollbar { display: none; }
+        .av-sub {
+            border: 1px solid #2d537f; background: #173252; color: #a7bfd8;
+            font-family: 'DM Mono',Consolas,monospace; font-size: 11px;
+            letter-spacing: 0.06em; border-radius: 999px; padding: 7px 14px;
+            cursor: pointer; white-space: nowrap; transition: all .15s;
+            height: auto; width: auto;
+        }
+        .av-sub.active { background: rgba(201,168,76,0.15); border-color: rgba(201,168,76,0.65); color: #f1cc75; }
+        .av-subpanel { display: none; flex-direction: column; gap: 12px; padding: 14px; flex: 1; overflow-y: auto; }
+        .av-subpanel.active { display: flex; }
+        .av-form-card {
+            border: 1px solid #2f537f; border-radius: 14px;
+            background: linear-gradient(180deg,#11253e,#10223b); padding: 14px;
+        }
+        .av-form-card h4 {
+            margin: 0 0 12px; color: #f1cc75; font-size: 12px;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            font-family: 'DM Mono',Consolas,monospace;
+        }
+        .av-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .av-field { display: flex; flex-direction: column; gap: 5px; }
+        .av-field-full { grid-column: 1 / -1; }
+        .av-field label {
+            font-size: 10.5px; color: #a7bfd8; font-family: 'DM Mono',Consolas,monospace;
+            letter-spacing: .04em; text-transform: uppercase;
+        }
+        .av-field input, .av-field textarea, .av-field select {
+            background: #0f1e32; border: 1px solid #315780; border-radius: 8px;
+            color: #eef6ff; font-size: 13px; padding: 8px 10px;
+            font-family: 'Trebuchet MS','Segoe UI',sans-serif; resize: vertical;
+            width: 100%; box-sizing: border-box;
+        }
+        .av-field input:focus, .av-field textarea:focus, .av-field select:focus {
+            outline: none; border-color: rgba(201,168,76,0.5);
+        }
+        .av-field select option { background: #173252; color: #eef6ff; }
+        .av-actions { margin-top: 12px; display: flex; justify-content: flex-end; }
+        .av-gen-btn {
+            background: linear-gradient(135deg,#d1a64f,#f1cc75); color: #10130f;
+            font-weight: 800; border: none; border-radius: 10px;
+            padding: 10px 20px; font-size: 13px; cursor: pointer;
+            transition: transform .12s; height: auto; width: auto;
+        }
+        .av-gen-btn:hover { transform: translateY(-1px); filter: brightness(1.06); }
+        .av-gen-btn:disabled { opacity: .6; pointer-events: none; }
+        .av-output { border: 1px solid rgba(201,168,76,0.3); border-radius: 14px; overflow: hidden; }
+        .av-output-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 14px; background: rgba(201,168,76,0.08);
+            border-bottom: 1px solid rgba(201,168,76,0.2); flex-wrap: wrap; gap: 6px;
+        }
+        .av-output-label {
+            font-size: 11px; color: #f1cc75; font-family: 'DM Mono',Consolas,monospace;
+            letter-spacing: .06em; text-transform: uppercase;
+        }
+        .av-output-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+        .av-action-btn {
+            background: rgba(209,166,79,0.12); border: 1px solid rgba(209,166,79,0.45);
+            border-radius: 999px; color: #f1cc75; font-size: 11px; padding: 5px 10px;
+            cursor: pointer; font-family: 'DM Mono',Consolas,monospace;
+            height: auto; width: auto; white-space: nowrap; transition: all .15s;
+        }
+        .av-action-btn:hover { background: rgba(209,166,79,0.22); filter: none; }
+        .av-prova-box { padding: 14px; max-height: 55vh; overflow-y: auto; }
+        .av-historico-list { display: flex; flex-direction: column; gap: 8px; }
+        .av-hist-item {
+            border: 1px solid #2d537f; border-radius: 10px; background: #11253e;
+            padding: 10px 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        }
+        .av-hist-info { flex: 1; min-width: 0; }
+        .av-hist-title {
+            font-size: 13px; color: #eef5fb; font-weight: 700;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .av-hist-meta {
+            font-size: 10px; color: #6e89a7;
+            font-family: 'DM Mono',Consolas,monospace; margin-top: 2px;
+        }
+        .av-hist-btns { display: flex; gap: 5px; flex-shrink: 0; }
+        .av-hist-btn {
+            background: transparent; border: 1px solid #2d537f; border-radius: 6px;
+            color: #a7bfd8; font-size: 11px; padding: 4px 8px; cursor: pointer;
+            height: auto; width: auto; transition: all .15s;
+        }
+        .av-hist-btn:hover { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.5); color: #f1cc75; filter: none; }
+        .av-hist-btn.danger:hover { background: rgba(240,80,80,0.1); border-color: rgba(240,80,80,0.4); color: #f0a0a0; filter: none; }
+        @media (max-width: 600px) {
+            .av-form-grid { grid-template-columns: 1fr; }
+            .av-field-full { grid-column: 1; }
+        }
+    </style>
 </head>
 <body>
     <div class="login-container" id="login-section">
@@ -741,6 +841,7 @@
         </div>
         <div class="tabbar">
             <button type="button" class="tab-btn active" data-panel="chat" onclick="switchPanel('chat')">Assistente</button>
+            <button type="button" class="tab-btn" data-panel="avaliacao" onclick="switchPanel('avaliacao')">Avaliações</button>
             <button type="button" class="tab-btn" data-panel="quick" onclick="switchPanel('quick')">Atalhos</button>
             <button type="button" class="tab-btn" data-panel="settings" onclick="switchPanel('settings')">Config pro</button>
         </div>
@@ -869,6 +970,119 @@
                     </div>
                 </div>
             </section>
+            <section id="panel-avaliacao" class="app-panel av-panel" aria-label="Painel de avaliações">
+                <div class="av-subnav">
+                    <button type="button" class="av-sub active" data-av="gerar" onclick="switchAvTab('gerar')">📝 Gerar Prova</button>
+                    <button type="button" class="av-sub" data-av="corrigir" onclick="switchAvTab('corrigir')">✅ Corrigir</button>
+                    <button type="button" class="av-sub" data-av="historico" onclick="switchAvTab('historico')">📚 Histórico</button>
+                </div>
+
+                <!-- GERAR PROVA -->
+                <div id="av-gerar" class="av-subpanel active">
+                    <div class="av-form-card">
+                        <h4>Configurar Prova</h4>
+                        <div class="av-form-grid">
+                            <div class="av-field">
+                                <label>Disciplina</label>
+                                <input type="text" id="av-disciplina" placeholder="Ex: Matemática, Português...">
+                            </div>
+                            <div class="av-field">
+                                <label>Série / Ano</label>
+                                <input type="text" id="av-serie" placeholder="Ex: 7º ano EF, 1º ano EM">
+                            </div>
+                            <div class="av-field av-field-full">
+                                <label>Conteúdo / Tema</label>
+                                <textarea id="av-conteudo" rows="2" placeholder="Ex: Frações, Interpretação de texto, Célula animal..."></textarea>
+                            </div>
+                            <div class="av-field">
+                                <label>Tipo de Questões</label>
+                                <select id="av-tipo">
+                                    <option value="multipla">Múltipla escolha (A–D)</option>
+                                    <option value="vf">Verdadeiro ou Falso</option>
+                                    <option value="dissertativa">Dissertativa</option>
+                                    <option value="mista">Mista (Mult. + V/F + Dissert.)</option>
+                                </select>
+                            </div>
+                            <div class="av-field">
+                                <label>Nível de Dificuldade</label>
+                                <select id="av-dificuldade">
+                                    <option value="basico">Básico</option>
+                                    <option value="intermediario">Intermediário</option>
+                                    <option value="avancado">Avançado</option>
+                                    <option value="saeb">SAEB / ENEM</option>
+                                </select>
+                            </div>
+                            <div class="av-field">
+                                <label>Nº de Questões</label>
+                                <input type="number" id="av-nquestoes" value="10" min="3" max="30" style="max-width:90px">
+                            </div>
+                        </div>
+                        <div class="av-actions">
+                            <button type="button" class="av-gen-btn" onclick="gerarProva()">✨ Gerar Prova</button>
+                        </div>
+                    </div>
+                    <div id="av-gerar-output" class="av-output" style="display:none">
+                        <div class="av-output-header">
+                            <span id="av-output-title" class="av-output-label"></span>
+                            <div class="av-output-btns">
+                                <button type="button" class="av-action-btn" onclick="exportAvaliacaoHtml('aluno')">📄 HTML Aluno</button>
+                                <button type="button" class="av-action-btn" onclick="exportAvaliacaoHtml('professor')">📋 HTML Gabarito</button>
+                                <button type="button" class="av-action-btn" onclick="salvarAvaliacao()">💾 Salvar</button>
+                            </div>
+                        </div>
+                        <div id="av-prova-content" class="av-prova-box bbl b"></div>
+                    </div>
+                </div>
+
+                <!-- CORRIGIR PROVA -->
+                <div id="av-corrigir" class="av-subpanel">
+                    <div class="av-form-card">
+                        <h4>Corrigir Respostas do Aluno</h4>
+                        <div class="av-form-grid">
+                            <div class="av-field">
+                                <label>Nome do Aluno</label>
+                                <input type="text" id="av-aluno-nome" placeholder="Nome do estudante">
+                            </div>
+                            <div class="av-field">
+                                <label>Carregar prova salva (opcional)</label>
+                                <select id="av-load-prova">
+                                    <option value="">— Digite as questões abaixo —</option>
+                                </select>
+                            </div>
+                            <div class="av-field av-field-full">
+                                <label>Questões da Prova</label>
+                                <textarea id="av-questoes-txt" rows="5" placeholder="Cole aqui as questões da prova (ou selecione uma prova salva acima)..."></textarea>
+                            </div>
+                            <div class="av-field av-field-full">
+                                <label>Respostas do Aluno</label>
+                                <textarea id="av-respostas-txt" rows="4" placeholder="Ex: 1-A, 2-Verdadeiro, 3-B, 4-Falso, 5-[resposta dissertativa do aluno]..."></textarea>
+                            </div>
+                        </div>
+                        <div class="av-actions">
+                            <button type="button" class="av-gen-btn" onclick="corrigirProva()">✅ Corrigir e Dar Nota</button>
+                        </div>
+                    </div>
+                    <div id="av-corrigir-output" class="av-output" style="display:none">
+                        <div class="av-output-header">
+                            <span class="av-output-label">Resultado da Correção</span>
+                            <div class="av-output-btns">
+                                <button type="button" class="av-action-btn" onclick="exportCorrecaoHtml()">📄 Exportar Correção</button>
+                            </div>
+                        </div>
+                        <div id="av-correcao-content" class="av-prova-box bbl b"></div>
+                    </div>
+                </div>
+
+                <!-- HISTÓRICO -->
+                <div id="av-historico" class="av-subpanel">
+                    <div class="av-form-card">
+                        <h4>Provas Salvas</h4>
+                        <div id="av-historico-list" class="av-historico-list">
+                            <p class="muted" style="text-align:center;padding:20px 0">Nenhuma prova salva ainda. Gere e salve uma prova na aba Gerar Prova.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 
@@ -964,6 +1178,7 @@
         function switchPanel(panelName) {
             const panelMap = {
                 chat: 'panel-chat',
+                avaliacao: 'panel-avaliacao',
                 quick: 'panel-quick',
                 settings: 'panel-settings'
             };
@@ -2050,6 +2265,375 @@
         syncModelSelector();
         syncResponseTypeSelector();
         updateProfileSummary();
+
+        // =====================================================================
+        // AVALIAÇÕES
+        // =====================================================================
+        const AV_STORAGE_KEY = 'seduc_avaliacoes';
+        let _avAtual = null;
+        let _correcaoAtual = null;
+
+        function switchAvTab(tab) {
+            document.querySelectorAll('.av-sub').forEach(b => b.classList.toggle('active', b.dataset.av === tab));
+            document.querySelectorAll('.av-subpanel').forEach(p => p.classList.toggle('active', p.id === `av-${tab}`));
+            if (tab === 'historico') renderHistoricoAv();
+            if (tab === 'corrigir') preencherSelectProvas();
+        }
+
+        function getAvaliacoes() {
+            try { return JSON.parse(localStorage.getItem(AV_STORAGE_KEY) || '[]'); } catch (_) { return []; }
+        }
+
+        function salvarAvaliacoes(list) {
+            localStorage.setItem(AV_STORAGE_KEY, JSON.stringify(list));
+        }
+
+        function preencherSelectProvas() {
+            const sel = document.getElementById('av-load-prova');
+            if (!sel) return;
+            const list = getAvaliacoes();
+            sel.innerHTML = '<option value="">— Digite as questões abaixo —</option>';
+            list.forEach((av, i) => {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = av.titulo;
+                sel.appendChild(opt);
+            });
+            sel.onchange = function() {
+                if (!this.value) return;
+                const av = list[parseInt(this.value)];
+                if (av) document.getElementById('av-questoes-txt').value = av.prova;
+            };
+        }
+
+        async function gerarProva() {
+            const disciplina = document.getElementById('av-disciplina').value.trim();
+            const serie = document.getElementById('av-serie').value.trim();
+            const conteudo = document.getElementById('av-conteudo').value.trim();
+            const tipo = document.getElementById('av-tipo').value;
+            const dificuldade = document.getElementById('av-dificuldade').value;
+            const nq = Math.min(30, Math.max(3, parseInt(document.getElementById('av-nquestoes').value) || 10));
+
+            if (!disciplina || !serie || !conteudo) {
+                showToast('Preencha disciplina, série e conteúdo.');
+                return;
+            }
+
+            const btn = document.querySelector('#av-gerar .av-gen-btn');
+            if (btn) { btn.disabled = true; btn.textContent = '⏳ Gerando...'; }
+
+            const tipoMap = {
+                multipla: `${nq} questões de múltipla escolha com 4 alternativas (A, B, C, D). Indique somente a letra correta no gabarito.`,
+                vf: `${nq} questões de verdadeiro ou falso. Use ( ) Verdadeiro  ( ) Falso em cada questão. Indique V ou F no gabarito.`,
+                dissertativa: `${nq} questões dissertativas abertas. Apresente sugestão de resposta esperada no gabarito.`,
+                mista: `${nq} questões no formato misto: primeiro ${Math.round(nq*0.4)} de múltipla escolha (A-D), depois ${Math.round(nq*0.3)} de verdadeiro/falso, depois ${nq - Math.round(nq*0.4) - Math.round(nq*0.3)} dissertativas curtas.`
+            };
+            const difMap = {
+                basico: 'nível BÁSICO — vocabulário simples, conteúdo literal, ideal para reforço',
+                intermediario: 'nível INTERMEDIÁRIO — exige interpretação e aplicação de conceitos',
+                avancado: 'nível AVANÇADO — análise crítica, síntese e conexões interdisciplinares',
+                saeb: 'padrão SAEB/ENEM — habilidades BNCC, textos-base, distratores elaborados'
+            };
+
+            const prompt = `Você é o Professor EDS, especialista em elaboração de avaliações pedagógicas conforme a BNCC.
+
+Gere uma avaliação completa com EXATAMENTE ${nq} questões.
+
+DADOS DA PROVA:
+- Disciplina: ${disciplina}
+- Série/Ano: ${serie}
+- Conteúdo/Tema: ${conteudo}
+- Tipo: ${tipoMap[tipo]}
+- Dificuldade: ${difMap[dificuldade]}
+
+FORMATO OBRIGATÓRIO — siga rigorosamente esta estrutura:
+
+# ${disciplina.toUpperCase()} — ${serie}
+**Conteúdo:** ${conteudo}
+**Dificuldade:** ${dificuldade.toUpperCase()} | **Questões:** ${nq}
+
+---
+
+**Questão 1.** [enunciado completo da questão]
+${tipo === 'multipla' || tipo === 'mista' ? 'A) [alternativa]\nB) [alternativa]\nC) [alternativa]\nD) [alternativa]' : tipo === 'vf' ? '( ) Verdadeiro  ( ) Falso' : '[espaço para resposta dissertativa]'}
+
+[continue numerando até a questão ${nq}]
+
+---
+
+## GABARITO — Professor EDS
+
+| Questão | Resposta | Habilidade BNCC | Pontuação |
+|---------|----------|-----------------|-----------|
+| 1 | [resposta] | [código ex: EF07MA01] | ${(10/nq).toFixed(1)} |
+
+**Total: 10,0 pontos**
+
+---
+
+Gere as ${nq} questões completas com qualidade pedagógica, seguindo o formato acima.`;
+
+            try {
+                const apiKey = window.API_KEY || localStorage.getItem('seduc_gemini_api_key');
+                if (!apiKey) throw new Error('Chave Gemini não encontrada. Faça login novamente.');
+
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(getActiveModel())}:generateContent?key=${apiKey}`,
+                    { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }) }
+                );
+                const texto = await parseGeminiResponse(response);
+
+                const gabIdx = texto.indexOf('## GABARITO');
+                const provaTexto = gabIdx > -1 ? texto.slice(0, gabIdx).trim() : texto;
+                const gabTexto  = gabIdx > -1 ? texto.slice(gabIdx).trim() : '';
+
+                _avAtual = { titulo: `${disciplina} — ${serie} — ${dificuldade}`, prova: provaTexto,
+                             gabarito: gabTexto, tipo, disciplina, serie, dificuldade, nq,
+                             geradoEm: new Date().toISOString() };
+
+                const outputEl  = document.getElementById('av-gerar-output');
+                const contentEl = document.getElementById('av-prova-content');
+                document.getElementById('av-output-title').textContent = `${disciplina} · ${serie} · ${nq} questões · ${dificuldade}`;
+
+                const rendered = (typeof marked !== 'undefined')
+                    ? marked.parse(texto, { breaks: true, gfm: true })
+                    : texto.replace(/\n/g, '<br>');
+                contentEl.innerHTML = window.DOMPurify ? DOMPurify.sanitize(rendered) : rendered;
+                outputEl.style.display = '';
+                outputEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                showToast('Prova gerada! Salve ou exporte.');
+
+            } catch (err) {
+                showToast('Erro: ' + (err.message || 'tente novamente.'));
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = '✨ Gerar Prova'; }
+            }
+        }
+
+        async function corrigirProva() {
+            const nomeAluno   = document.getElementById('av-aluno-nome').value.trim();
+            const questoesTxt = document.getElementById('av-questoes-txt').value.trim();
+            const respostasTxt = document.getElementById('av-respostas-txt').value.trim();
+
+            if (!questoesTxt || !respostasTxt) {
+                showToast('Preencha as questões e as respostas do aluno.');
+                return;
+            }
+
+            const btn = document.querySelector('#av-corrigir .av-gen-btn');
+            if (btn) { btn.disabled = true; btn.textContent = '⏳ Corrigindo...'; }
+
+            const prompt = `Você é o Professor EDS, especialista em avaliação pedagógica.
+
+Corrija as respostas do aluno, atribuindo nota e feedback construtivo.
+
+NOME DO ALUNO: ${nomeAluno || 'Não informado'}
+DATA: ${new Date().toLocaleDateString('pt-BR')}
+
+QUESTÕES DA PROVA:
+${questoesTxt}
+
+RESPOSTAS DO ALUNO:
+${respostasTxt}
+
+FORMATO DA CORREÇÃO:
+
+# RESULTADO DA CORREÇÃO
+
+**Aluno:** ${nomeAluno || 'Não informado'}
+**Data:** ${new Date().toLocaleDateString('pt-BR')}
+
+## Gabarito Comentado
+
+| Questão | Resposta do Aluno | Gabarito | Resultado | Comentário pedagógico |
+|---------|-------------------|----------|-----------|----------------------|
+[para cada questão: ✅ Certa ou ❌ Errada com comentário breve e construtivo]
+
+## Desempenho Geral
+
+**Nota Final:** X,X / 10,0
+
+**Nível de desempenho:** [Insuficiente / Básico / Adequado / Avançado]
+
+**Percentual de acertos:** X%
+
+## Pontos Fortes
+[O que o aluno demonstrou dominar — seja específico]
+
+## Pontos de Atenção
+[O que precisa reforçar — baseado nos erros]
+
+## Recomendações de Estudo
+- [sugestão 1]
+- [sugestão 2]
+- [sugestão 3]
+
+Seja justo, pedagógico e construtivo. Use a BNCC como referência quando pertinente.`;
+
+            try {
+                const apiKey = window.API_KEY || localStorage.getItem('seduc_gemini_api_key');
+                if (!apiKey) throw new Error('Chave Gemini não encontrada. Faça login novamente.');
+
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(getActiveModel())}:generateContent?key=${apiKey}`,
+                    { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }) }
+                );
+                const texto = await parseGeminiResponse(response);
+                _correcaoAtual = { aluno: nomeAluno, texto, geradoEm: new Date().toISOString() };
+
+                const outputEl  = document.getElementById('av-corrigir-output');
+                const contentEl = document.getElementById('av-correcao-content');
+                const rendered  = (typeof marked !== 'undefined')
+                    ? marked.parse(texto, { breaks: true, gfm: true })
+                    : texto.replace(/\n/g, '<br>');
+                contentEl.innerHTML = window.DOMPurify ? DOMPurify.sanitize(rendered) : rendered;
+                outputEl.style.display = '';
+                outputEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                showToast('Correção concluída!');
+
+            } catch (err) {
+                showToast('Erro: ' + (err.message || 'tente novamente.'));
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = '✅ Corrigir e Dar Nota'; }
+            }
+        }
+
+        function salvarAvaliacao() {
+            if (!_avAtual) { showToast('Nenhuma prova gerada ainda.'); return; }
+            const list = getAvaliacoes();
+            list.unshift({ ..._avAtual, id: Date.now() });
+            salvarAvaliacoes(list.slice(0, 50));
+            preencherSelectProvas();
+            showToast('Prova salva no histórico!');
+        }
+
+        function renderHistoricoAv() {
+            const list = getAvaliacoes();
+            const container = document.getElementById('av-historico-list');
+            if (!list.length) {
+                container.innerHTML = '<p class="muted" style="text-align:center;padding:20px 0">Nenhuma prova salva ainda.</p>';
+                return;
+            }
+            container.innerHTML = list.map((av, i) => `
+                <div class="av-hist-item">
+                    <div class="av-hist-info">
+                        <div class="av-hist-title">${escapeHtml(av.titulo)}</div>
+                        <div class="av-hist-meta">${av.nq} questões · ${escapeHtml(av.tipo)} · ${new Date(av.geradoEm).toLocaleDateString('pt-BR')}</div>
+                    </div>
+                    <div class="av-hist-btns">
+                        <button type="button" class="av-hist-btn" onclick="abrirProvaSalva(${i})">📖 Ver</button>
+                        <button type="button" class="av-hist-btn" onclick="exportProvaSalva(${i})">📄 HTML</button>
+                        <button type="button" class="av-hist-btn danger" onclick="deletarProva(${i})">🗑</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function abrirProvaSalva(idx) {
+            const av = getAvaliacoes()[idx];
+            if (!av) return;
+            _avAtual = av;
+            switchAvTab('gerar');
+            document.getElementById('av-disciplina').value = av.disciplina || '';
+            document.getElementById('av-serie').value = av.serie || '';
+            document.getElementById('av-tipo').value = av.tipo || 'multipla';
+            document.getElementById('av-dificuldade').value = av.dificuldade || 'basico';
+            document.getElementById('av-nquestoes').value = av.nq || 10;
+            document.getElementById('av-conteudo').value = '';
+
+            const outputEl  = document.getElementById('av-gerar-output');
+            const contentEl = document.getElementById('av-prova-content');
+            document.getElementById('av-output-title').textContent = av.titulo;
+            const fullText = av.gabarito ? `${av.prova}\n\n${av.gabarito}` : av.prova;
+            const rendered = (typeof marked !== 'undefined')
+                ? marked.parse(fullText, { breaks: true, gfm: true })
+                : fullText.replace(/\n/g, '<br>');
+            contentEl.innerHTML = window.DOMPurify ? DOMPurify.sanitize(rendered) : rendered;
+            outputEl.style.display = '';
+            showToast(`"${av.titulo}" carregada.`);
+        }
+
+        function deletarProva(idx) {
+            const list = getAvaliacoes();
+            list.splice(idx, 1);
+            salvarAvaliacoes(list);
+            renderHistoricoAv();
+            preencherSelectProvas();
+            showToast('Prova removida.');
+        }
+
+        function exportAvaliacaoHtml(modo) {
+            if (!_avAtual) { showToast('Nenhuma prova gerada.'); return; }
+            const isProf = modo === 'professor';
+            const conteudo = isProf ? `${_avAtual.prova}\n\n${_avAtual.gabarito || ''}` : _avAtual.prova;
+            const titulo   = isProf ? `${_avAtual.titulo} — GABARITO` : _avAtual.titulo;
+            _exportAvalHtml(titulo, conteudo, isProf);
+        }
+
+        function exportProvaSalva(idx) {
+            const av = getAvaliacoes()[idx];
+            if (!av) return;
+            _avAtual = av;
+            exportAvaliacaoHtml('aluno');
+        }
+
+        function exportCorrecaoHtml() {
+            if (!_correcaoAtual) { showToast('Nenhuma correção gerada.'); return; }
+            _exportAvalHtml(`Correção — ${_correcaoAtual.aluno || 'Aluno'}`, _correcaoAtual.texto, true);
+        }
+
+        function _exportAvalHtml(titulo, markdown, isProf) {
+            const dateTag = new Date().toISOString().slice(0, 10);
+            const rendered = (typeof marked !== 'undefined')
+                ? marked.parse(markdown, { breaks: true, gfm: true })
+                : markdown.replace(/\n/g, '<br>');
+            const safe = window.DOMPurify ? DOMPurify.sanitize(rendered) : rendered;
+
+            const html = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(titulo)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Syne','Segoe UI',sans-serif;background:#f7f9fc;color:#1a2733;padding:24px;max-width:860px;margin:0 auto}
+  h1,h2,h3,h4{color:#103050;margin:16px 0 8px}
+  h1{font-size:1.45rem;border-bottom:2px solid #13a385;padding-bottom:8px}
+  h2{font-size:1.1rem;color:#13a385;margin-top:20px}
+  h3{font-size:1rem;color:#1a5c42}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.88rem}
+  th{background:#103050;color:#fff;padding:8px 10px;text-align:left}
+  td{padding:7px 10px;border-bottom:1px solid #dde8f0;vertical-align:top}
+  tr:nth-child(even) td{background:#f0f6fa}
+  p,li{line-height:1.7;margin-bottom:6px}
+  ul,ol{padding-left:20px;margin-bottom:10px}
+  strong{color:#103050}
+  hr{border:none;border-top:1px solid #cde0ee;margin:18px 0}
+  .header{background:linear-gradient(135deg,#103050,#0d5c3e);color:#fff;padding:18px 22px;border-radius:12px;margin-bottom:22px}
+  .header h1{color:#fff;border-bottom:1px solid rgba(255,255,255,0.3);font-size:1.3rem}
+  .header .meta{font-size:11px;color:rgba(255,255,255,0.7);margin-top:8px;font-family:'DM Mono',Consolas,monospace}
+  ${isProf ? '.gabarito-section{background:#fff9e6;border:2px solid #f1cc75;border-radius:12px;padding:16px;margin-top:20px}' : ''}
+  .footer{margin-top:32px;text-align:center;font-size:11px;color:#8899aa;font-family:'DM Mono',Consolas,monospace;border-top:1px solid #cde0ee;padding-top:14px}
+  @media print{body{padding:0}.header{border-radius:0}table{font-size:.8rem}}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>${escapeHtml(titulo)}</h1>
+  <div class="meta">EDS PlanejaEdge · EDS Soluções Inteligentes · ${dateTag}</div>
+</div>
+<div${isProf ? ' class="gabarito-section"' : ''}>${safe}</div>
+<div class="footer">EDS PlanejaEdge — Planejador pedagógico com IA · SEDUC-PE</div>
+</body></html>`;
+
+            const slug = titulo.replace(/[^\wÀ-ÿ\s-]/g, '').replace(/\s+/g, '-').toLowerCase().slice(0, 60);
+            triggerDownload(html, `prova-${slug}-${dateTag}.html`, 'text/html;charset=utf-8');
+            showToast('Exportado em HTML!');
+        }
     </script>
 </body>
 </html>
