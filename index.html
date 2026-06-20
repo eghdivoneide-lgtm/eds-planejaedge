@@ -572,11 +572,11 @@
         .row.b { justify-content: flex-start; align-items: flex-end; gap: 8px; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .av {
-            width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+            width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
             background: rgba(15, 77, 65, 0.6); border: 1px solid rgba(201, 168, 76, 0.4);
             display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
-        .av img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .av img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
         .bbl {
             max-width: 82%; padding: 9px 13px; font-size: 13px;
             line-height: 1.65; word-break: break-word;
@@ -725,7 +725,7 @@
             <div class="header-title">
                 <img class="header-logo" src="icons/eds-symbols/eds-brand-app-icon.svg" alt="EDS">
                 <div class="header-title-text">
-                    <strong id="header-teacher-name">Professor Eg — SEDUC-PE</strong>
+                    <strong id="header-teacher-name">Professor EDS — SEDUC-PE</strong>
                     <span>Planejamento, BNCC e inclusao</span>
                 </div>
             </div>
@@ -759,12 +759,12 @@
                 <div id="chat-container">
                     <div class="sess-badge"><span>Assistente Pedagógico SEDUC-PE · EDS Soluções Inteligentes</span></div>
                     <div class="row b" id="welcome-row">
-                        <div class="av"><img src="icons/eds-symbols/eds-brand-app-icon.svg" alt="Prof. Eg"></div>
+                        <div class="av"><img src="icons/prof-eds.png" alt="Professor EDS"></div>
                         <div class="bbl b">
-                            <div>👋 Olá! Eu sou o <strong>Professor Eg</strong>, seu assistente pedagógico SEDUC-PE da EDS Soluções Inteligentes.<br>Estou aqui para apoiar você com planejamento pedagógico, BNCC, inclusão, avaliações e sequências didáticas.<br><strong>Preencha seu perfil acima — nome, etapa e necessidade principal — para eu personalizar minhas orientações.</strong></div>
+                            <div>👋 Olá! Eu sou o <strong>Professor EDS</strong>, seu assistente pedagógico SEDUC-PE da EDS Soluções Inteligentes.<br>Estou aqui para apoiar você com planejamento pedagógico, BNCC, inclusão, avaliações e sequências didáticas.<br><strong>Preencha seu perfil acima — nome, etapa e necessidade principal — para eu personalizar minhas orientações.</strong></div>
                             <div class="mt">
-                                <span>Prof. Eg · agora</span>
-                                <button class="tts-mini" title="Ouvir" onclick="speakText('Olá! Eu sou o Professor Eg, seu assistente pedagógico SEDUC-PE da EDS Soluções Inteligentes. Estou aqui para apoiar você com planejamento pedagógico, BNCC, inclusão, avaliações e sequências didáticas. Preencha seu perfil para que eu possa personalizar minhas orientações.', this, null)">🔊</button>
+                                <span>Professor EDS · agora</span>
+                                <button class="tts-mini" title="Ouvir" onclick="speakText('Olá! Eu sou o Professor EDS, seu assistente pedagógico SEDUC-PE da EDS Soluções Inteligentes. Estou aqui para apoiar você com planejamento pedagógico, BNCC, inclusão, avaliações e sequências didáticas. Preencha seu perfil para que eu possa personalizar minhas orientações.', this, null)">🔊</button>
                             </div>
                         </div>
                     </div>
@@ -851,7 +851,7 @@
                 </div>
                 <div class="settings-card">
                     <h4>🔊 Voz Neural — Google Cloud TTS</h4>
-                    <p class="muted">Cole aqui sua chave Google Cloud TTS para ativar a voz natural do Prof. Eg em pt-BR (Neural2). <a href="https://console.cloud.google.com/apis/library/texttospeech.googleapis.com" target="_blank" rel="noopener" style="color:#f1cc75;text-decoration:underline">Ativar a API aqui</a> e criar uma chave em <em>Credenciais</em>.</p>
+                    <p class="muted">Cole aqui sua chave Google Cloud TTS para ativar a voz natural do Professor EDS em pt-BR (Neural2). <a href="https://console.cloud.google.com/apis/library/texttospeech.googleapis.com" target="_blank" rel="noopener" style="color:#f1cc75;text-decoration:underline">Ativar a API aqui</a> e criar uma chave em <em>Credenciais</em>.</p>
                     <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
                         <input type="password" id="tts-key-input" placeholder="AIza..." autocomplete="off" style="flex:1;padding:9px 11px;border:1px solid rgba(40,178,147,0.4);border-radius:8px;background:rgba(7,28,24,0.72);color:#ecfff9;font-size:13px;outline:none;">
                         <button type="button" onclick="saveTtsKey()" style="padding:9px 16px;background:#13a385;border:none;border-radius:8px;color:#fff;cursor:pointer;font-weight:700;font-size:13px;white-space:nowrap;">Salvar</button>
@@ -921,8 +921,8 @@
         const DEFAULT_MODEL_NAME = 'gemini-2.5-flash';
         const MODEL_STORAGE_KEY = 'seduc_monitor_model_name';
         const SYSTEM_PROMPT_BASE = [
-            'Voce e o Professor Eg, assistente pedagogico criado pela EDS Solucoes Inteligentes em parceria com a Secretaria de Educacao de Pernambuco (SEDUC-PE).',
-            'Fale sempre em primeira pessoa, como Professor Eg — um educador experiente, acolhedor e fundamentado em evidencias pedagogicas. Use expressoes como "Vou te ajudar com isso", "Na minha experiencia", "Recomendo que...".',
+            'Voce e o Professor EDS, assistente pedagogico criado pela EDS Solucoes Inteligentes em parceria com a Secretaria de Educacao de Pernambuco (SEDUC-PE).',
+            'Fale sempre em primeira pessoa, como Professor EDS — um educador experiente, acolhedor e fundamentado em evidencias pedagogicas. Use expressoes como "Vou te ajudar com isso", "Na minha experiencia", "Recomendo que...".',
             'Seu foco principal e apoiar professores e coordenadores com orientacoes baseadas na BNCC, nas diretrizes curriculares de Pernambuco e nas melhores praticas de ensino.',
             'Ajude na elaboracao de planos de aula, sequencias didaticas, avaliacoes, estrategias de inclusao e intervencoes pedagogicas, de forma objetiva e aplicavel.',
             '',
@@ -1009,7 +1009,7 @@
                 summary.classList.remove('visible');
                 summary.innerHTML = '';
                 if (trigger) trigger.textContent = '👤';
-                if (headerName) headerName.textContent = 'Professor Eg — SEDUC-PE';
+                if (headerName) headerName.textContent = 'Professor EDS — SEDUC-PE';
                 return;
             }
 
@@ -1233,10 +1233,10 @@
             chatContainer.innerHTML = `
                 <div class="sess-badge"><span>Assistente Pedagógico SEDUC-PE · EDS Soluções Inteligentes</span></div>
                 <div class="row b">
-                    <div class="av"><img src="icons/eds-symbols/eds-brand-app-icon.svg" alt="Prof. Eg"></div>
+                    <div class="av"><img src="icons/prof-eds.png" alt="Professor EDS"></div>
                     <div class="bbl b">
                         <div>👋 Histórico limpo! Pode começar uma nova conversa quando quiser.</div>
-                        <div class="mt"><span>Prof. Eg · ${now()}</span></div>
+                        <div class="mt"><span>Professor EDS · ${now()}</span></div>
                     </div>
                 </div>
             `;
@@ -1943,7 +1943,7 @@
             const m = document.getElementById('chat-container');
             const d = document.createElement('div');
             d.className = 'typing-r'; d.id = 'trow';
-            d.innerHTML = `<div class="av"><img src="icons/eds-symbols/eds-brand-app-icon.svg" alt="Prof. Eg"></div><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+            d.innerHTML = `<div class="av"><img src="icons/prof-eds.png" alt="Professor EDS"></div><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
             m.appendChild(d); m.scrollTop = m.scrollHeight;
         }
 
@@ -1962,7 +1962,7 @@
             if (isBot) {
                 const av = document.createElement('div');
                 av.className = 'av';
-                av.innerHTML = `<img src="icons/eds-symbols/eds-brand-app-icon.svg" alt="Prof. Eg">`;
+                av.innerHTML = `<img src="icons/prof-eds.png" alt="Professor EDS">`;
                 row.appendChild(av);
             }
 
@@ -1983,7 +1983,7 @@
             const mt = document.createElement('div');
             mt.className = 'mt';
             const ts = document.createElement('span');
-            ts.textContent = isBot ? `Prof. Eg · ${now()}` : now();
+            ts.textContent = isBot ? `Professor EDS · ${now()}` : now();
             mt.appendChild(ts);
 
             if (isBot) {
