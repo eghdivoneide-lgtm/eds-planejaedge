@@ -1,7 +1,7 @@
 {
-  "name": "Assistente Pedagogico SEDUC-PE",
-  "short_name": "SEDUC-PE",
-  "description": "Assistente Pedagogico SEDUC-PE para professores e coordenadores, desenvolvido pela EDS Solucoes Inteligentes.",
+  "name": "EDS PlanejaEdge",
+  "short_name": "PlanejaEdge",
+  "description": "EDS PlanejaEdge — Planejador pedagógico com IA para professores e coordenadores SEDUC-PE. Desenvolvido pela EDS Soluções Inteligentes.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

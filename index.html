@@ -6,12 +6,12 @@
     <meta name="theme-color" content="#173a63">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Assistente Pedagogico SEDUC-PE">
+    <meta name="apple-mobile-web-app-title" content="EDS PlanejaEdge">
     <link rel="manifest" href="manifest-seduc.webmanifest">
     <link rel="icon" href="icons/icon-192.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="icons/icon-512.svg">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <title>Assistente Pedagogico SEDUC-PE - EDS Solucoes Inteligentes</title>
+    <title>EDS PlanejaEdge — Planejamento Pedagógico com IA</title>
     <style>
         :root {
             --eds-green-900: #081a16;
@@ -703,15 +703,15 @@
         <img class="login-logo" src="icons/eds-symbols/eds-brand-horizontal.svg" alt="EDS Solucoes Inteligentes">
         <div class="login-brand">EDS Solucoes Inteligentes</div>
         <div class="wej-pill">SEDUC-PE • Professores e Coordenadores</div>
-        <div style="color:#8ec7f0;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;font-size:13px;">Parceria SEDUC-PE + EDS</div>
+        <div style="color:#8ec7f0;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;font-size:13px;">EDS PlanejaEdge · Parceria SEDUC-PE</div>
         <div class="login-section-title">⚙ CONFIGURACAO</div>
         <h2>Chave de Acesso</h2>
-        <p style="font-size:1.08em; line-height:1.6; margin:0 0 16px;">Bem-vindo ao Assistente Pedagogico SEDUC-PE, desenvolvido pela EDS Solucoes Inteligentes.<br>Insira sua chave Google Gemini para iniciar com apoio a planos de aula, avaliacoes, inclusao, BNCC e orientacao pedagogica.<br>Seus dados ficam apenas neste dispositivo.</p>
+        <p style="font-size:1.08em; line-height:1.6; margin:0 0 16px;">Bem-vindo ao <b>EDS PlanejaEdge</b>, desenvolvido pela EDS Soluções Inteligentes.<br>Insira sua chave Google Gemini para iniciar com apoio a planos de aula, avaliações, inclusão, BNCC e orientação pedagógica.<br>Seus dados ficam apenas neste dispositivo.</p>
         <div class="key-row">
             <input type="password" id="api-key-input" placeholder="Cole sua chave Gemini aqui..." autocomplete="off">
             <button type="button" class="key-toggle-btn" onclick="toggleApiKeyVisibility()">👁</button>
         </div>
-        <button onclick="login()">Entrar no Assistente Pedagogico SEDUC-PE 🚀</button>
+        <button onclick="login()">Entrar no EDS PlanejaEdge 🚀</button>
         <div class="info">
             <b>Como obter sua chave:</b><br>
             1. Acesse <a href="https://console.cloud.google.com/apis/credentials" target="_blank">console.cloud.google.com</a><br>
@@ -726,11 +726,11 @@
                 <img class="header-logo" src="icons/eds-symbols/eds-brand-app-icon.svg" alt="EDS">
                 <div class="header-title-text">
                     <strong id="header-teacher-name">Professor EDS — SEDUC-PE</strong>
-                    <span>Planejamento, BNCC e inclusao</span>
+                    <span>EDS PlanejaEdge · SEDUC-PE</span>
                 </div>
             </div>
             <div class="header-right">
-                <span class="status-chip">rede pedagogica online</span>
+                <span class="status-chip">PlanejaEdge online</span>
                 <button type="button" id="profile-trigger" class="profile-trigger" onclick="toggleProfileMenu(event)">👤</button>
                 <div id="profile-menu" class="profile-menu">
                     <button type="button" onclick="editProfileFromMenu()">✏️ Editar perfil</button>
@@ -757,7 +757,7 @@
                     <button class="tool-btn" onclick="saveStudentProfile()">Salvar perfil</button>
                 </div>
                 <div id="chat-container">
-                    <div class="sess-badge"><span>Assistente Pedagógico SEDUC-PE · EDS Soluções Inteligentes</span></div>
+                    <div class="sess-badge"><span>EDS PlanejaEdge · Planejamento Pedagógico com IA</span></div>
                     <div class="row b" id="welcome-row">
                         <div class="av"><img src="icons/prof-eds.png" alt="Professor EDS"></div>
                         <div class="bbl b">
@@ -846,7 +846,7 @@
             <section id="panel-settings" class="app-panel settings-panel" aria-label="Painel de configuracoes">
                 <div class="settings-card">
                     <h4>Stack do produto</h4>
-                    <p class="muted">Assistente Pedagogico SEDUC-PE com foco em BNCC, diretrizes curriculares, inclusao, avaliacao e planejamento docente.</p>
+                    <p class="muted">EDS PlanejaEdge com foco em BNCC, diretrizes curriculares, inclusao, avaliacao e planejamento docente.</p>
                     <div class="info-chip">SEDUC-PE + EDS</div>
                 </div>
                 <div class="settings-card">
@@ -897,7 +897,7 @@
             window.API_KEY = key;
             markSessionActivity();
             switchPanel('chat');
-            showToast('Ambiente SEDUC-PE iniciado.');
+            showToast('EDS PlanejaEdge iniciado.');
         }
         window.onload = function() {
             const savedTtsKey = localStorage.getItem('seduc_tts_key');
@@ -1231,7 +1231,7 @@
             localStorage.removeItem(CHAT_HISTORY_KEY);
             const chatContainer = document.getElementById('chat-container');
             chatContainer.innerHTML = `
-                <div class="sess-badge"><span>Assistente Pedagógico SEDUC-PE · EDS Soluções Inteligentes</span></div>
+                <div class="sess-badge"><span>EDS PlanejaEdge · Planejamento Pedagógico com IA</span></div>
                 <div class="row b">
                     <div class="av"><img src="icons/prof-eds.png" alt="Professor EDS"></div>
                     <div class="bbl b">
@@ -1305,7 +1305,7 @@
 <body>
 <div class="header">
   <div class="header-title">
-    <strong>Assistente Pedagógico SEDUC-PE</strong>
+    <strong>EDS PlanejaEdge</strong>
     <span>Planejamento, BNCC e inclusão</span>
   </div>
 </div>
@@ -1315,10 +1315,10 @@
   <span>📅 ${dateFormatted}</span>
 </div>
 <div class="chat-container">${messagesHtml}</div>
-<div class="footer">EDS Soluções Inteligentes • Assistente Pedagógico SEDUC-PE</div>
+<div class="footer">EDS Soluções Inteligentes • EDS PlanejaEdge</div>
 </body></html>`;
 
-            triggerDownload(html, `historico-seduc-pe-${dateTag}.html`, 'text/html;charset=utf-8');
+            triggerDownload(html, `historico-planejaedge-${dateTag}.html`, 'text/html;charset=utf-8');
             showToast('Exportado em HTML.');
         }
 
@@ -1331,7 +1331,7 @@
             const sep = '='.repeat(50);
             const div = '-'.repeat(40);
             const header = [
-                'HISTÓRICO — ASSISTENTE PEDAGÓGICO SEDUC-PE', sep,
+                'HISTÓRICO — EDS PLANEJAEDGE', sep,
                 `Data: ${new Date().toLocaleDateString('pt-BR')}`,
                 `Professor(a): ${studentProfile.name || 'não informado'}`,
                 `Segmento: ${studentProfile.age || 'não informado'}`,
@@ -1344,7 +1344,7 @@
                 return `${label}:\n${item.text}`;
             }).join(`\n\n${div}\n\n`);
 
-            triggerDownload(header + transcript, `historico-seduc-pe-${dateTag}.txt`, 'text/plain;charset=utf-8');
+            triggerDownload(header + transcript, `historico-planejaedge-${dateTag}.txt`, 'text/plain;charset=utf-8');
             showToast('Exportado em TXT.');
         }
 
@@ -1377,7 +1377,7 @@
 
             const children = [
                 new Paragraph({
-                    children: [new TextRun({ text: 'Histórico — Assistente Pedagógico SEDUC-PE', bold: true, size: 28, font: 'Arial', color: '0f4d41' })],
+                    children: [new TextRun({ text: 'Histórico — EDS PlanejaEdge', bold: true, size: 28, font: 'Arial', color: '0f4d41' })],
                     spacing: { after: 120 }
                 }),
                 new Paragraph({
@@ -1403,14 +1403,14 @@
             }
 
             children.push(new Paragraph({
-                children: [new TextRun({ text: 'EDS Soluções Inteligentes • Assistente Pedagógico SEDUC-PE', size: 16, color: '999999', italics: true, font: 'Arial' })],
+                children: [new TextRun({ text: 'EDS Soluções Inteligentes • EDS PlanejaEdge', size: 16, color: '999999', italics: true, font: 'Arial' })],
                 spacing: { before: 400, after: 0 }
             }));
 
             try {
                 const doc = new Document({ sections: [{ children }] });
                 const blob = await Packer.toBlob(doc);
-                triggerDownload(blob, `historico-seduc-pe-${dateTag}.docx`, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+                triggerDownload(blob, `historico-planejaedge-${dateTag}.docx`, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
                 showToast('Exportado em DOCX.');
             } catch (e) {
                 console.error('Erro exportAsDocx:', e);
