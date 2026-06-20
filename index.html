@@ -770,6 +770,14 @@
         }
         .av-action-btn:hover { background: rgba(209,166,79,0.22); filter: none; }
         .av-prova-box { padding: 14px; max-height: 55vh; overflow-y: auto; }
+        /* cabeçalho no preview interno */
+        .ph-block { border: 1px solid rgba(95,199,197,0.3); border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; background: rgba(11,35,55,0.5); }
+        .ph-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-bottom: 6px; }
+        .ph-table td { border: none; padding: 2px 8px 2px 0; background: none; vertical-align: top; color: #d6f0ea; }
+        .ph-label { font-weight: 700; color: #7ee8d6; width: 100px; flex-shrink: 0; font-family: 'DM Mono',Consolas,monospace; font-size: 10.5px; text-transform: uppercase; }
+        .ph-value { color: #eef6ff; }
+        .ph-line { font-size: 12px; color: #a7bfd8; margin-top: 7px; padding-top: 7px; border-top: 1px dashed rgba(95,199,197,0.3); }
+        .ph-blank { display: inline-block; border-bottom: 1px solid rgba(160,200,190,0.5); min-width: 120px; }
         .av-historico-list { display: flex; flex-direction: column; gap: 8px; }
         .av-hist-item {
             border: 1px solid #2d537f; border-radius: 10px; background: #11253e;
@@ -792,9 +800,33 @@
         }
         .av-hist-btn:hover { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.5); color: #f1cc75; filter: none; }
         .av-hist-btn.danger:hover { background: rgba(240,80,80,0.1); border-color: rgba(240,80,80,0.4); color: #f0a0a0; filter: none; }
+
+        /* cabeçalho opcional */
+        .av-cab-grid { display: flex; flex-direction: column; gap: 8px; }
+        .av-cab-row { display: flex; align-items: center; gap: 8px; }
+        .av-cab-row input[type="checkbox"] {
+            width: 15px; height: 15px; flex-shrink: 0;
+            accent-color: #d1a64f; cursor: pointer; margin: 0;
+        }
+        .av-cab-label {
+            font-size: 10.5px; color: #a7bfd8; width: 94px; flex-shrink: 0;
+            font-family: 'DM Mono',Consolas,monospace; letter-spacing: .03em; cursor: pointer;
+        }
+        .av-cab-input {
+            flex: 1; background: #0f1e32; border: 1px solid #315780;
+            border-radius: 6px; color: #eef6ff; font-size: 12.5px;
+            padding: 6px 9px; font-family: 'Trebuchet MS','Segoe UI',sans-serif;
+            transition: opacity .2s, border-color .2s; box-sizing: border-box;
+        }
+        .av-cab-input:disabled { opacity: .25; cursor: not-allowed; }
+        .av-cab-input:not(:disabled) { border-color: rgba(201,168,76,0.45); }
+        .av-cab-separator { margin-top: 4px; padding-top: 9px; border-top: 1px solid rgba(47,83,127,0.4); }
+        .av-cab-check-label { font-size: 11px; color: #a7bfd8; font-family: 'DM Mono',Consolas,monospace; cursor: pointer; }
+
         @media (max-width: 600px) {
             .av-form-grid { grid-template-columns: 1fr; }
             .av-field-full { grid-column: 1; }
+            .av-cab-label { width: 80px; font-size: 10px; }
         }
     </style>
 </head>
@@ -979,6 +1011,54 @@
 
                 <!-- GERAR PROVA -->
                 <div id="av-gerar" class="av-subpanel active">
+                    <div class="av-form-card">
+                        <h4>📋 Cabeçalho da Prova <span style="color:#6e89a7;font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;font-family:'Trebuchet MS','Segoe UI',sans-serif">— marque os campos desejados</span></h4>
+                        <div class="av-cab-grid">
+                            <div class="av-cab-row">
+                                <input type="checkbox" id="cab-professor-on" onchange="toggleCabField('cab-professor')">
+                                <label class="av-cab-label" for="cab-professor-on">Professor(a)</label>
+                                <input type="text" id="cab-professor" class="av-cab-input" disabled placeholder="Nome do(a) professor(a)">
+                            </div>
+                            <div class="av-cab-row">
+                                <input type="checkbox" id="cab-escola-on" onchange="toggleCabField('cab-escola')">
+                                <label class="av-cab-label" for="cab-escola-on">Escola</label>
+                                <input type="text" id="cab-escola" class="av-cab-input" disabled placeholder="Nome da escola / instituição">
+                            </div>
+                            <div class="av-cab-row">
+                                <input type="checkbox" id="cab-municipio-on" onchange="toggleCabField('cab-municipio')">
+                                <label class="av-cab-label" for="cab-municipio-on">Município/UF</label>
+                                <input type="text" id="cab-municipio" class="av-cab-input" disabled placeholder="Ex: Recife – PE">
+                            </div>
+                            <div class="av-cab-row">
+                                <input type="checkbox" id="cab-turma-on" onchange="toggleCabField('cab-turma')">
+                                <label class="av-cab-label" for="cab-turma-on">Turma/Turno</label>
+                                <input type="text" id="cab-turma" class="av-cab-input" disabled placeholder="Ex: 7º A – Manhã">
+                            </div>
+                            <div class="av-cab-row">
+                                <input type="checkbox" id="cab-data-on" onchange="toggleCabField('cab-data')">
+                                <label class="av-cab-label" for="cab-data-on">Data</label>
+                                <input type="date" id="cab-data" class="av-cab-input" disabled>
+                            </div>
+                            <div class="av-cab-row">
+                                <input type="checkbox" id="cab-bimestre-on" onchange="toggleCabField('cab-bimestre')">
+                                <label class="av-cab-label" for="cab-bimestre-on">Bimestre</label>
+                                <input type="text" id="cab-bimestre" class="av-cab-input" disabled placeholder="Ex: 2º Bimestre / 1º Trimestre">
+                            </div>
+                            <div class="av-cab-row">
+                                <input type="checkbox" id="cab-valor-on" onchange="toggleCabField('cab-valor')">
+                                <label class="av-cab-label" for="cab-valor-on">Valor</label>
+                                <input type="text" id="cab-valor" class="av-cab-input" disabled placeholder="Ex: 10,0 pontos">
+                            </div>
+                            <div class="av-cab-row av-cab-separator">
+                                <input type="checkbox" id="cab-linha-aluno">
+                                <label class="av-cab-check-label" for="cab-linha-aluno">Incluir linha: Nome do(a) Aluno(a)</label>
+                            </div>
+                            <div class="av-cab-row">
+                                <input type="checkbox" id="cab-linha-nota">
+                                <label class="av-cab-check-label" for="cab-linha-nota">Incluir linha: Nota / Conceito</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="av-form-card">
                         <h4>Configurar Prova</h4>
                         <div class="av-form-grid">
@@ -2273,6 +2353,56 @@
         let _avAtual = null;
         let _correcaoAtual = null;
 
+        function toggleCabField(id) {
+            const input = document.getElementById(id);
+            const cb = document.getElementById(id + '-on');
+            if (!input || !cb) return;
+            input.disabled = !cb.checked;
+            if (cb.checked) input.focus();
+        }
+
+        function buildCabecalho() {
+            const defs = [
+                { id: 'cab-professor', label: 'Professor(a)' },
+                { id: 'cab-escola',    label: 'Escola' },
+                { id: 'cab-municipio', label: 'Município/UF' },
+                { id: 'cab-turma',     label: 'Turma/Turno' },
+                { id: 'cab-data',      label: 'Data' },
+                { id: 'cab-bimestre',  label: 'Bimestre' },
+                { id: 'cab-valor',     label: 'Valor' },
+            ];
+            const fields = defs
+                .filter(d => document.getElementById(d.id + '-on')?.checked && document.getElementById(d.id)?.value.trim())
+                .map(d => {
+                    let val = document.getElementById(d.id).value.trim();
+                    if (d.id === 'cab-data' && val) {
+                        const [y, m, dia] = val.split('-');
+                        val = `${dia}/${m}/${y}`;
+                    }
+                    return { label: d.label, value: val };
+                });
+            return {
+                fields,
+                lineAluno: !!document.getElementById('cab-linha-aluno')?.checked,
+                lineNota:  !!document.getElementById('cab-linha-nota')?.checked,
+            };
+        }
+
+        function renderCabecalhoHtmlBlock(cab) {
+            if (!cab || (!cab.fields.length && !cab.lineAluno && !cab.lineNota)) return '';
+            const rows = cab.fields.map(f =>
+                `<tr><td class="ph-label">${escapeHtml(f.label)}</td><td class="ph-value">${escapeHtml(f.value)}</td></tr>`
+            ).join('');
+            const tableHtml = rows ? `<table class="ph-table"><tbody>${rows}</tbody></table>` : '';
+            const lineAluno = cab.lineAluno
+                ? `<div class="ph-line">Nome do(a) Aluno(a):&nbsp;<span class="ph-blank">____________________________________________</span></div>`
+                : '';
+            const lineNota = cab.lineNota
+                ? `<div class="ph-line">Nota:&nbsp;<span class="ph-blank">__________</span>&nbsp;/&nbsp;${cab.fields.find(f=>f.label==='Valor')?.value || '10,0'}</div>`
+                : '';
+            return `<div class="ph-block">${tableHtml}${lineAluno}${lineNota}</div>`;
+        }
+
         function switchAvTab(tab) {
             document.querySelectorAll('.av-sub').forEach(b => b.classList.toggle('active', b.dataset.av === tab));
             document.querySelectorAll('.av-subpanel').forEach(p => p.classList.toggle('active', p.id === `av-${tab}`));
@@ -2388,9 +2518,10 @@ Gere as ${nq} questões completas com qualidade pedagógica, seguindo o formato 
                 const provaTexto = gabIdx > -1 ? texto.slice(0, gabIdx).trim() : texto;
                 const gabTexto  = gabIdx > -1 ? texto.slice(gabIdx).trim() : '';
 
+                const cab = buildCabecalho();
                 _avAtual = { titulo: `${disciplina} — ${serie} — ${dificuldade}`, prova: provaTexto,
                              gabarito: gabTexto, tipo, disciplina, serie, dificuldade, nq,
-                             geradoEm: new Date().toISOString() };
+                             cabecalho: cab, geradoEm: new Date().toISOString() };
 
                 const outputEl  = document.getElementById('av-gerar-output');
                 const contentEl = document.getElementById('av-prova-content');
@@ -2399,7 +2530,9 @@ Gere as ${nq} questões completas com qualidade pedagógica, seguindo o formato 
                 const rendered = (typeof marked !== 'undefined')
                     ? marked.parse(texto, { breaks: true, gfm: true })
                     : texto.replace(/\n/g, '<br>');
-                contentEl.innerHTML = window.DOMPurify ? DOMPurify.sanitize(rendered) : rendered;
+                const cabHtml = renderCabecalhoHtmlBlock(cab);
+                const safe    = window.DOMPurify ? DOMPurify.sanitize(rendered) : rendered;
+                contentEl.innerHTML = cabHtml + safe;
                 outputEl.style.display = '';
                 outputEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 showToast('Prova gerada! Salve ou exporte.');
@@ -2569,7 +2702,7 @@ Seja justo, pedagógico e construtivo. Use a BNCC como referência quando pertin
             const isProf = modo === 'professor';
             const conteudo = isProf ? `${_avAtual.prova}\n\n${_avAtual.gabarito || ''}` : _avAtual.prova;
             const titulo   = isProf ? `${_avAtual.titulo} — GABARITO` : _avAtual.titulo;
-            _exportAvalHtml(titulo, conteudo, isProf);
+            _exportAvalHtml(titulo, conteudo, isProf, _avAtual.cabecalho || null);
         }
 
         function exportProvaSalva(idx) {
@@ -2581,15 +2714,31 @@ Seja justo, pedagógico e construtivo. Use a BNCC como referência quando pertin
 
         function exportCorrecaoHtml() {
             if (!_correcaoAtual) { showToast('Nenhuma correção gerada.'); return; }
-            _exportAvalHtml(`Correção — ${_correcaoAtual.aluno || 'Aluno'}`, _correcaoAtual.texto, true);
+            _exportAvalHtml(`Correção — ${_correcaoAtual.aluno || 'Aluno'}`, _correcaoAtual.texto, true, null);
         }
 
-        function _exportAvalHtml(titulo, markdown, isProf) {
+        function _exportAvalHtml(titulo, markdown, isProf, cab) {
             const dateTag = new Date().toISOString().slice(0, 10);
             const rendered = (typeof marked !== 'undefined')
                 ? marked.parse(markdown, { breaks: true, gfm: true })
                 : markdown.replace(/\n/g, '<br>');
             const safe = window.DOMPurify ? DOMPurify.sanitize(rendered) : rendered;
+
+            const cabRows = (cab && cab.fields && cab.fields.length)
+                ? cab.fields.map(f =>
+                    `<tr><td class="ph-label">${escapeHtml(f.label)}:</td><td class="ph-value">${escapeHtml(f.value)}</td></tr>`
+                  ).join('')
+                : '';
+            const phTable = cabRows ? `<table class="ph-table"><tbody>${cabRows}</tbody></table>` : '';
+            const phAluno = (cab && cab.lineAluno)
+                ? `<div class="ph-line">Nome do(a) Aluno(a): <span class="ph-blank">____________________________________________</span></div>`
+                : '';
+            const phNota = (cab && cab.lineNota)
+                ? `<div class="ph-line">Nota: <span class="ph-blank">__________</span> / ${cab.fields.find(f=>f.label==='Valor')?.value || '10,0'}</div>`
+                : '';
+            const cabBlock = (phTable || phAluno || phNota)
+                ? `<div class="ph-block">${phTable}${phAluno}${phNota}</div>`
+                : '';
 
             const html = `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -2616,9 +2765,16 @@ Seja justo, pedagógico e construtivo. Use a BNCC como referência quando pertin
   .header{background:linear-gradient(135deg,#103050,#0d5c3e);color:#fff;padding:18px 22px;border-radius:12px;margin-bottom:22px}
   .header h1{color:#fff;border-bottom:1px solid rgba(255,255,255,0.3);font-size:1.3rem}
   .header .meta{font-size:11px;color:rgba(255,255,255,0.7);margin-top:8px;font-family:'DM Mono',Consolas,monospace}
+  .ph-block{border:1px solid #b0cce0;border-radius:10px;padding:12px 16px;margin-bottom:18px;background:#f0f7fc}
+  .ph-table{margin:0 0 8px;font-size:.85rem}
+  .ph-table td{border:none;padding:3px 10px 3px 0;background:none;vertical-align:top}
+  .ph-label{font-weight:700;color:#103050;width:110px;flex-shrink:0}
+  .ph-value{color:#1a3550}
+  .ph-line{font-size:.9rem;color:#1a2733;margin-top:7px;padding-top:7px;border-top:1px dashed #c0d8e8}
+  .ph-blank{display:inline-block;border-bottom:1px solid #555;min-width:140px}
   ${isProf ? '.gabarito-section{background:#fff9e6;border:2px solid #f1cc75;border-radius:12px;padding:16px;margin-top:20px}' : ''}
   .footer{margin-top:32px;text-align:center;font-size:11px;color:#8899aa;font-family:'DM Mono',Consolas,monospace;border-top:1px solid #cde0ee;padding-top:14px}
-  @media print{body{padding:0}.header{border-radius:0}table{font-size:.8rem}}
+  @media print{body{padding:8px}.header{border-radius:0}table{font-size:.82rem}.ph-block{break-inside:avoid}}
 </style>
 </head>
 <body>
@@ -2626,6 +2782,7 @@ Seja justo, pedagógico e construtivo. Use a BNCC como referência quando pertin
   <h1>${escapeHtml(titulo)}</h1>
   <div class="meta">EDS PlanejaEdge · EDS Soluções Inteligentes · ${dateTag}</div>
 </div>
+${cabBlock}
 <div${isProf ? ' class="gabarito-section"' : ''}>${safe}</div>
 <div class="footer">EDS PlanejaEdge — Planejador pedagógico com IA · SEDUC-PE</div>
 </body></html>`;
