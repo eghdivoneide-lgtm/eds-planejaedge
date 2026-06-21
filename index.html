@@ -1400,6 +1400,7 @@
         let _currentSession = null;
         let _userCreditos   = null;
         let _isAdmin        = false;
+        let _adminRefreshTimer = null;
         let _authMode       = 'login';
 
         async function initAuth() {
@@ -1481,6 +1482,8 @@
         function onLogoutCleanup() {
             _currentSession = null;
             _userCreditos   = null;
+            _isAdmin        = false;
+            clearInterval(_adminRefreshTimer);
             document.getElementById('auth-modal').style.display = 'flex';
             document.getElementById('chat-section').style.display = 'none';
         }
@@ -1582,10 +1585,10 @@
             return resp;
         }
 
-        async function loadAdminUsers() {
+        async function loadAdminUsers(silent) {
             if (!_isAdmin) return;
             const tableEl = document.getElementById('admin-users-table');
-            if (tableEl) tableEl.innerHTML = '<p class="muted" style="font-size:12px">Carregando...</p>';
+            if (tableEl && !silent) tableEl.innerHTML = '<p class="muted" style="font-size:12px">Carregando...</p>';
             try {
                 const { data, error } = await _sb.rpc('admin_list_users');
                 if (error) throw error;
@@ -1614,9 +1617,12 @@
                             <th style="padding:6px 10px;font-size:11px;color:#6e89a7;font-weight:600">Perfil</th>
                         </tr></thead>
                         <tbody>${rows}</tbody>
-                    </table>`;
+                    </table>
+                    <p class="muted" style="font-size:10.5px;text-align:right;margin-top:8px;font-family:'DM Mono',Consolas,monospace">
+                        🔄 Atualizado às ${new Date().toLocaleTimeString('pt-BR')} · atualiza sozinho a cada 20s
+                    </p>`;
             } catch (e) {
-                if (tableEl) tableEl.innerHTML = '<p class="muted" style="color:#f08080">Erro ao carregar usuários.</p>';
+                if (tableEl && !silent) tableEl.innerHTML = '<p class="muted" style="color:#f08080">Erro ao carregar usuários.</p>';
                 console.warn('loadAdminUsers:', e);
             }
         }
@@ -1697,7 +1703,11 @@
             document.querySelectorAll('.tab-btn').forEach((btn) => {
                 btn.classList.toggle('active', btn.dataset.panel === panelName);
             });
-            if (panelName === 'admin') loadAdminUsers();
+            clearInterval(_adminRefreshTimer);
+            if (panelName === 'admin') {
+                loadAdminUsers();
+                _adminRefreshTimer = setInterval(() => loadAdminUsers(true), 20000);
+            }
         }
 
         function quickFillPrompt(text) {
