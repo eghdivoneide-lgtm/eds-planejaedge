@@ -1449,11 +1449,15 @@
 
         function translateSbError(msg) {
             if (!msg) return 'Erro desconhecido.';
-            if (/invalid login/i.test(msg))       return 'E-mail ou senha incorretos.';
-            if (/email not confirmed/i.test(msg)) return 'Confirme seu e-mail antes de entrar.';
-            if (/already registered/i.test(msg))  return 'E-mail já cadastrado. Faça login.';
-            if (/password should/i.test(msg))     return 'Senha deve ter ao menos 6 caracteres.';
-            if (/rate limit/i.test(msg))          return 'Muitas tentativas. Aguarde alguns segundos.';
+            if (/invalid login/i.test(msg))            return 'E-mail ou senha incorretos.';
+            if (/email not confirmed/i.test(msg))      return 'Confirme seu e-mail antes de entrar.';
+            if (/already registered/i.test(msg))       return 'E-mail já cadastrado. Faça login.';
+            if (/password should/i.test(msg))          return 'Senha deve ter ao menos 6 caracteres.';
+            if (/security purposes|after \d+ second/i.test(msg)) return 'Aguarde alguns segundos antes de tentar novamente.';
+            if (/rate limit|too many/i.test(msg))      return 'Muitas tentativas. Aguarde alguns segundos.';
+            if (/user already exists/i.test(msg))      return 'E-mail já cadastrado. Clique em "Entrar".';
+            if (/invalid email/i.test(msg))            return 'E-mail inválido.';
+            if (/weak password/i.test(msg))            return 'Senha muito fraca. Use ao menos 6 caracteres.';
             return msg;
         }
 
