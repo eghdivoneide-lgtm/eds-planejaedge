@@ -1,12 +1,39 @@
-ASSISTENTE PEDAGOGICO SEDUC-PE — Desenvolvido por EDS Solucoes Inteligentes
+EDS PlanejaEdge — Assistente Pedagógico com IA
+Desenvolvido por EDS Soluções Inteligentes
 
-Arquivos: index.html, monitor-seduc-pro.html, manifest-seduc.webmanifest, sw-seduc.js
+COMO ACESSAR
+  Acesse: https://seduc-eds.netlify.app
+  Instale como app: menu do navegador > Instalar app
 
-Instalacao:
-1) Execute via localhost ou HTTPS (PWA nao instala por file://)
-2) Abra index.html no navegador
-3) Informe sua chave Gemini e use normalmente
-4) Para instalar como app: menu do navegador > Instalar app
+PRIMEIRO ACESSO
+  1) Na tela de login, clique em "Criar conta"
+  2) Informe seu e-mail e crie uma senha (mínimo 6 caracteres)
+  3) Ao entrar, você recebe 100 créditos de IA
+  4) Preencha seu perfil (nome, etapa, necessidade) para personalizar o assistente
 
-Foco: professores e coordenadores pedagogicos
-Contexto: BNCC, diretrizes curriculares, inclusao, avaliacao e planejamento docente
+CRÉDITOS
+  Cada pergunta ao assistente ou geração de prova/correção consome 1 crédito.
+  Ao chegar a zero, entre em contato com o coordenador EDS para recarga.
+
+FUNCIONALIDADES
+  - Assistente pedagógico (planejamento, BNCC, inclusão, avaliações)
+  - Gerar Prova (múltipla escolha, dissertativo, com cabeçalho institucional)
+  - Corrigir respostas de alunos com feedback detalhado
+  - Relatório de Turma com análise coletiva
+  - Exportar para Word (.docx) e HTML
+  - Atalhos pedagógicos prontos para uso
+
+ARQUIVOS DO PROJETO
+  index.html                    (app completo)
+  sw-seduc.js                   (service worker / offline)
+  manifest-seduc.webmanifest    (instalação PWA)
+  supabase/functions/ai-proxy/  (Edge Function — IA segura no servidor)
+
+SUPORTE
+  Contate a EDS Soluções Inteligentes para:
+  - Recarga de créditos
+  - Acesso de novos professores
+  - Relatos de problemas
+
+Foco: professores e coordenadores pedagógicos
+Contexto: BNCC, diretrizes curriculares, inclusão, avaliação e planejamento docente

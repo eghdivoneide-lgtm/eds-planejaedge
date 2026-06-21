@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  validate:
+    name: Validar código
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar arquivos obrigatórios
+        run: |
+          for f in index.html sw-seduc.js manifest-seduc.webmanifest netlify.toml; do
+            [ -f "$f" ] || (echo "ERRO: $f não encontrado" && exit 1)
+          done
+          echo "✅ Arquivos obrigatórios presentes"
+
+      - name: Verificar sintaxe do Service Worker
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Node check — sw-seduc.js
+        run: node --check sw-seduc.js && echo "✅ sw-seduc.js OK"
+
+      - name: Verificar integridade do HTML
+        run: |
+          node -e "
+            const fs = require('fs');
+            const h = fs.readFileSync('index.html', 'utf8');
+            const checks = [
+              ['</html>',               'tag </html> ausente'],
+              ['supabase.createClient', 'cliente Supabase ausente'],
+              ['callAIProxy',           'função callAIProxy ausente'],
+              ['SUPABASE_ANON_KEY',     'constante SUPABASE_ANON_KEY ausente'],
+              ['eds-planejaedge',       'referência ao projeto Supabase ausente'],
+              ['sw-seduc.js',           'registro do Service Worker ausente'],
+            ];
+            let ok = true;
+            for (const [str, msg] of checks) {
+              if (!h.includes(str)) { console.error('ERRO:', msg); ok = false; }
+              else console.log('✅', str);
+            }
+            if (!ok) process.exit(1);
+          "
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v1.x
+
+      - name: Deno check — Edge Function
+        run: deno check supabase/functions/ai-proxy/index.ts && echo "✅ ai-proxy OK"

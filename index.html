@@ -907,6 +907,7 @@
                 <div id="profile-menu" class="profile-menu">
                     <div id="credits-display" style="font-size:11px;color:#6e89a7;padding:6px 10px 2px;font-family:'DM Mono',Consolas,monospace"></div>
                     <button type="button" onclick="editProfileFromMenu()">✏️ Editar perfil</button>
+                    <button type="button" id="admin-menu-btn" style="display:none" onclick="closeProfileMenu();switchPanel('admin')">🛠 Admin</button>
                     <button type="button" onclick="logoutFromMenu()">🚪 Sair</button>
                 </div>
             </div>
@@ -916,6 +917,7 @@
             <button type="button" class="tab-btn" data-panel="avaliacao" onclick="switchPanel('avaliacao')">Avaliações</button>
             <button type="button" class="tab-btn" data-panel="quick" onclick="switchPanel('quick')">Atalhos</button>
             <button type="button" class="tab-btn" data-panel="settings" onclick="switchPanel('settings')">Config pro</button>
+            <button type="button" class="tab-btn" id="admin-tab-btn" data-panel="admin" onclick="switchPanel('admin')" style="display:none">🛠 Admin</button>
         </div>
         <div class="panel-stack">
             <section id="panel-chat" class="app-panel active" aria-label="Painel do assistente">
@@ -1038,6 +1040,29 @@
                     </div>
                 </div>
             </section>
+            <!-- PAINEL ADMIN -->
+            <section id="panel-admin" class="app-panel settings-panel" aria-label="Painel administrativo">
+                <div class="settings-card">
+                    <h4>🛠 Gestão de Professores</h4>
+                    <p class="muted" style="margin-bottom:12px">Gerencie créditos sem precisar abrir o SQL Editor do Supabase.</p>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-end">
+                        <input type="email" id="admin-email-input" placeholder="e-mail do professor" autocomplete="off"
+                               style="flex:1;min-width:180px;padding:9px 11px;border:1px solid rgba(40,178,147,0.4);border-radius:8px;background:rgba(7,28,24,0.72);color:#ecfff9;font-size:13px;outline:none">
+                        <input type="number" id="admin-credits-input" placeholder="créditos" min="1" max="9999" value="100"
+                               style="width:90px;padding:9px 11px;border:1px solid rgba(40,178,147,0.4);border-radius:8px;background:rgba(7,28,24,0.72);color:#ecfff9;font-size:13px;outline:none">
+                        <button type="button" onclick="adminAddCredits()"
+                                style="padding:9px 16px;background:#13a385;border:none;border-radius:8px;color:#fff;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap">
+                            + Adicionar créditos
+                        </button>
+                    </div>
+                    <button type="button" onclick="loadAdminUsers()"
+                            style="padding:7px 14px;background:rgba(40,178,147,0.15);border:1px solid rgba(40,178,147,0.35);border-radius:8px;color:#7ee8d6;font-size:12.5px;cursor:pointer;margin-bottom:14px">
+                        🔄 Atualizar lista
+                    </button>
+                    <div id="admin-users-table" style="overflow-x:auto"></div>
+                </div>
+            </section>
+
             <section id="panel-avaliacao" class="app-panel av-panel" aria-label="Painel de avaliações">
                 <div class="av-subnav">
                     <button type="button" class="av-sub active" data-av="gerar" onclick="switchAvTab('gerar')">📝 Gerar Prova</button>
@@ -1296,6 +1321,7 @@
         const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let _currentSession = null;
         let _userCreditos   = null;
+        let _isAdmin        = false;
         let _authMode       = 'login';
 
         async function initAuth() {
@@ -1326,7 +1352,7 @@
                 // Tenta SELECT; se não existir perfil, cria com 100 créditos (fallback do trigger)
                 let { data } = await _sb
                     .from('profiles')
-                    .select('creditos')
+                    .select('creditos, is_admin')
                     .eq('id', _currentSession.user.id)
                     .single();
 
@@ -1334,19 +1360,30 @@
                     const { data: inserted } = await _sb
                         .from('profiles')
                         .insert({ id: _currentSession.user.id, email: _currentSession.user.email, creditos: 100 })
-                        .select('creditos')
+                        .select('creditos, is_admin')
                         .single();
                     data = inserted;
                 }
 
-                if (data) { _userCreditos = data.creditos; }
+                if (data) {
+                    _userCreditos = data.creditos;
+                    _isAdmin = data.is_admin === true;
+                }
             } catch (e) { console.warn('loadUserProfile:', e); }
 
             updateCreditsDisplay();
+            updateAdminUI();
             const emailEl = document.getElementById('settings-email');
             const credEl  = document.getElementById('settings-credits');
             if (emailEl) emailEl.textContent = _currentSession.user.email || '';
             if (credEl)  credEl.textContent  = `Créditos disponíveis: ${_userCreditos ?? '—'}`;
+        }
+
+        function updateAdminUI() {
+            const adminBtn = document.getElementById('admin-tab-btn');
+            const adminMenu = document.getElementById('admin-menu-btn');
+            if (adminBtn)  adminBtn.style.display  = _isAdmin ? '' : 'none';
+            if (adminMenu) adminMenu.style.display = _isAdmin ? '' : 'none';
         }
 
         function updateCreditsDisplay() {
@@ -1454,9 +1491,73 @@
                 _userCreditos = 0; updateCreditsDisplay();
                 throw new Error('Créditos esgotados. Entre em contato com a EDS para renovar.');
             }
+            if (resp.status === 429) {
+                throw new Error('Aguarde alguns segundos antes de enviar outra mensagem.');
+            }
             if (resp.status === 401) { _currentSession = null; onLogoutCleanup(); throw new Error('Sessão expirada. Faça login novamente.'); }
             if (_userCreditos !== null && _userCreditos > 0) { _userCreditos--; updateCreditsDisplay(); }
             return resp;
+        }
+
+        async function loadAdminUsers() {
+            if (!_isAdmin) return;
+            const tableEl = document.getElementById('admin-users-table');
+            if (tableEl) tableEl.innerHTML = '<p class="muted" style="font-size:12px">Carregando...</p>';
+            try {
+                const { data, error } = await _sb.rpc('admin_list_users');
+                if (error) throw error;
+                if (!data || !data.length) {
+                    tableEl.innerHTML = '<p class="muted">Nenhum professor cadastrado ainda.</p>';
+                    return;
+                }
+                const rows = data.map(u => {
+                    const usados = 100 - u.creditos < 0 ? '—' : (100 - u.creditos);
+                    const lastAt = u.last_ai_at ? new Date(u.last_ai_at).toLocaleString('pt-BR') : '—';
+                    return `<tr>
+                        <td style="padding:6px 10px;font-size:12px;color:#eef5fb;max-width:180px;overflow:hidden;text-overflow:ellipsis">${u.email}</td>
+                        <td style="padding:6px 10px;font-size:12px;color:#f1cc75;text-align:center;font-weight:700">${u.creditos}</td>
+                        <td style="padding:6px 10px;font-size:11px;color:#6e89a7;text-align:center">${lastAt}</td>
+                        <td style="padding:6px 10px;text-align:center">
+                            ${u.is_admin ? '<span style="font-size:10px;color:#7ee8d6">admin</span>' : ''}
+                        </td>
+                    </tr>`;
+                }).join('');
+                tableEl.innerHTML = `
+                    <table style="width:100%;border-collapse:collapse;font-family:'Trebuchet MS','Segoe UI',sans-serif">
+                        <thead><tr style="border-bottom:1px solid #1e4060">
+                            <th style="padding:6px 10px;text-align:left;font-size:11px;color:#6e89a7;font-weight:600">E-mail</th>
+                            <th style="padding:6px 10px;font-size:11px;color:#6e89a7;font-weight:600">Créditos</th>
+                            <th style="padding:6px 10px;font-size:11px;color:#6e89a7;font-weight:600">Último uso</th>
+                            <th style="padding:6px 10px;font-size:11px;color:#6e89a7;font-weight:600">Perfil</th>
+                        </tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>`;
+            } catch (e) {
+                if (tableEl) tableEl.innerHTML = '<p class="muted" style="color:#f08080">Erro ao carregar usuários.</p>';
+                console.warn('loadAdminUsers:', e);
+            }
+        }
+
+        async function adminAddCredits() {
+            if (!_isAdmin) return;
+            const emailEl  = document.getElementById('admin-email-input');
+            const amountEl = document.getElementById('admin-credits-input');
+            const email  = (emailEl  || {}).value.trim();
+            const amount = parseInt((amountEl || {}).value, 10);
+            if (!email || !amount || amount < 1) { showToast('Informe e-mail e quantidade válida.'); return; }
+            try {
+                const { data, error } = await _sb.rpc('admin_add_credits', { p_email: email, p_amount: amount });
+                if (error) throw error;
+                showToast(`✅ ${amount} créditos adicionados para ${email}. Novo saldo: ${data}`);
+                if (emailEl) emailEl.value = '';
+                loadAdminUsers();
+            } catch (e) {
+                const msg = e.message || String(e);
+                if (msg.includes('user_not_found')) showToast('Professor não encontrado.');
+                else if (msg.includes('not_admin'))  showToast('Sem permissão de admin.');
+                else showToast('Erro ao adicionar créditos.');
+                console.warn('adminAddCredits:', e);
+            }
         }
 
         window.onload = function() { initAuth(); }
@@ -1501,7 +1602,8 @@
                 chat: 'panel-chat',
                 avaliacao: 'panel-avaliacao',
                 quick: 'panel-quick',
-                settings: 'panel-settings'
+                settings: 'panel-settings',
+                admin: 'panel-admin'
             };
             const panelId = panelMap[panelName] || panelMap.chat;
 
@@ -1512,6 +1614,7 @@
             document.querySelectorAll('.tab-btn').forEach((btn) => {
                 btn.classList.toggle('active', btn.dataset.panel === panelName);
             });
+            if (panelName === 'admin') loadAdminUsers();
         }
 
         function quickFillPrompt(text) {

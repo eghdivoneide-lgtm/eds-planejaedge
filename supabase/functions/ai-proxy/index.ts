@@ -53,7 +53,19 @@ Deno.serve(async (req) => {
 
         // Débito atômico ANTES de chamar Gemini — evita double-spend em requisições concorrentes
         const { data: remaining, error: debitErr } = await _sb.rpc('debit_credit', { p_user_id: user.id })
-        if (debitErr || remaining === null || remaining === undefined) {
+        if (debitErr) {
+            return new Response(JSON.stringify({ error: 'sem_creditos' }), {
+                status: 402,
+                headers: { ...CORS, 'Content-Type': 'application/json' }
+            })
+        }
+        if (remaining === -1) {
+            return new Response(JSON.stringify({ error: 'rate_limit' }), {
+                status: 429,
+                headers: { ...CORS, 'Content-Type': 'application/json' }
+            })
+        }
+        if (remaining === null || remaining === undefined) {
             return new Response(JSON.stringify({ error: 'sem_creditos' }), {
                 status: 402,
                 headers: { ...CORS, 'Content-Type': 'application/json' }
