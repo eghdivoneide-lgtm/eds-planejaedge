@@ -858,31 +858,51 @@
             .av-cab-label { width: 76px; font-size: 10px; }
             .rel-obs { display:none; }
         }
+
+        /* ===== AUTH MODAL ===== */
+        .auth-modal { position:fixed; inset:0; background:#071625; z-index:9999; display:flex; align-items:center; justify-content:center; padding:20px; }
+        .auth-card  { background:#0e2139; border:1px solid #1e4060; border-radius:18px; padding:36px 28px; width:100%; max-width:400px; text-align:center; box-shadow:0 24px 64px rgba(0,0,0,0.6); }
+        .auth-logo  { width:72px; height:72px; margin:0 auto 14px; display:block; }
+        .auth-title { font-size:1.4rem; font-weight:800; color:#eef5fb; margin-bottom:4px; letter-spacing:-.02em; }
+        .auth-sub   { font-size:.8rem; color:#6e89a7; margin-bottom:22px; font-family:'DM Mono',Consolas,monospace; letter-spacing:.07em; text-transform:uppercase; }
+        .auth-input { width:100%; background:#071c31; border:1px solid #1e4060; border-radius:9px; color:#eef5fb; padding:11px 14px; font-size:13.5px; margin-bottom:9px; outline:none; font-family:'Trebuchet MS','Segoe UI',sans-serif; transition:border-color .18s; box-sizing:border-box; }
+        .auth-input:focus { border-color:#13a385; }
+        .auth-btn   { width:100%; background:linear-gradient(135deg,#13a385,#0d7a63); border:none; border-radius:9px; color:#fff; font-size:14px; font-weight:700; padding:12px; cursor:pointer; margin-top:4px; font-family:'Trebuchet MS','Segoe UI',sans-serif; letter-spacing:.04em; transition:filter .15s; }
+        .auth-btn:hover    { filter:brightness(1.1); }
+        .auth-btn:disabled { opacity:.5; cursor:default; filter:none; }
+        .auth-switch { font-size:12px; color:#6e89a7; margin-top:14px; }
+        .auth-switch a { color:#13a385; cursor:pointer; text-decoration:underline; }
+        .auth-error { font-size:12px; color:#f08080; margin-top:8px; min-height:16px; display:none; }
     </style>
 </head>
 <body>
-    <div class="login-container" id="login-section">
-        <img class="login-logo" src="icons/eds-symbols/eds-brand-horizontal.svg" alt="EDS Solucoes Inteligentes">
-        <div class="login-brand">EDS Solucoes Inteligentes</div>
-        <div class="wej-pill">SEDUC-PE • Professores e Coordenadores</div>
-        <div style="color:#8ec7f0;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;font-size:13px;">EDS PlanejaEdge · Parceria SEDUC-PE</div>
-        <div class="login-section-title">⚙ CONFIGURACAO</div>
-        <h2>Chave de Acesso</h2>
-        <p style="font-size:1.08em; line-height:1.6; margin:0 0 16px;">Bem-vindo ao <b>EDS PlanejaEdge</b>, desenvolvido pela EDS Soluções Inteligentes.<br>Insira sua chave Google Gemini para iniciar com apoio a planos de aula, avaliações, inclusão, BNCC e orientação pedagógica.<br>Seus dados ficam apenas neste dispositivo.</p>
-        <div class="key-row">
-            <input type="password" id="api-key-input" placeholder="Cole sua chave Gemini aqui..." autocomplete="off">
-            <button type="button" class="key-toggle-btn" onclick="toggleApiKeyVisibility()">👁</button>
-        </div>
-        <button onclick="login()">Entrar no EDS PlanejaEdge 🚀</button>
-        <div class="info">
-            <b>Como obter sua chave:</b><br>
-            1. Acesse <a href="https://console.cloud.google.com/apis/credentials" target="_blank">console.cloud.google.com</a><br>
-            2. Crie uma API Key e copie<br>
-            3. Cole aqui e clique em Entrar <span style="font-size:1.2em;">🔒</span><br>
+    <!-- AUTH MODAL — visível até login -->
+    <div id="auth-modal" class="auth-modal">
+        <div class="auth-card">
+            <img class="auth-logo" src="icons/eds-symbols/eds-brand-app-icon.svg" alt="EDS PlanejaEdge">
+            <div class="auth-title">EDS PlanejaEdge</div>
+            <div class="auth-sub" id="auth-sub-text">Planejador pedagógico com IA</div>
+            <input type="email"    id="auth-email"    class="auth-input" placeholder="E-mail" autocomplete="email"
+                   onkeydown="if(event.key==='Enter') document.getElementById('auth-password').focus()">
+            <input type="password" id="auth-password" class="auth-input" placeholder="Senha" autocomplete="current-password"
+                   onkeydown="if(event.key==='Enter') handleAuth()">
+            <div id="auth-password2-wrap" style="display:none">
+                <input type="password" id="auth-password2" class="auth-input" placeholder="Confirmar senha"
+                       onkeydown="if(event.key==='Enter') handleAuth()">
+            </div>
+            <div id="auth-error" class="auth-error"></div>
+            <button type="button" id="auth-btn" class="auth-btn" onclick="handleAuth()">Entrar</button>
+            <div class="auth-switch">
+                <span id="auth-switch-label">Não tem conta? </span>
+                <a id="auth-switch-link" onclick="toggleAuthMode()">Criar conta</a>
+            </div>
+            <div class="auth-switch" style="margin-top:6px">
+                <a onclick="handleForgotPassword()">Esqueci a senha</a>
+            </div>
         </div>
     </div>
 
-    <div id="chat-section">
+    <div id="chat-section" style="display:none">
         <div class="header">
             <div class="header-title">
                 <img class="header-logo" src="icons/eds-symbols/eds-brand-app-icon.svg" alt="EDS">
@@ -895,8 +915,8 @@
                 <span class="status-chip">PlanejaEdge online</span>
                 <button type="button" id="profile-trigger" class="profile-trigger" onclick="toggleProfileMenu(event)">👤</button>
                 <div id="profile-menu" class="profile-menu">
+                    <div id="credits-display" style="font-size:11px;color:#6e89a7;padding:6px 10px 2px;font-family:'DM Mono',Consolas,monospace"></div>
                     <button type="button" onclick="editProfileFromMenu()">✏️ Editar perfil</button>
-                    <button type="button" onclick="switchKeyFromMenu()">🔑 Trocar chave</button>
                     <button type="button" onclick="logoutFromMenu()">🚪 Sair</button>
                 </div>
             </div>
@@ -1008,9 +1028,15 @@
             </section>
             <section id="panel-settings" class="app-panel settings-panel" aria-label="Painel de configuracoes">
                 <div class="settings-card">
-                    <h4>Stack do produto</h4>
-                    <p class="muted">EDS PlanejaEdge com foco em BNCC, diretrizes curriculares, inclusao, avaliacao e planejamento docente.</p>
-                    <div class="info-chip">SEDUC-PE + EDS</div>
+                    <h4>Minha Conta</h4>
+                    <p class="muted" id="settings-email" style="font-size:12px;font-family:'DM Mono',Consolas,monospace;margin-bottom:8px"></p>
+                    <p class="muted" id="settings-credits" style="font-size:12.5px;margin-bottom:10px"></p>
+                    <button type="button" onclick="logoutFromMenu()" style="background:rgba(200,60,60,0.15);border:1px solid rgba(200,60,60,0.4);color:#f08080;border-radius:8px;padding:7px 16px;font-size:12.5px;cursor:pointer;font-family:inherit">🚪 Sair da conta</button>
+                </div>
+                <div class="settings-card">
+                    <h4>Sobre o EDS PlanejaEdge</h4>
+                    <p class="muted">Planejador pedagógico com IA para professores e coordenadores. Baseado na BNCC e nas melhores práticas de ensino.</p>
+                    <div class="info-chip">EDS Soluções Inteligentes</div>
                 </div>
                 <div class="settings-card">
                     <h4>🔊 Voz Neural — Google Cloud TTS</h4>
@@ -1275,43 +1301,170 @@
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/docx@7.8.2/build/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked@14.1.4/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script>
         if (window.pdfjsLib) {
             window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         }
 
-        // LOGIN
-        function login() {
-            const key = document.getElementById('api-key-input').value.trim();
-            if (!key) {
-                showToast('Por favor, informe sua chave Gemini.');
-                return;
-            }
-            localStorage.setItem('seduc_gemini_api_key', key);
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('chat-section').style.display = 'flex';
-            window.API_KEY = key;
-            markSessionActivity();
-            switchPanel('chat');
-            showToast('EDS PlanejaEdge iniciado.');
-        }
-        window.onload = function() {
+        // =====================================================================
+        // SUPABASE AUTH
+        // =====================================================================
+        const SUPABASE_URL      = 'COLE_AQUI'; // ex: https://abcxyz.supabase.co
+        const SUPABASE_ANON_KEY = 'COLE_AQUI';
+        const PROXY_URL = `${SUPABASE_URL}/functions/v1/ai-proxy`;
+        const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let _currentSession = null;
+        let _userCreditos   = null;
+        let _authMode       = 'login';
+
+        async function initAuth() {
             const savedTtsKey = localStorage.getItem('seduc_tts_key');
             if (savedTtsKey) window.TTS_KEY = savedTtsKey;
 
-            const savedKey = localStorage.getItem('seduc_gemini_api_key');
-            if (savedKey) {
-                if (isSessionExpired()) {
-                    clearSession(false);
+            const { data } = await _sb.auth.getSession();
+            if (data.session) await onLoginSuccess(data.session);
+
+            _sb.auth.onAuthStateChange(async (event, session) => {
+                if (event === 'SIGNED_IN' && session)          await onLoginSuccess(session);
+                else if (event === 'SIGNED_OUT')               onLogoutCleanup();
+                else if (event === 'TOKEN_REFRESHED' && session) _currentSession = session;
+            });
+        }
+
+        async function onLoginSuccess(session) {
+            _currentSession = session;
+            document.getElementById('auth-modal').style.display = 'none';
+            document.getElementById('chat-section').style.display = 'flex';
+            markSessionActivity();
+            switchPanel('chat');
+            await loadUserProfile();
+            showToast('EDS PlanejaEdge iniciado!');
+        }
+
+        async function loadUserProfile() {
+            if (!_currentSession) return;
+            try {
+                const { data } = await _sb
+                    .from('profiles')
+                    .select('creditos')
+                    .eq('id', _currentSession.user.id)
+                    .single();
+                if (data) {
+                    _userCreditos = data.creditos;
+                    updateCreditsDisplay();
+                }
+                const emailEl = document.getElementById('settings-email');
+                const credEl  = document.getElementById('settings-credits');
+                if (emailEl) emailEl.textContent = _currentSession.user.email || '';
+                if (credEl)  credEl.textContent  = `Créditos disponíveis: ${_userCreditos ?? '—'}`;
+            } catch (_) {}
+        }
+
+        function updateCreditsDisplay() {
+            const el   = document.getElementById('credits-display');
+            const credEl = document.getElementById('settings-credits');
+            if (el)    el.textContent    = _userCreditos !== null ? `${_userCreditos} créditos` : '';
+            if (credEl) credEl.textContent = `Créditos disponíveis: ${_userCreditos ?? '—'}`;
+        }
+
+        function onLogoutCleanup() {
+            _currentSession = null;
+            _userCreditos   = null;
+            document.getElementById('auth-modal').style.display = 'flex';
+            document.getElementById('chat-section').style.display = 'none';
+        }
+
+        async function handleAuth() {
+            const email    = (document.getElementById('auth-email')    || {}).value.trim();
+            const password = (document.getElementById('auth-password') || {}).value;
+            const errEl    = document.getElementById('auth-error');
+            const btn      = document.getElementById('auth-btn');
+            if (errEl) errEl.style.display = 'none';
+            if (!email || !password) { showAuthError('Preencha e-mail e senha.'); return; }
+            if (btn) { btn.disabled = true; btn.textContent = _authMode === 'login' ? 'Entrando...' : 'Criando conta...'; }
+            try {
+                if (_authMode === 'login') {
+                    const { error } = await _sb.auth.signInWithPassword({ email, password });
+                    if (error) throw error;
+                } else {
+                    const pass2 = (document.getElementById('auth-password2') || {}).value;
+                    if (password !== pass2) throw new Error('As senhas não coincidem.');
+                    if (password.length < 6) throw new Error('Senha deve ter ao menos 6 caracteres.');
+                    const { error } = await _sb.auth.signUp({ email, password });
+                    if (error) throw error;
+                    showAuthError('Conta criada! Verifique seu e-mail para confirmar o acesso.', '#7ee8d6');
                     return;
                 }
-                document.getElementById('login-section').style.display = 'none';
-                document.getElementById('chat-section').style.display = 'flex';
-                window.API_KEY = savedKey;
-                markSessionActivity();
-                switchPanel('chat');
+            } catch (err) {
+                showAuthError(translateSbError(err.message));
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = _authMode === 'login' ? 'Entrar' : 'Criar conta'; }
             }
         }
+
+        function showAuthError(msg, color) {
+            const el = document.getElementById('auth-error');
+            if (!el) return;
+            el.style.display = 'block';
+            el.style.color   = color || '#f08080';
+            el.textContent   = msg;
+        }
+
+        function toggleAuthMode() {
+            _authMode = _authMode === 'login' ? 'register' : 'login';
+            const isReg = _authMode === 'register';
+            const el = (id) => document.getElementById(id);
+            if (el('auth-btn'))          el('auth-btn').textContent         = isReg ? 'Criar conta' : 'Entrar';
+            if (el('auth-sub-text'))     el('auth-sub-text').textContent    = isReg ? 'Crie sua conta de acesso' : 'Planejador pedagógico com IA';
+            if (el('auth-switch-label')) el('auth-switch-label').textContent = isReg ? 'Já tem conta? ' : 'Não tem conta? ';
+            if (el('auth-switch-link'))  el('auth-switch-link').textContent  = isReg ? 'Entrar' : 'Criar conta';
+            if (el('auth-password2-wrap')) el('auth-password2-wrap').style.display = isReg ? 'block' : 'none';
+            if (el('auth-error')) el('auth-error').style.display = 'none';
+        }
+
+        async function handleForgotPassword() {
+            const email = (document.getElementById('auth-email') || {}).value.trim();
+            if (!email) { showAuthError('Informe seu e-mail acima primeiro.'); return; }
+            const { error } = await _sb.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + window.location.pathname
+            });
+            if (error) { showAuthError(translateSbError(error.message)); return; }
+            showAuthError('Link de redefinição enviado! Verifique seu e-mail.', '#7ee8d6');
+        }
+
+        function translateSbError(msg) {
+            if (!msg) return 'Erro desconhecido.';
+            if (/invalid login/i.test(msg))       return 'E-mail ou senha incorretos.';
+            if (/email not confirmed/i.test(msg)) return 'Confirme seu e-mail antes de entrar.';
+            if (/already registered/i.test(msg))  return 'E-mail já cadastrado. Faça login.';
+            if (/password should/i.test(msg))     return 'Senha deve ter ao menos 6 caracteres.';
+            if (/rate limit/i.test(msg))          return 'Muitas tentativas. Aguarde alguns segundos.';
+            return msg;
+        }
+
+        async function callAIProxy(model, contents, extras) {
+            if (!_currentSession) { onLogoutCleanup(); throw new Error('Sessão expirada. Faça login novamente.'); }
+            const body = { model, contents };
+            if (extras) Object.assign(body, extras);
+            const resp = await fetch(PROXY_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${_currentSession.access_token}`
+                },
+                body: JSON.stringify(body)
+            });
+            if (resp.status === 402) {
+                _userCreditos = 0; updateCreditsDisplay();
+                throw new Error('Créditos esgotados. Entre em contato com a EDS para renovar.');
+            }
+            if (resp.status === 401) { _currentSession = null; onLogoutCleanup(); throw new Error('Sessão expirada. Faça login novamente.'); }
+            if (_userCreditos !== null && _userCreditos > 0) { _userCreditos--; updateCreditsDisplay(); }
+            return resp;
+        }
+
+        window.onload = function() { initAuth(); }
 
         // CHAT
         const DEFAULT_MODEL_NAME = 'gemini-2.5-flash';
@@ -1445,35 +1598,9 @@
             closeProfileMenu();
         }
 
-        function switchKeyFromMenu() {
-            closeProfileMenu();
-            clearSession(false);
-            showToast('Chave removida. Informe a nova chave para continuar.');
-        }
-
         function logoutFromMenu() {
             closeProfileMenu();
-            clearSession(false);
-        }
-
-        function clearSession(showMessage = false) {
-            localStorage.removeItem('seduc_gemini_api_key');
-            localStorage.removeItem(SESSION_LAST_ACTIVITY_KEY);
-            window.API_KEY = null;
-            document.getElementById('login-section').style.display = 'block';
-            document.getElementById('chat-section').style.display = 'none';
-            document.getElementById('api-key-input').value = '';
-            toggleProfileBox(true);
-            switchPanel('chat');
-            if (showMessage) {
-                setTimeout(() => showToast(`Sessão expirada após ${SESSION_TIMEOUT_MINUTES} min. Faça login novamente.`), 150);
-            }
-        }
-
-        function isSessionExpired() {
-            const lastActivity = Number(localStorage.getItem(SESSION_LAST_ACTIVITY_KEY));
-            if (!lastActivity) return false;
-            return Date.now() - lastActivity > SESSION_TIMEOUT_MS;
+            _sb.auth.signOut();
         }
 
         function checkSessionExpiry() {
@@ -2183,11 +2310,6 @@
             showTyping();
 
             try {
-                const apiKey = window.API_KEY || localStorage.getItem('seduc_gemini_api_key');
-                if (!apiKey) {
-                    throw new Error('Nao encontrei sua chave Gemini ativa. Clique no menu de perfil e informe a chave novamente.');
-                }
-
                 const modelName = getActiveModel();
 
                 const ageGuide = getPedagogicGuideByAge(studentProfile.age);
@@ -2214,13 +2336,8 @@
                 }));
                 historyContents.push({ role: 'user', parts });
 
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelName)}:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        system_instruction: { parts: [{ text: systemWithProfile }] },
-                        contents: historyContents
-                    })
+                const response = await callAIProxy(modelName, historyContents, {
+                    system_instruction: { parts: [{ text: systemWithProfile }] }
                 });
 
                 const answerText = await parseGeminiResponse(response);
@@ -2670,9 +2787,6 @@ ${tipo === 'multipla' || tipo === 'mista' ? 'A) [alternativa]\nB) [alternativa]\
 Gere as ${nq} questões completas com qualidade pedagógica, seguindo o formato acima.`;
 
             try {
-                const apiKey = window.API_KEY || localStorage.getItem('seduc_gemini_api_key');
-                if (!apiKey) throw new Error('Chave Gemini não encontrada. Faça login novamente.');
-
                 const avParts = [];
                 if (_avFile && _avFile.kind === 'image') {
                     avParts.push({ inline_data: { mime_type: _avFile.mimeType, data: _avFile.data } });
@@ -2683,11 +2797,7 @@ Gere as ${nq} questões completas com qualidade pedagógica, seguindo o formato 
                 }
                 avParts.push({ text: fullPrompt });
 
-                const response = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(getActiveModel())}:generateContent?key=${apiKey}`,
-                    { method: 'POST', headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ contents: [{ role: 'user', parts: avParts }] }) }
-                );
+                const response = await callAIProxy(getActiveModel(), [{ role: 'user', parts: avParts }]);
                 const textoRaw = await parseGeminiResponse(response);
                 clearAvFile();
 
@@ -2786,14 +2896,7 @@ FORMATO DA CORREÇÃO:
 Seja justo, pedagógico e construtivo. Use a BNCC como referência quando pertinente.`;
 
             try {
-                const apiKey = window.API_KEY || localStorage.getItem('seduc_gemini_api_key');
-                if (!apiKey) throw new Error('Chave Gemini não encontrada. Faça login novamente.');
-
-                const response = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(getActiveModel())}:generateContent?key=${apiKey}`,
-                    { method: 'POST', headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }) }
-                );
+                const response = await callAIProxy(getActiveModel(), [{ role: 'user', parts: [{ text: prompt }] }]);
                 const texto = await parseGeminiResponse(response);
                 _correcaoAtual = { aluno: nomeAluno, texto, geradoEm: new Date().toISOString() };
 
@@ -3211,9 +3314,6 @@ ${isProf ? '<div class="gabarito-section">' : ''}${safe}${isProf ? '</div>' : ''
         async function gerarRelatorioTurma() {
             const list = getRelatorioAlunos();
             if (!list.length) { showToast('Adicione pelo menos um aluno ao relatório.'); return; }
-            const apiKey = getApiKey();
-            if (!apiKey) { showToast('Configure a chave Gemini nas Configurações.'); return; }
-
             const btn = document.querySelector('[onclick="gerarRelatorioTurma()"]');
             if (btn) { btn.disabled = true; btn.textContent = 'Gerando relatório...'; }
             const outputEl  = document.getElementById('rel-output');
@@ -3280,11 +3380,7 @@ FORMATO OBRIGATÓRIO (siga exatamente):
 REGRA CRÍTICA: Comece DIRETAMENTE com "# Relatório de Turma". Nenhum texto antes do título.`;
 
             try {
-                const response = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(getActiveModel())}:generateContent?key=${apiKey}`,
-                    { method: 'POST', headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }) }
-                );
+                const response = await callAIProxy(getActiveModel(), [{ role: 'user', parts: [{ text: prompt }] }]);
                 const texto = await parseGeminiResponse(response);
                 const h1Idx = texto.search(/^#{1,2}\s/m);
                 _relAtual = { texto: h1Idx > 0 ? texto.slice(h1Idx).trim() : texto, geradoEm: new Date().toISOString() };
