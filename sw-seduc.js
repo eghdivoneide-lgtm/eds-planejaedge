@@ -1,11 +1,13 @@
-const CACHE_NAME = 'eds-planejaedge-v10';
+const CACHE_NAME = 'eds-planejaedge-v11';
 const APP_SHELL = [
   './',
   './index.html',
+  './landing.html',
   './manifest-seduc.webmanifest',
   './icons/icon-192.svg',
   './icons/icon-512.svg',
   './icons/prof-eds.png',
+  './icons/prof-eds-figura.png',
   './icons/eds-symbols/eds-brand-horizontal.svg',
   './icons/eds-symbols/eds-brand-app-icon.svg'
 ];
