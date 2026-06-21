@@ -72,6 +72,8 @@ Deno.serve(async (req) => {
         )
 
         if (!geminiResp.ok) {
+            // Estorna crédito — professor não deve pagar por falha da IA
+            await _sb.rpc('refund_credit', { p_user_id: user.id }).catch(() => {})
             const errText = await geminiResp.text()
             return new Response(errText, { status: geminiResp.status, headers: CORS })
         }
