@@ -141,6 +141,44 @@
         @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
         .ava-reopen img { width: 150%; height: 150%; object-fit: cover; object-position: top center; margin: -8px 0 0 -22%; }
 
+        /* HERO + APP PREVIEW (mockup do app aberto) */
+        .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 46px; align-items: center; }
+        .hero-art { position: relative; display: flex; justify-content: center; }
+        .hero-art .glow { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 320px; height: 200px; background: radial-gradient(60% 100% at 50% 0%, rgba(47,224,189,.22), transparent 70%); filter: blur(26px); z-index: 0; pointer-events: none; }
+        .phone { position: relative; z-index: 1; width: 312px; max-width: 100%; padding: 13px; border-radius: 44px; background: linear-gradient(160deg, #123a33, #08201b); border: 1px solid rgba(47,224,189,.28); box-shadow: 0 36px 84px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.05); animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+        .phone::before { content: ''; position: absolute; top: 21px; left: 50%; transform: translateX(-50%); width: 108px; height: 7px; border-radius: 99px; background: rgba(0,0,0,.6); z-index: 3; }
+        .screen { position: relative; border-radius: 32px; overflow: hidden; background: #0a1b2e; height: 568px; display: flex; flex-direction: column; }
+        .app-top { display: flex; align-items: center; gap: 10px; padding: 32px 15px 12px; background: linear-gradient(180deg, #0e2440, #0a1b2e); border-bottom: 1px solid rgba(47,224,189,.15); }
+        .app-top img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; object-position: top center; border: 2px solid var(--gold); }
+        .app-top .who { flex: 1; line-height: 1.25; }
+        .app-top .who b { font-family: 'Syne'; font-size: 14px; color: #eaf6ff; display: block; }
+        .app-top .who span { font-size: 11px; color: #5fd6bd; font-family: 'DM Mono', monospace; }
+        .app-top .cred { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--gold); border: 1px solid rgba(241,204,117,.4); border-radius: 99px; padding: 3px 9px; }
+        .chat { flex: 1; padding: 14px 13px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; background: radial-gradient(120% 60% at 50% 0%, rgba(19,163,133,.06), transparent 60%); }
+        .msg { max-width: 85%; font-size: 12px; line-height: 1.5; padding: 10px 12px; border-radius: 14px; }
+        .msg.user { align-self: flex-end; background: linear-gradient(135deg, #11806b, #0c5f50); color: #eafdf8; border-bottom-right-radius: 4px; }
+        .msg.bot { align-self: flex-start; background: #0f2740; color: #dceaf6; border: 1px solid rgba(47,224,189,.16); border-bottom-left-radius: 4px; }
+        .msg.bot b { color: #f1cc75; }
+        .msg.bot .li { display: flex; gap: 6px; margin-top: 5px; }
+        .msg.bot .li i { color: #2fe0bd; font-style: normal; }
+        .chips { display: flex; gap: 7px; padding: 2px 13px 9px; flex-wrap: nowrap; overflow: hidden; }
+        .chips span { font-size: 10.5px; color: #bfeede; border: 1px solid rgba(47,224,189,.3); border-radius: 99px; padding: 5px 10px; white-space: nowrap; background: rgba(19,163,133,.08); }
+        .app-input { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-top: 1px solid rgba(47,224,189,.14); background: #0a1b2e; }
+        .app-input .field { flex: 1; font-size: 11.5px; color: #6f93a8; background: #11293f; border: 1px solid rgba(47,224,189,.2); border-radius: 11px; padding: 9px 11px; }
+        .app-input .send { width: 36px; height: 36px; border-radius: 11px; background: linear-gradient(135deg, #13a385, #0f7763); display: flex; align-items: center; justify-content: center; color: #062018; font-size: 15px; flex-shrink: 0; }
+        .app-models { display: flex; gap: 7px; padding: 0 12px 13px; background: #0a1b2e; }
+        .app-models span { font-size: 10px; color: #9dc9bc; font-family: 'DM Mono', monospace; border: 1px solid rgba(47,224,189,.22); border-radius: 8px; padding: 4px 8px; }
+        .phone-tag { position: absolute; z-index: 2; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; padding: 7px 12px; border-radius: 12px; background: rgba(8,26,22,0.92); border: 1px solid var(--border); box-shadow: 0 12px 28px rgba(0,0,0,.45); backdrop-filter: blur(6px); }
+        .phone-tag.t1 { top: 64px; right: -18px; color: var(--teal); }
+        .phone-tag.t2 { bottom: 86px; left: -22px; color: var(--gold); }
+
+        @media (max-width: 980px) {
+            .hero-grid { grid-template-columns: 1fr; gap: 38px; }
+            .hero-art { margin-top: 6px; }
+            .phone-tag.t1 { right: 4px; }
+            .phone-tag.t2 { left: 4px; }
+        }
         @media (max-width: 880px) {
             .nav-links { display: none; }
             .prob-grid, .cards, .steps, .plans { grid-template-columns: 1fr; }
@@ -170,15 +208,56 @@
     <main id="top">
         <!-- HERO -->
         <section class="hero">
-            <div class="wrap">
-                <span class="pill">✦ EDS SOLUÇÕES INTELIGENTES · ALINHADO À BNCC</span>
-                <h1>Pare de planejar aula <span class="g">no improviso</span> e corrigir prova <span class="g">de madrugada.</span></h1>
-                <p class="lead">O <strong>EDS PlanejaEdge</strong> usa Inteligência Artificial para criar planos de aula, gerar e corrigir provas e montar relatórios de turma — tudo em segundos, fundamentado na BNCC.</p>
-                <div class="hero-actions">
-                    <a class="btn btn-gold btn-lg" href="index.html?signup=1">Começar agora →</a>
-                    <a class="btn btn-ghost btn-lg" href="#como">Ver como funciona</a>
+            <div class="wrap hero-grid">
+                <div class="hero-copy">
+                    <span class="pill">✦ EDS SOLUÇÕES INTELIGENTES · ALINHADO À BNCC</span>
+                    <h1>Pare de planejar aula <span class="g">no improviso</span> e corrigir prova <span class="g">de madrugada.</span></h1>
+                    <p class="lead">O <strong>EDS PlanejaEdge</strong> usa Inteligência Artificial para criar planos de aula, gerar e corrigir provas e montar relatórios de turma — tudo em segundos, fundamentado na BNCC.</p>
+                    <div class="hero-actions">
+                        <a class="btn btn-gold btn-lg" href="index.html?signup=1">Começar agora →</a>
+                        <a class="btn btn-ghost btn-lg" href="#como">Ver como funciona</a>
+                    </div>
+                    <p class="microcopy">✓ <b>100 créditos grátis</b> ao criar conta · sem cartão de crédito · pronto em segundos</p>
                 </div>
-                <p class="microcopy">✓ <b>100 créditos grátis</b> ao criar conta · sem cartão de crédito · pronto em segundos</p>
+
+                <!-- APP PREVIEW: mockup do app aberto -->
+                <div class="hero-art">
+                    <div class="glow"></div>
+                    <div class="phone" role="img" aria-label="Prévia do aplicativo EDS PlanejaEdge em uso, com o Professor EDS gerando um plano de aula">
+                        <div class="screen">
+                            <div class="app-top">
+                                <img src="icons/prof-eds.png" alt="">
+                                <div class="who"><b>Professor EDS</b><span>● online · assistente IA</span></div>
+                                <div class="cred">✦ 98</div>
+                            </div>
+                            <div class="chat">
+                                <div class="msg user">Crie um plano de aula de Frações — 6º ano, alinhado à BNCC 📚</div>
+                                <div class="msg bot">
+                                    <b>Plano de Aula · Frações (6º ano)</b>
+                                    <div class="li"><i>🎯</i><span>Objetivo (BNCC EF06MA07): comparar e ordenar frações.</span></div>
+                                    <div class="li"><i>✓</i><span>Acolhida com situação-problema do dia a dia</span></div>
+                                    <div class="li"><i>✓</i><span>Atividade prática em duplas + material concreto</span></div>
+                                    <div class="li"><i>✓</i><span>Avaliação formativa com rubrica pronta</span></div>
+                                </div>
+                            </div>
+                            <div class="chips">
+                                <span>📋 Plano de aula</span>
+                                <span>📚 Sequência didática</span>
+                                <span>📝 Prova</span>
+                            </div>
+                            <div class="app-input">
+                                <div class="field">Descreva sua demanda pedagógica…</div>
+                                <div class="send">➤</div>
+                            </div>
+                            <div class="app-models">
+                                <span>Gemini 2.5 ▾</span>
+                                <span>Balanceado ▾</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phone-tag t1">⚡ Pronto em 4 segundos</div>
+                    <div class="phone-tag t2">✓ Alinhado à BNCC</div>
+                </div>
             </div>
         </section>
 
