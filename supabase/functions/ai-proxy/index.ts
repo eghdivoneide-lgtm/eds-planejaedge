@@ -1,9 +1,34 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const ALLOWED_ORIGIN = Deno.env.get('ALLOWED_ORIGIN') || '*'
-const CORS = {
-    'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+// Lista de origens permitidas (separadas por vírgula). Ex.:
+//   ALLOWED_ORIGIN = https://planejaedge-eds.netlify.app, https://planejaedge.com.br
+// Os previews do Netlify (deploy-preview-N--<site>.netlify.app, branch--<site>.netlify.app)
+// são liberados automaticamente para os sites configurados.
+const RAW_ORIGINS = (Deno.env.get('ALLOWED_ORIGIN') || '*').split(',').map((s) => s.trim()).filter(Boolean)
+const ALLOW_ALL = RAW_ORIGINS.includes('*')
+
+function netlifySite(origin: string): string | null {
+    const m = origin.match(/^https:\/\/(?:[a-z0-9-]+--)?([a-z0-9-]+)\.netlify\.app$/i)
+    return m ? m[1].toLowerCase() : null
+}
+const ALLOWED_SITES = new Set(RAW_ORIGINS.map(netlifySite).filter((x): x is string => !!x))
+
+function resolveOrigin(origin: string | null): string {
+    if (ALLOW_ALL) return origin || '*'
+    if (!origin) return RAW_ORIGINS[0] || '*'
+    if (RAW_ORIGINS.includes(origin)) return origin
+    const site = netlifySite(origin)
+    if (site && ALLOWED_SITES.has(site)) return origin   // libera previews do mesmo site
+    return RAW_ORIGINS[0] || '*'
+}
+
+function corsHeaders(req: Request): Record<string, string> {
+    return {
+        'Access-Control-Allow-Origin': resolveOrigin(req.headers.get('Origin')),
+        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Vary': 'Origin',
+    }
 }
 
 const ALLOWED_MODELS = new Set([
@@ -17,6 +42,7 @@ const ALLOWED_MODELS = new Set([
 const MAX_PAYLOAD_CHARS = 100_000
 
 Deno.serve(async (req) => {
+    const CORS = corsHeaders(req)
     if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS })
 
     try {

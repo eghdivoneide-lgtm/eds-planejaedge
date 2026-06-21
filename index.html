@@ -236,6 +236,15 @@
             .model-select { min-width: 126px; font-size: 13px; }
             .send-btn { min-width: 68px; padding: 10px 10px; }
         }
+
+        /* TOOLTIP (balão de ajuda no hover) */
+        .app-tip { position: fixed; z-index: 300; max-width: 260px; transform: translateX(-50%); background: rgba(8,26,22,0.97); color: #eafff9; border: 1px solid rgba(241,204,117,0.5); border-radius: 10px; padding: 9px 12px; font-size: 12.5px; line-height: 1.4; font-family: 'Trebuchet MS','Segoe UI',sans-serif; box-shadow: 0 12px 30px rgba(0,0,0,0.5); pointer-events: none; opacity: 0; transition: opacity .15s ease; }
+        .app-tip.show { opacity: 1; }
+        .app-tip::before { content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top: 0; border-bottom-color: rgba(241,204,117,0.5); }
+        .app-tip.above::before { top: auto; bottom: -6px; border-bottom: 0; border-top: 6px solid rgba(241,204,117,0.5); }
+        .consultant-help { width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(241,204,117,0.8); background: #0e2139; cursor: help; padding: 0; margin: 0 8px; flex: 0 0 auto; transition: transform .15s, box-shadow .15s; }
+        .consultant-help:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
+        .consultant-help img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
     </style>
     <style>
         :root {
@@ -323,6 +332,7 @@
             margin-right: 8px;
             white-space: nowrap;
         }
+        .status-chip.credits { color: #ffe6a3; border-color: rgba(241,204,117,0.55); background: rgba(241,204,117,0.14); font-weight: 600; }
         .tabbar {
             display: flex;
             gap: 8px;
@@ -541,7 +551,9 @@
                 grid-template-columns: 1fr;
             }
             .status-chip {
-                display: none;
+                font-size: 10px;
+                padding: 4px 7px;
+                margin-right: 5px;
             }
         }
     </style>
@@ -917,7 +929,8 @@
             </div>
             <div class="header-right">
                 <span class="status-chip" id="status-chip">PlanejaEdge online</span>
-                <button type="button" id="profile-trigger" class="profile-trigger" onclick="toggleProfileMenu(event)">👤</button>
+                <button type="button" class="consultant-help" data-tip="Sou o Professor EDS, seu consultor 👋 Passe o mouse sobre cada botão para ver o que ele faz." onclick="this.blur()"><img src="icons/prof-eds.png" alt="Ajuda — Professor EDS"></button>
+                <button type="button" id="profile-trigger" class="profile-trigger" data-tip="Sua conta: perfil, créditos e sair." onclick="toggleProfileMenu(event)">👤</button>
                 <div id="profile-menu" class="profile-menu">
                     <div id="credits-display" style="font-size:11px;color:#6e89a7;padding:6px 10px 2px;font-family:'DM Mono',Consolas,monospace"></div>
                     <button type="button" onclick="editProfileFromMenu()">✏️ Editar perfil</button>
@@ -927,11 +940,11 @@
             </div>
         </div>
         <div class="tabbar">
-            <button type="button" class="tab-btn active" data-panel="chat" onclick="switchPanel('chat')">Assistente</button>
-            <button type="button" class="tab-btn" data-panel="avaliacao" onclick="switchPanel('avaliacao')">Avaliações</button>
-            <button type="button" class="tab-btn" data-panel="quick" onclick="switchPanel('quick')">Atalhos</button>
-            <button type="button" class="tab-btn" data-panel="settings" onclick="switchPanel('settings')">Config pro</button>
-            <button type="button" class="tab-btn" id="admin-tab-btn" data-panel="admin" onclick="switchPanel('admin')" style="display:none">🛠 Admin</button>
+            <button type="button" class="tab-btn active" data-panel="chat" onclick="switchPanel('chat')" data-tip="Converse com o Professor EDS: planos de aula, dúvidas e estratégias com base na BNCC.">Assistente</button>
+            <button type="button" class="tab-btn" data-panel="avaliacao" onclick="switchPanel('avaliacao')" data-tip="Gere provas, corrija e veja o histórico — tudo alinhado à BNCC.">Avaliações</button>
+            <button type="button" class="tab-btn" data-panel="quick" onclick="switchPanel('quick')" data-tip="Prompts pedagógicos prontos para usar com um toque.">Atalhos</button>
+            <button type="button" class="tab-btn" data-panel="settings" onclick="switchPanel('settings')" data-tip="Sua conta, créditos, perfil e exportações de materiais.">Config pro</button>
+            <button type="button" class="tab-btn" id="admin-tab-btn" data-panel="admin" onclick="switchPanel('admin')" style="display:none" data-tip="Gestão de professores e créditos (acesso restrito).">🛠 Admin</button>
         </div>
         <div class="panel-stack">
             <section id="panel-chat" class="app-panel active" aria-label="Painel do assistente">
@@ -961,24 +974,24 @@
                     <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="handleFile(event)">
                     <input type="file" id="file-input" accept="image/*,application/pdf,text/plain,.csv,.json,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="display:none" onchange="handleFile(event)">
                     <div class="quick-bar">
-                        <button type="button" class="qbtn" onclick="qs('Monte um plano de aula completo com objetivo, habilidades da BNCC, metodologia, recursos e avaliação formativa.')">📋 Plano de aula</button>
-                        <button type="button" class="qbtn" onclick="qs('Crie uma sequência didática de 4 aulas com progressão pedagógica, estratégias ativas e critérios de avaliação.')">📚 Sequência didática</button>
-                        <button type="button" class="qbtn" onclick="qs('Sugira adaptações inclusivas para um plano de aula considerando estudantes com diferentes ritmos e necessidades de aprendizagem.')">♿ Inclusão</button>
-                        <button type="button" class="qbtn" onclick="qs('Crie uma avaliação diagnóstica com gabarito comentado e orientações de intervenção pedagógica a partir dos resultados.')">📝 Avaliação diagnóstica</button>
-                        <button type="button" class="qbtn" onclick="qs('Crie uma rubrica de avaliação qualitativa com descritores de desempenho para a atividade ou componente curricular que vou informar.')">✅ Rubrica</button>
-                        <button type="button" class="qbtn" onclick="qs('Faça a correção comentada desta redação, apontando pontos fortes, aspectos a melhorar e sugestões de reescrita fundamentadas na BNCC.')">✏️ Correção de redação</button>
-                        <button type="button" class="qbtn" onclick="qs('Monte um plano de recuperação personalizado para estudante com dificuldade específica, com atividades graduadas e critérios de acompanhamento.')">🔄 Recuperação</button>
-                        <button type="button" class="qbtn" onclick="qs('Crie um roteiro estruturado para reunião de pais e responsáveis, com pauta, pontos de discussão e orientações de apoio em casa.')">👨‍👩‍👧 Reunião de pais</button>
-                        <button type="button" class="qbtn" onclick="qs('Elabore um relatório de desenvolvimento individual para Educação Infantil, com observações sobre desenvolvimento motor, cognitivo, social e emocional.')">📊 Relatório EI</button>
+                        <button type="button" class="qbtn" data-tip="Gera um plano de aula completo: objetivo, habilidades da BNCC, metodologia e avaliação." onclick="qs('Monte um plano de aula completo com objetivo, habilidades da BNCC, metodologia, recursos e avaliação formativa.')">📋 Plano de aula</button>
+                        <button type="button" class="qbtn" data-tip="Cria uma sequência de 4 aulas com progressão pedagógica e critérios de avaliação." onclick="qs('Crie uma sequência didática de 4 aulas com progressão pedagógica, estratégias ativas e critérios de avaliação.')">📚 Sequência didática</button>
+                        <button type="button" class="qbtn" data-tip="Sugere adaptações inclusivas para diferentes ritmos e necessidades de aprendizagem." onclick="qs('Sugira adaptações inclusivas para um plano de aula considerando estudantes com diferentes ritmos e necessidades de aprendizagem.')">♿ Inclusão</button>
+                        <button type="button" class="qbtn" data-tip="Monta uma avaliação diagnóstica com gabarito comentado e orientações de intervenção." onclick="qs('Crie uma avaliação diagnóstica com gabarito comentado e orientações de intervenção pedagógica a partir dos resultados.')">📝 Avaliação diagnóstica</button>
+                        <button type="button" class="qbtn" data-tip="Cria uma rubrica de avaliação com descritores de desempenho." onclick="qs('Crie uma rubrica de avaliação qualitativa com descritores de desempenho para a atividade ou componente curricular que vou informar.')">✅ Rubrica</button>
+                        <button type="button" class="qbtn" data-tip="Corrige uma redação com pontos fortes, ajustes e sugestões de reescrita." onclick="qs('Faça a correção comentada desta redação, apontando pontos fortes, aspectos a melhorar e sugestões de reescrita fundamentadas na BNCC.')">✏️ Correção de redação</button>
+                        <button type="button" class="qbtn" data-tip="Monta um plano de recuperação personalizado com atividades graduadas." onclick="qs('Monte um plano de recuperação personalizado para estudante com dificuldade específica, com atividades graduadas e critérios de acompanhamento.')">🔄 Recuperação</button>
+                        <button type="button" class="qbtn" data-tip="Gera um roteiro para reunião de pais com pauta e orientações." onclick="qs('Crie um roteiro estruturado para reunião de pais e responsáveis, com pauta, pontos de discussão e orientações de apoio em casa.')">👨‍👩‍👧 Reunião de pais</button>
+                        <button type="button" class="qbtn" data-tip="Cria um relatório de desenvolvimento individual (Educação Infantil)." onclick="qs('Elabore um relatório de desenvolvimento individual para Educação Infantil, com observações sobre desenvolvimento motor, cognitivo, social e emocional.')">📊 Relatório EI</button>
                     </div>
                     <div class="att-bar">
-                        <button type="button" class="att-btn" onclick="document.getElementById('camera-input').click()">📷 Câmera</button>
-                        <button type="button" class="att-btn" onclick="document.getElementById('file-input').click()">📎 Arquivo</button>
-                        <button type="button" class="att-btn" onclick="exportAsHtml()">📄 HTML</button>
-                        <button type="button" class="att-btn" onclick="exportAsText()">📝 TXT</button>
-                        <button type="button" class="att-btn" onclick="exportAsDocx()">📋 DOCX</button>
-                        <button type="button" class="att-btn danger" onclick="clearSelectedFile()">🧹 Limpar anexo</button>
-                        <button type="button" class="att-btn danger" onclick="clearChatHistory()">🗑 Novo chat</button>
+                        <button type="button" class="att-btn" data-tip="Tire uma foto para o Professor EDS analisar." onclick="document.getElementById('camera-input').click()">📷 Câmera</button>
+                        <button type="button" class="att-btn" data-tip="Anexe imagem, PDF ou documento para análise." onclick="document.getElementById('file-input').click()">📎 Arquivo</button>
+                        <button type="button" class="att-btn" data-tip="Exporta a conversa atual em HTML." onclick="exportAsHtml()">📄 HTML</button>
+                        <button type="button" class="att-btn" data-tip="Exporta a conversa atual em texto (TXT)." onclick="exportAsText()">📝 TXT</button>
+                        <button type="button" class="att-btn" data-tip="Exporta a conversa atual em Word (DOCX)." onclick="exportAsDocx()">📋 DOCX</button>
+                        <button type="button" class="att-btn danger" data-tip="Remove o arquivo anexado." onclick="clearSelectedFile()">🧹 Limpar anexo</button>
+                        <button type="button" class="att-btn danger" data-tip="Limpa a conversa e começa um novo chat." onclick="clearChatHistory()">🗑 Novo chat</button>
                     </div>
                     <div id="preview-area"></div>
                     <div class="inp-row">
@@ -1080,10 +1093,10 @@
 
             <section id="panel-avaliacao" class="app-panel av-panel" aria-label="Painel de avaliações">
                 <div class="av-subnav">
-                    <button type="button" class="av-sub active" data-av="gerar" onclick="switchAvTab('gerar')">📝 Gerar Prova</button>
-                    <button type="button" class="av-sub" data-av="corrigir" onclick="switchAvTab('corrigir')">✅ Corrigir</button>
-                    <button type="button" class="av-sub" data-av="historico" onclick="switchAvTab('historico')">📚 Histórico</button>
-                    <button type="button" class="av-sub" data-av="relatorio" onclick="switchAvTab('relatorio')">📊 Relatório</button>
+                    <button type="button" class="av-sub active" data-av="gerar" onclick="switchAvTab('gerar')" data-tip="Monte uma prova por disciplina, série, conteúdo e dificuldade, com gabarito automático.">📝 Gerar Prova</button>
+                    <button type="button" class="av-sub" data-av="corrigir" onclick="switchAvTab('corrigir')" data-tip="Envie as respostas do aluno e receba a correção com feedback.">✅ Corrigir</button>
+                    <button type="button" class="av-sub" data-av="historico" onclick="switchAvTab('historico')" data-tip="Reabra e exporte (DOCX/HTML) as provas que você salvou.">📚 Histórico</button>
+                    <button type="button" class="av-sub" data-av="relatorio" onclick="switchAvTab('relatorio')" data-tip="Consolide notas e observações da turma em um relatório pronto.">📊 Relatório</button>
                 </div>
 
                 <!-- GERAR PROVA -->
@@ -1407,7 +1420,10 @@
             const chipEl = document.getElementById('status-chip');
             const menuEl = document.getElementById('credits-display');
             const credEl = document.getElementById('settings-credits');
-            if (chipEl) chipEl.textContent = _userCreditos !== null ? `${_userCreditos} créditos` : 'PlanejaEdge online';
+            if (chipEl) {
+                chipEl.textContent = _userCreditos !== null ? `🪙 ${_userCreditos} créditos` : 'PlanejaEdge online';
+                chipEl.classList.toggle('credits', _userCreditos !== null);
+            }
             if (menuEl) menuEl.textContent = v;
             if (credEl) credEl.textContent = `Créditos disponíveis: ${_userCreditos ?? '—'}`;
         }
@@ -3416,6 +3432,48 @@ REGRA CRÍTICA: Comece DIRETAMENTE com "# Relatório de Turma". Nenhum texto ant
                 showToast('Relatório exportado em DOCX!');
             } catch (e) { console.error(e); showToast('Erro ao gerar DOCX do relatório.'); }
         }
+    </script>
+
+    <!-- TOOLTIP (balão de ajuda no hover) -->
+    <script>
+        (function () {
+            const tip = document.createElement('div');
+            tip.className = 'app-tip';
+            document.body.appendChild(tip);
+            let current = null;
+
+            function place(el) {
+                const text = el.getAttribute('data-tip');
+                if (!text) return;
+                tip.textContent = text;
+                tip.classList.add('show');
+                const r = el.getBoundingClientRect();
+                const th = tip.offsetHeight;
+                const above = (r.bottom + 9 + th > window.innerHeight - 6) && (r.top - th - 9 > 6);
+                tip.classList.toggle('above', above);
+                tip.style.left = Math.min(Math.max(r.left + r.width / 2, 140), window.innerWidth - 140) + 'px';
+                tip.style.top = (above ? r.top - th - 9 : r.bottom + 9) + 'px';
+            }
+            function hide() { tip.classList.remove('show'); current = null; }
+
+            document.addEventListener('mouseover', (e) => {
+                const el = e.target.closest('[data-tip]');
+                if (el && el !== current) { current = el; place(el); }
+            });
+            document.addEventListener('mouseout', (e) => {
+                const el = e.target.closest('[data-tip]');
+                if (el && el === current) hide();
+            });
+            // Em telas de toque, mostra o balão por instantes ao tocar
+            document.addEventListener('click', (e) => {
+                const el = e.target.closest('[data-tip]');
+                if (!el) { hide(); return; }
+                place(el);
+                clearTimeout(place._t);
+                place._t = setTimeout(hide, 2600);
+            });
+            window.addEventListener('scroll', hide, true);
+        })();
     </script>
 </body>
 </html>
