@@ -1039,13 +1039,8 @@
                     <div class="info-chip">EDS Soluções Inteligentes</div>
                 </div>
                 <div class="settings-card">
-                    <h4>🔊 Voz Neural — Google Cloud TTS</h4>
-                    <p class="muted">Cole aqui sua chave Google Cloud TTS para ativar a voz natural do Professor EDS em pt-BR (Neural2). <a href="https://console.cloud.google.com/apis/library/texttospeech.googleapis.com" target="_blank" rel="noopener" style="color:#f1cc75;text-decoration:underline">Ativar a API aqui</a> e criar uma chave em <em>Credenciais</em>.</p>
-                    <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
-                        <input type="password" id="tts-key-input" placeholder="AIza..." autocomplete="off" style="flex:1;padding:9px 11px;border:1px solid rgba(40,178,147,0.4);border-radius:8px;background:rgba(7,28,24,0.72);color:#ecfff9;font-size:13px;outline:none;">
-                        <button type="button" onclick="saveTtsKey()" style="padding:9px 16px;background:#13a385;border:none;border-radius:8px;color:#fff;cursor:pointer;font-weight:700;font-size:13px;white-space:nowrap;">Salvar</button>
-                    </div>
-                    <p class="muted" style="margin-top:8px;font-size:11px;">Free tier: 1 milhão de caracteres/mês. Nenhum custo para uso educacional típico.</p>
+                    <h4>🔊 Voz Neural</h4>
+                    <p class="muted">A leitura em voz alta usa a síntese de voz do seu navegador (pt-BR). Clique em 🔊 em qualquer resposta para ouvir.</p>
                 </div>
                 <div class="settings-card">
                     <h4>Acoes rapidas</h4>
@@ -1319,8 +1314,6 @@
         let _authMode       = 'login';
 
         async function initAuth() {
-            const savedTtsKey = localStorage.getItem('seduc_tts_key');
-            if (savedTtsKey) window.TTS_KEY = savedTtsKey;
 
             const { data } = await _sb.auth.getSession();
             if (data.session) await onLoginSuccess(data.session);
@@ -1336,7 +1329,6 @@
             _currentSession = session;
             document.getElementById('auth-modal').style.display = 'none';
             document.getElementById('chat-section').style.display = 'flex';
-            markSessionActivity();
             switchPanel('chat');
             await loadUserProfile();
             const credMsg = _userCreditos !== null ? ` Você tem ${_userCreditos} créditos.` : '';
@@ -1511,9 +1503,6 @@
         ].join('\n');
         const CHAT_HISTORY_KEY = 'seduc_monitor_chat_history_v1';
         const MAX_HISTORY_ITEMS = 80;
-        const SESSION_LAST_ACTIVITY_KEY = 'seduc_monitor_last_activity';
-        const SESSION_TIMEOUT_MINUTES = 30;
-        const SESSION_TIMEOUT_MS = SESSION_TIMEOUT_MINUTES * 60 * 1000;
         const RESPONSE_TYPE_KEY = 'seduc_response_type_preference';
         let selectedFile = null;
         let studentProfile = {
@@ -1521,12 +1510,6 @@
             age: '',
             grade: ''
         };
-
-        function markSessionActivity() {
-            if (window.API_KEY || localStorage.getItem('seduc_gemini_api_key')) {
-                localStorage.setItem(SESSION_LAST_ACTIVITY_KEY, String(Date.now()));
-            }
-        }
 
         function switchPanel(panelName) {
             const panelMap = {
@@ -1621,16 +1604,7 @@
             _sb.auth.signOut();
         }
 
-        function checkSessionExpiry() {
-            const savedKey = localStorage.getItem('seduc_gemini_api_key');
-            if (!savedKey) return;
-            if (isSessionExpired()) {
-                clearSession(true);
-            }
-        }
-
         function saveStudentProfile() {
-            markSessionActivity();
             const nameValue = document.getElementById('student-name').value.trim();
             const ageValue = document.getElementById('student-age').value.trim();
             const gradeValue = document.getElementById('student-grade').value.trim();
@@ -1768,7 +1742,6 @@
         }
 
         function clearChatHistory() {
-            markSessionActivity();
             localStorage.removeItem(CHAT_HISTORY_KEY);
             const chatContainer = document.getElementById('chat-container');
             chatContainer.innerHTML = `
@@ -1785,7 +1758,6 @@
         }
 
         function exportAsHtml() {
-            markSessionActivity();
             const items = getHistory();
             if (!items.length) { showToast('Nenhuma mensagem para exportar ainda.'); return; }
 
@@ -1864,7 +1836,6 @@
         }
 
         function exportAsText() {
-            markSessionActivity();
             const items = getHistory();
             if (!items.length) { showToast('Nenhuma mensagem para exportar ainda.'); return; }
 
@@ -1890,7 +1861,6 @@
         }
 
         async function exportAsDocx() {
-            markSessionActivity();
             const items = getHistory();
             if (!items.length) { showToast('Nenhuma mensagem para exportar ainda.'); return; }
             if (!window.docx) { showToast('Biblioteca DOCX não carregou. Recarregue a página.'); return; }
@@ -1972,7 +1942,6 @@
         }
 
         function clearSelectedFile() {
-            markSessionActivity();
             selectedFile = null;
             document.getElementById('camera-input').value = '';
             document.getElementById('file-input').value = '';
@@ -1981,7 +1950,6 @@
         }
 
         async function handleFile(event) {
-            markSessionActivity();
             const file = event.target.files && event.target.files[0];
             if (!file) return;
 
@@ -2306,7 +2274,6 @@
         }
 
         async function sendMessage() {
-            checkSessionExpiry();
             const inputField = document.getElementById('user-input');
             const sendBtn = document.getElementById('send-btn');
             const userText = inputField.value.trim();
@@ -2319,7 +2286,6 @@
 
             addMessage(userText, 'user-message');
             inputField.value = '';
-            markSessionActivity();
             if (sendBtn) {
                 sendBtn.classList.add('is-loading');
                 sendBtn.disabled = true;
@@ -2378,26 +2344,25 @@
 
         let _ttsActiveBtn = null;
         let _ttsActiveVw = null;
-        let _ttsAudio = null;
+        let _ttsUtter = null;
 
         function _ttsReset(btn, videoWrap) {
             if (btn) { btn.classList.remove('speaking'); btn.textContent = '🔊'; }
             if (videoWrap) videoWrap.classList.remove('speaking-active');
-            _ttsActiveBtn = null; _ttsActiveVw = null; _ttsAudio = null;
+            _ttsActiveBtn = null; _ttsActiveVw = null; _ttsUtter = null;
         }
 
         function speakText(text, btn, videoWrap) {
-            if (_ttsActiveBtn === btn && _ttsAudio && !_ttsAudio.paused) {
-                _ttsAudio.pause();
+            if (_ttsActiveBtn === btn && speechSynthesis.speaking) {
+                speechSynthesis.cancel();
                 _ttsReset(btn, videoWrap);
                 return;
             }
-            if (_ttsAudio) { _ttsAudio.pause(); }
+            speechSynthesis.cancel();
             _ttsReset(_ttsActiveBtn, _ttsActiveVw);
 
-            const ttsKey = window.TTS_KEY || localStorage.getItem('seduc_tts_key');
-            if (!ttsKey) {
-                showToast('Configure sua chave Google TTS em ⚙ Config Pro.');
+            if (!('speechSynthesis' in window)) {
+                showToast('Seu navegador não suporta leitura em voz alta.');
                 return;
             }
 
@@ -2414,48 +2379,21 @@
                 .trim();
 
             btn.classList.add('speaking');
-            btn.textContent = '⏳';
+            btn.textContent = '⏹';
             if (videoWrap) videoWrap.classList.add('speaking-active');
             _ttsActiveBtn = btn;
             _ttsActiveVw = videoWrap;
 
-            fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${ttsKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    input: { text: clean },
-                    voice: { languageCode: 'pt-BR', name: 'pt-BR-Neural2-B', ssmlGender: 'MALE' },
-                    audioConfig: { audioEncoding: 'MP3', speakingRate: 1.05, pitch: 0.0, effectsProfileId: ['headphone-class-device'] }
-                })
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (data.error) {
-                    showToast('Erro TTS: ' + (data.error.message || 'verifique sua chave.'));
-                    _ttsReset(btn, videoWrap);
-                    return;
-                }
-                const audio = new Audio('data:audio/mp3;base64,' + data.audioContent);
-                _ttsAudio = audio;
-                btn.textContent = '⏹';
-                const done = () => _ttsReset(btn, videoWrap);
-                audio.onended = done;
-                audio.onerror = done;
-                audio.play();
-            })
-            .catch(() => {
-                showToast('Erro ao conectar ao serviço de voz.');
-                _ttsReset(btn, videoWrap);
-            });
-        }
-
-        function saveTtsKey() {
-            const k = document.getElementById('tts-key-input').value.trim();
-            if (!k) { showToast('Digite a chave Google Cloud TTS.'); return; }
-            localStorage.setItem('seduc_tts_key', k);
-            window.TTS_KEY = k;
-            document.getElementById('tts-key-input').value = '';
-            showToast('✅ Chave de voz salva! Clique em "Ouvir" para testar.');
+            const utter = new SpeechSynthesisUtterance(clean);
+            utter.lang = 'pt-BR';
+            utter.rate = 1.05;
+            const voices = speechSynthesis.getVoices();
+            const ptVoice = voices.find(v => v.lang.startsWith('pt-BR') || v.lang.startsWith('pt_BR'));
+            if (ptVoice) utter.voice = ptVoice;
+            utter.onend  = () => _ttsReset(btn, videoWrap);
+            utter.onerror = () => _ttsReset(btn, videoWrap);
+            _ttsUtter = utter;
+            speechSynthesis.speak(utter);
         }
 
         function now() {
@@ -2548,7 +2486,6 @@
         if (modelSelector) {
             modelSelector.addEventListener('change', function (e) {
                 localStorage.setItem(MODEL_STORAGE_KEY, e.target.value);
-                markSessionActivity();
                 showToast(`Modelo ativo: ${e.target.value}`);
             });
         }
@@ -2562,10 +2499,6 @@
             }
         });
 
-        ['click', 'keydown', 'touchstart'].forEach((eventName) => {
-            document.addEventListener(eventName, markSessionActivity, { passive: true });
-        });
-
         if ('serviceWorker' in navigator && location.protocol !== 'file:') {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw-seduc.js').catch((error) => {
@@ -2573,8 +2506,6 @@
                 });
             });
         }
-
-        setInterval(checkSessionExpiry, 60000);
 
         loadStudentProfile();
         loadChatHistory();
