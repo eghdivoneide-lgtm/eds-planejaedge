@@ -39,7 +39,7 @@ jobs:
               ['supabase.createClient', 'cliente Supabase ausente'],
               ['callAIProxy',           'função callAIProxy ausente'],
               ['SUPABASE_ANON_KEY',     'constante SUPABASE_ANON_KEY ausente'],
-              ['eds-planejaedge',       'referência ao projeto Supabase ausente'],
+              ['bebawvpxgcviepkdxtyn',  'referência ao projeto Supabase ausente'],
               ['sw-seduc.js',           'registro do Service Worker ausente'],
             ];
             let ok = true;

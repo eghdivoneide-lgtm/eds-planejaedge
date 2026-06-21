@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b231e">
+    <title>EDS PlanejaEdge — Planejamento Pedagógico com IA</title>
+    <meta name="description" content="O EDS PlanejaEdge usa Inteligência Artificial para criar planos de aula, gerar e corrigir provas e montar relatórios de turma — tudo em segundos, alinhado à BNCC. Desenvolvido pela EDS Soluções Inteligentes.">
+    <link rel="icon" href="icons/eds-symbols/eds-brand-app-icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icons/icon-512.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --g900: #061310; --g850: #081a16; --g800: #0b231e; --g700: #0f4d41;
+            --g600: #0f7763; --g500: #13a385; --teal: #2fe0bd;
+            --gold: #f1cc75; --gold-2: #d1a64f;
+            --t100: #e9faf5; --t200: #c7efe3; --muted: #9dc9bc;
+            --border: rgba(34, 176, 144, 0.32);
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0; color: var(--t100); line-height: 1.55;
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            background:
+                radial-gradient(70% 60% at 12% 4%, rgba(19,163,133,0.16), transparent 60%),
+                radial-gradient(60% 55% at 95% -5%, rgba(209,166,79,0.10), transparent 62%),
+                linear-gradient(180deg, #061310 0%, #081a16 50%, #0b231e 100%);
+            background-attachment: fixed;
+        }
+        h1, h2, h3, .syne { font-family: 'Syne', 'Trebuchet MS', sans-serif; }
+        .mono { font-family: 'DM Mono', Consolas, monospace; }
+        a { color: inherit; text-decoration: none; }
+        .wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+        .g { color: var(--gold); }
+
+        /* NAV */
+        .nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); background: rgba(6,19,16,0.78); border-bottom: 1px solid var(--border); }
+        .nav-in { display: flex; align-items: center; justify-content: space-between; height: 70px; }
+        .brand { display: flex; align-items: center; gap: 10px; font-family: 'Syne'; font-weight: 800; font-size: 1.2rem; }
+        .brand .star { color: var(--gold); font-size: 1.5rem; line-height: 1; }
+        .brand .pro { color: var(--gold); }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: var(--t200); font-size: 15px; transition: color .15s; }
+        .nav-links a:hover { color: var(--teal); }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; font-family: 'Syne', sans-serif; transition: transform .18s ease, filter .18s ease, background .2s; white-space: nowrap; }
+        .btn-gold { background: linear-gradient(90deg, var(--gold), var(--gold-2)); color: #1a1505; padding: 12px 24px; font-size: 15px; box-shadow: 0 10px 26px rgba(209,166,79,.28); }
+        .btn-gold:hover { transform: translateY(-2px); filter: brightness(1.05); }
+        .btn-ghost { background: rgba(15,119,99,0.16); color: var(--t100); border: 1px solid rgba(34,176,144,0.5); padding: 12px 24px; font-size: 15px; }
+        .btn-ghost:hover { background: rgba(15,119,99,0.32); transform: translateY(-2px); }
+        .btn-lg { padding: 17px 32px; font-size: 17px; }
+
+        /* HERO */
+        .hero { padding: 70px 0 30px; position: relative; }
+        .pill { display: inline-flex; align-items: center; gap: 9px; font-family: 'DM Mono', monospace; font-size: 12.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); padding: 8px 18px; border-radius: 999px; border: 1px solid rgba(209,166,79,0.45); background: rgba(209,166,79,0.07); }
+        .hero h1 { font-size: clamp(2.6rem, 7vw, 5.4rem); font-weight: 800; line-height: 0.98; letter-spacing: -1.5px; margin: 26px 0 22px; max-width: 14ch; }
+        .hero .lead { font-size: clamp(1.05rem, 1.6vw, 1.32rem); color: var(--t200); max-width: 600px; margin: 0 0 30px; }
+        .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+        .microcopy { margin-top: 18px; font-family: 'DM Mono', monospace; font-size: 13.5px; color: var(--muted); }
+        .microcopy b { color: var(--teal); }
+
+        /* SECTION SHELL */
+        section.block { padding: 76px 0; }
+        .kicker { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 2.6px; text-transform: uppercase; color: var(--gold); }
+        .sec-head { max-width: 720px; margin: 0 auto 48px; text-align: center; }
+        .sec-head h2 { font-size: clamp(1.9rem, 3.6vw, 2.7rem); margin: 12px 0 14px; letter-spacing: -.5px; line-height: 1.08; }
+        .sec-head p { color: var(--t200); font-size: 1.1rem; margin: 0; }
+
+        /* O PROBLEMA */
+        .prob-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+        .prob { background: rgba(8,26,22,0.55); border: 1px solid rgba(209,166,79,0.22); border-radius: 18px; padding: 26px 24px; }
+        .prob .x { display: inline-flex; width: 46px; height: 46px; align-items: center; justify-content: center; border-radius: 12px; background: rgba(224,90,90,0.12); border: 1px solid rgba(224,90,90,0.35); color: #f08a8a; font-size: 1.3rem; margin-bottom: 14px; }
+        .prob h3 { margin: 0 0 7px; font-size: 1.16rem; }
+        .prob p { margin: 0; color: var(--muted); font-size: .97rem; }
+
+        /* FEATURES */
+        .cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+        .card { background: linear-gradient(180deg, rgba(16,48,41,0.82), rgba(11,35,30,0.92)); border: 1px solid var(--border); border-radius: 20px; padding: 28px 26px; transition: transform .2s, border-color .2s, box-shadow .2s; }
+        .card:hover { transform: translateY(-5px); border-color: rgba(47,224,189,.5); box-shadow: 0 22px 44px rgba(0,0,0,.34); }
+        .card .ic { display: inline-flex; width: 58px; height: 58px; align-items: center; justify-content: center; border-radius: 15px; background: rgba(19,163,133,.14); border: 1px solid rgba(34,176,144,.34); font-size: 1.9rem; margin-bottom: 16px; }
+        .card h3 { margin: 0 0 8px; font-size: 1.24rem; }
+        .card p { margin: 0; color: var(--muted); font-size: .98rem; }
+
+        /* COMO FUNCIONA */
+        .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; counter-reset: s; }
+        .step { position: relative; background: rgba(8,26,22,.5); border: 1px solid rgba(34,176,144,.25); border-radius: 18px; padding: 30px 26px; }
+        .step::before { counter-increment: s; content: "0" counter(s); font-family: 'Syne'; font-weight: 800; font-size: 2.6rem; color: rgba(241,204,117,.9); line-height: 1; display: block; margin-bottom: 12px; }
+        .step h3 { margin: 0 0 7px; font-size: 1.18rem; }
+        .step p { margin: 0; color: var(--muted); font-size: .97rem; }
+
+        /* FAQ */
+        .faq { max-width: 820px; margin: 0 auto; }
+        .qa { border: 1px solid var(--border); border-radius: 14px; margin-bottom: 12px; background: rgba(8,26,22,0.5); overflow: hidden; }
+        .qa summary { cursor: pointer; list-style: none; padding: 19px 22px; font-family: 'Syne'; font-weight: 700; font-size: 1.06rem; display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+        .qa summary::-webkit-details-marker { display: none; }
+        .qa summary::after { content: "+"; color: var(--gold); font-size: 1.5rem; font-weight: 400; transition: transform .2s; }
+        .qa[open] summary::after { transform: rotate(45deg); }
+        .qa .a { padding: 0 22px 20px; color: var(--t200); font-size: 1rem; }
+
+        /* CTA BAND */
+        .cta-band { text-align: center; background: linear-gradient(180deg, rgba(209,166,79,0.12), rgba(11,35,30,0.55)); border: 1px solid rgba(209,166,79,0.3); border-radius: 28px; padding: 56px 28px; }
+        .cta-band h2 { font-size: clamp(1.9rem, 4vw, 2.8rem); margin: 0 0 12px; letter-spacing: -.5px; }
+        .cta-band p { color: var(--t200); font-size: 1.12rem; max-width: 560px; margin: 0 auto 30px; }
+        .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+        /* FOOTER */
+        footer { border-top: 1px solid var(--border); padding: 36px 0; margin-top: 40px; }
+        .foot { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+        .foot img { height: 30px; opacity: .92; }
+        .foot small { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; }
+
+        /* AVATAR ASSISTANT — figura do Professor EDS que "passeia" com dicas */
+        .assistant { position: fixed; right: 26px; bottom: 0; z-index: 60; display: flex; align-items: flex-end; gap: 0; transition: opacity .4s ease, transform .45s ease; }
+        .assistant.hidden { opacity: 0; transform: translateY(40px); pointer-events: none; }
+        .bubble { position: relative; align-self: flex-end; margin-bottom: 150px; max-width: 250px; background: rgba(8,26,22,0.95); border: 1px solid var(--border); border-radius: 16px 16px 16px 4px; padding: 13px 16px; font-size: 13.5px; line-height: 1.42; color: var(--t100); box-shadow: 0 14px 34px rgba(0,0,0,.5); backdrop-filter: blur(6px); animation: pop .4s ease; margin-right: -10px; }
+        .bubble::after { content: ''; position: absolute; right: -8px; bottom: 14px; width: 0; height: 0; border: 8px solid transparent; border-left-color: rgba(8,26,22,0.95); border-right: 0; }
+        .bubble b { color: var(--gold); }
+        .bubble .tip-label { display: block; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--teal); margin-bottom: 4px; }
+        .bubble .close { position: absolute; top: -9px; left: -9px; width: 22px; height: 22px; border-radius: 50%; background: var(--g700); border: 1px solid var(--border); color: var(--t100); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
+        @keyframes pop { from { opacity: 0; transform: scale(.92) translateY(6px); } to { opacity: 1; transform: none; } }
+        .ava-figure { width: auto; height: 210px; display: block; filter: drop-shadow(0 12px 22px rgba(0,0,0,.55)); animation: stroll 5s ease-in-out infinite; transform-origin: bottom center; }
+        @keyframes stroll { 0%,100% { transform: translateY(0) rotate(0deg); } 25% { transform: translateY(-6px) rotate(-1deg); } 75% { transform: translateY(-6px) rotate(1deg); } }
+        .ava-reopen { position: fixed; right: 22px; bottom: 22px; z-index: 60; width: 64px; height: 64px; border-radius: 50%; overflow: hidden; border: 2.5px solid rgba(241,204,117,0.85); box-shadow: 0 10px 26px rgba(0,0,0,.5); cursor: pointer; display: none; background: var(--g700); }
+        .ava-reopen.show { display: block; animation: bob 3.2s ease-in-out infinite; }
+        @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        .ava-reopen img { width: 150%; height: 150%; object-fit: cover; object-position: top center; margin: -8px 0 0 -22%; }
+
+        @media (max-width: 880px) {
+            .nav-links { display: none; }
+            .prob-grid, .cards, .steps { grid-template-columns: 1fr; }
+            .hero h1 { max-width: none; }
+            .assistant { right: 12px; }
+            .ava-figure { height: 150px; }
+            .bubble { max-width: 190px; margin-bottom: 108px; font-size: 12.5px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAV -->
+    <header class="nav">
+        <div class="wrap nav-in">
+            <a class="brand" href="#top"><span class="star">✦</span> PlanejaEdge<span class="pro"></span></a>
+            <nav class="nav-links">
+                <a href="#problema">O problema</a>
+                <a href="#recursos">O que faz</a>
+                <a href="#como">Como funciona</a>
+                <a href="#duvidas">Dúvidas</a>
+            </nav>
+            <a class="btn btn-gold" href="index.html?signup=1">Criar conta</a>
+        </div>
+    </header>
+
+    <main id="top">
+        <!-- HERO -->
+        <section class="hero">
+            <div class="wrap">
+                <span class="pill">✦ EDS SOLUÇÕES INTELIGENTES · ALINHADO À BNCC</span>
+                <h1>Pare de planejar aula <span class="g">no improviso</span> e corrigir prova <span class="g">de madrugada.</span></h1>
+                <p class="lead">O <strong>EDS PlanejaEdge</strong> usa Inteligência Artificial para criar planos de aula, gerar e corrigir provas e montar relatórios de turma — tudo em segundos, fundamentado na BNCC.</p>
+                <div class="hero-actions">
+                    <a class="btn btn-gold btn-lg" href="index.html?signup=1">Começar agora →</a>
+                    <a class="btn btn-ghost btn-lg" href="#como">Ver como funciona</a>
+                </div>
+                <p class="microcopy">✓ <b>100 créditos grátis</b> ao criar conta · sem cartão de crédito · pronto em segundos</p>
+            </div>
+        </section>
+
+        <!-- O PROBLEMA -->
+        <section class="block" id="problema">
+            <div class="wrap">
+                <div class="sec-head">
+                    <div class="kicker">O problema</div>
+                    <h2>O planejamento pedagógico consome o seu tempo</h2>
+                    <p>Professores gastam horas em tarefas repetitivas que a IA já resolve em segundos.</p>
+                </div>
+                <div class="prob-grid">
+                    <div class="prob"><div class="x">✕</div><h3>Planos no improviso</h3><p>Montar plano de aula alinhado à BNCC do zero, toda semana, tira tempo da sala de aula.</p></div>
+                    <div class="prob"><div class="x">✕</div><h3>Provas feitas às pressas</h3><p>Elaborar avaliações com gabarito e níveis de dificuldade é demorado e repetitivo.</p></div>
+                    <div class="prob"><div class="x">✕</div><h3>Correção de madrugada</h3><p>Corrigir e consolidar notas e observações da turma rouba suas noites e fins de semana.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- O QUE FAZ -->
+        <section class="block" id="recursos">
+            <div class="wrap">
+                <div class="sec-head">
+                    <div class="kicker">O que faz</div>
+                    <h2>Seu assistente pedagógico completo</h2>
+                    <p>Do plano de aula ao relatório da turma — o Professor EDS acelera tudo sem perder qualidade.</p>
+                </div>
+                <div class="cards">
+                    <div class="card"><div class="ic">💬</div><h3>Assistente Pedagógico</h3><p>Planos de aula, sequências didáticas, inclusão e intervenções — práticos e fundamentados na BNCC.</p></div>
+                    <div class="card"><div class="ic">📝</div><h3>Geração de Provas</h3><p>Avaliações por disciplina, série, conteúdo e nível (básico ao SAEB/ENEM), com gabarito automático.</p></div>
+                    <div class="card"><div class="ic">✅</div><h3>Correção Inteligente</h3><p>Corrija provas e receba feedback estruturado, com resposta esperada e critérios pedagógicos.</p></div>
+                    <div class="card"><div class="ic">📊</div><h3>Relatório de Turma</h3><p>Consolide notas e observações em um relatório claro, pronto para conselhos de classe.</p></div>
+                    <div class="card"><div class="ic">📄</div><h3>Exportação DOCX e HTML</h3><p>Baixe provas, correções e relatórios formatados, prontos para imprimir e usar.</p></div>
+                    <div class="card"><div class="ic">📱</div><h3>App Instalável (PWA)</h3><p>Use no computador ou no celular e instale como aplicativo, dentro ou fora da sala.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMO FUNCIONA -->
+        <section class="block" id="como">
+            <div class="wrap">
+                <div class="sec-head">
+                    <div class="kicker">Como funciona</div>
+                    <h2>Em 3 passos simples</h2>
+                </div>
+                <div class="steps">
+                    <div class="step"><h3>Crie sua conta</h3><p>Cadastre-se com e-mail e senha e ganhe créditos de boas-vindas para começar agora.</p></div>
+                    <div class="step"><h3>Peça ao Professor EDS</h3><p>Descreva sua demanda — plano, prova ou relatório — e receba o resultado em segundos.</p></div>
+                    <div class="step"><h3>Exporte e use</h3><p>Ajuste, baixe em DOCX/HTML e leve direto para a sala de aula ou coordenação.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DÚVIDAS / FAQ -->
+        <section class="block" id="duvidas">
+            <div class="wrap">
+                <div class="sec-head">
+                    <div class="kicker">Dúvidas</div>
+                    <h2>Perguntas frequentes</h2>
+                </div>
+                <div class="faq">
+                    <details class="qa"><summary>Preciso pagar para usar?</summary><div class="a">Você ganha créditos gratuitos ao criar a conta e já pode usar todos os recursos. Depois, a recarga de créditos é feita conforme o seu uso — sem mensalidade obrigatória.</div></details>
+                    <details class="qa"><summary>As provas e planos seguem a BNCC?</summary><div class="a">Sim. O Professor EDS é orientado pela BNCC e pelas boas práticas pedagógicas, incluindo níveis de dificuldade do básico ao padrão SAEB/ENEM.</div></details>
+                    <details class="qa"><summary>Consigo exportar o material gerado?</summary><div class="a">Sim. Provas, correções e relatórios podem ser exportados em DOCX e HTML, formatados e prontos para imprimir ou editar.</div></details>
+                    <details class="qa"><summary>Funciona no celular?</summary><div class="a">Sim. É um aplicativo web (PWA) que funciona no computador e no celular, e pode ser instalado como app na tela inicial.</div></details>
+                    <details class="qa"><summary>Meus dados estão seguros?</summary><div class="a">Sim. O acesso é individual e autenticado, e a integração com a IA roda em servidor seguro — nenhuma credencial fica exposta no navegador.</div></details>
+                    <details class="qa"><summary>Quem desenvolve o PlanejaEdge?</summary><div class="a">O EDS PlanejaEdge é desenvolvido pela <strong>EDS Soluções Inteligentes</strong>, especializada em soluções com Inteligência Artificial.</div></details>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA BAND -->
+        <section class="block" style="padding-top:0">
+            <div class="wrap">
+                <div class="cta-band">
+                    <h2>Pronto para ganhar tempo no seu planejamento?</h2>
+                    <p>Junte-se aos professores que usam o EDS PlanejaEdge para ensinar com mais qualidade e menos esforço.</p>
+                    <div class="cta-actions">
+                        <a class="btn btn-gold btn-lg" href="index.html?signup=1">Criar conta gratuita →</a>
+                        <a class="btn btn-ghost btn-lg" href="index.html">Entrar</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="wrap foot">
+            <img src="icons/eds-symbols/eds-brand-horizontal.svg" alt="EDS Soluções Inteligentes">
+            <small>© 2026 EDS Soluções Inteligentes · EDS PlanejaEdge · Planejamento pedagógico com IA</small>
+        </div>
+    </footer>
+
+    <!-- AVATAR ASSISTANT — figura do Professor EDS -->
+    <div class="assistant" id="assistant">
+        <div class="bubble" id="ava-bubble">
+            <button class="close" id="ava-close" aria-label="Fechar">×</button>
+            <span class="tip-label">Professor EDS · dica</span>
+            <span id="ava-tip">Olá! Sou o Professor EDS. Posso montar um plano de aula completo para você em segundos.</span>
+        </div>
+        <img class="ava-figure" src="icons/prof-eds-figura.png" alt="Professor EDS">
+    </div>
+    <div class="ava-reopen" id="ava-reopen" title="Falar com o Professor EDS">
+        <img src="icons/prof-eds.png" alt="Professor EDS">
+    </div>
+
+    <script>
+        (function () {
+            var tips = {
+                top:      'Olá! Sou o <b>Professor EDS</b>. Posso montar um plano de aula completo para você em segundos.',
+                problema: 'Sabia? Você pode <b>economizar horas por semana</b> automatizando provas e relatórios.',
+                recursos: 'Experimente <b>gerar uma prova com gabarito automático</b> — é só pedir o conteúdo.',
+                como:     'É só <b>criar a conta</b> e me pedir o que precisa. Eu cuido do resto. 😊',
+                duvidas:  'Ficou com alguma dúvida? <b>Crie sua conta grátis</b> e me chame dentro do app!'
+            };
+            var bubble = document.getElementById('ava-bubble');
+            var tipEl = document.getElementById('ava-tip');
+            var assistant = document.getElementById('assistant');
+            var reopen = document.getElementById('ava-reopen');
+            var current = 'top';
+
+            function setTip(key) {
+                if (key === current || !tips[key]) return;
+                current = key;
+                tipEl.innerHTML = tips[key];
+                bubble.style.animation = 'none';
+                void bubble.offsetWidth;
+                bubble.style.animation = 'pop .4s ease';
+            }
+
+            // Atualiza a dica conforme a seção visível (o avatar "acompanha" a navegação)
+            if ('IntersectionObserver' in window) {
+                var io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (e.isIntersecting) setTip(e.target.id || 'top');
+                    });
+                }, { rootMargin: '-45% 0px -45% 0px' });
+                ['problema', 'recursos', 'como', 'duvidas'].forEach(function (id) {
+                    var el = document.getElementById(id);
+                    if (el) io.observe(el);
+                });
+            }
+
+            if (sessionStorage.getItem('ava_closed') === '1') {
+                assistant.classList.add('hidden'); reopen.classList.add('show');
+            }
+            document.getElementById('ava-close').addEventListener('click', function () {
+                assistant.classList.add('hidden'); reopen.classList.add('show');
+                sessionStorage.setItem('ava_closed', '1');
+            });
+            reopen.addEventListener('click', function () {
+                assistant.classList.remove('hidden'); reopen.classList.remove('show');
+                sessionStorage.removeItem('ava_closed');
+            });
+        })();
+    </script>
+</body>
+</html>

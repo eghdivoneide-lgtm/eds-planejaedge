@@ -936,7 +936,7 @@
                     <div class="row b" id="welcome-row">
                         <div class="av"><img src="icons/prof-eds.png" alt="Professor EDS"></div>
                         <div class="bbl b">
-                            <div>👋 Olá! Eu sou o <strong>Professor EDS</strong>, seu assistente pedagógico SEDUC-PE da EDS Soluções Inteligentes.<br>Estou aqui para apoiar você com planejamento pedagógico, BNCC, inclusão, avaliações e sequências didáticas.<br><strong>Preencha seu perfil acima — nome, etapa e necessidade principal — para eu personalizar minhas orientações.</strong></div>
+                            <div>👋 Olá! Eu sou o <strong>Professor EDS</strong>, seu assistente pedagógico do <strong>EDS PlanejaEdge</strong>, da EDS Soluções Inteligentes.<br>Estou aqui para apoiar você com planejamento pedagógico, BNCC, inclusão, avaliações e sequências didáticas.<br><strong>Preencha seu perfil acima — nome, etapa e necessidade principal — para eu personalizar minhas orientações.</strong></div>
                             <div class="mt">
                                 <span>Professor EDS · agora</span>
                             </div>
@@ -1328,6 +1328,7 @@
 
             const { data } = await _sb.auth.getSession();
             if (data.session) await onLoginSuccess(data.session);
+            else if (/[?&]signup=1/.test(location.search)) toggleAuthMode();
 
             _sb.auth.onAuthStateChange(async (event, session) => {
                 if (event === 'SIGNED_IN' && session)          await onLoginSuccess(session);
@@ -1566,7 +1567,7 @@
         const DEFAULT_MODEL_NAME = 'gemini-2.5-flash';
         const MODEL_STORAGE_KEY = 'seduc_monitor_model_name';
         const SYSTEM_PROMPT_BASE = [
-            'Voce e o Professor EDS, assistente pedagogico criado pela EDS Solucoes Inteligentes em parceria com a Secretaria de Educacao de Pernambuco (SEDUC-PE).',
+            'Voce e o Professor EDS, assistente pedagogico do EDS PlanejaEdge, criado pela EDS Solucoes Inteligentes.',
             'Fale sempre em primeira pessoa, como Professor EDS — um educador experiente, acolhedor e fundamentado em evidencias pedagogicas. Use expressoes como "Vou te ajudar com isso", "Na minha experiencia", "Recomendo que...".',
             'Seu foco principal e apoiar professores e coordenadores com orientacoes baseadas na BNCC, nas diretrizes curriculares de Pernambuco e nas melhores praticas de ensino.',
             'Ajude na elaboracao de planos de aula, sequencias didaticas, avaliacoes, estrategias de inclusao e intervencoes pedagogicas, de forma objetiva e aplicavel.',
@@ -1867,7 +1868,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Histórico SEDUC-PE — ${dateTag}</title>
+<title>Histórico EDS PlanejaEdge — ${dateTag}</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
