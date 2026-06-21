@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidade — EDS PlanejaEdge</title>
+    <link rel="icon" href="icons/eds-symbols/eds-brand-app-icon.svg" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --g900:#061310; --g800:#0b231e; --g700:#0f4d41; --g600:#0f7763;
+            --teal:#2fe0bd; --gold:#f1cc75;
+            --t100:#e9faf5; --t200:#c7efe3; --muted:#9dc9bc;
+            --border:rgba(34,176,144,0.28);
+        }
+        *{box-sizing:border-box;}
+        body{margin:0;background:var(--g900);color:var(--t100);font-family:'Syne',sans-serif;line-height:1.7;}
+        a{color:var(--teal);text-decoration:none;}
+        a:hover{text-decoration:underline;}
+
+        header{background:var(--g800);border-bottom:1px solid var(--border);padding:1.1rem 2rem;display:flex;align-items:center;gap:1rem;}
+        header a{color:var(--t200);font-size:.85rem;}
+        header span{color:var(--muted);}
+
+        main{max-width:820px;margin:0 auto;padding:2.5rem 1.5rem 4rem;}
+
+        h1{font-size:clamp(1.5rem,4vw,2.1rem);color:var(--teal);margin-bottom:.3rem;}
+        .updated{color:var(--muted);font-size:.82rem;margin-bottom:2.5rem;}
+
+        h2{font-size:1.05rem;color:var(--gold);margin:2.2rem 0 .5rem;text-transform:uppercase;letter-spacing:.06em;}
+        p{margin:.5rem 0;color:var(--t200);}
+        ul{margin:.4rem 0 .4rem 1.2rem;color:var(--t200);}
+        ul li{margin:.3rem 0;}
+
+        .card{background:var(--g800);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;margin:1.5rem 0;}
+        .card strong{color:var(--teal);}
+
+        table{width:100%;border-collapse:collapse;margin:.8rem 0;}
+        th{text-align:left;color:var(--gold);font-size:.82rem;text-transform:uppercase;padding:.6rem .8rem;border-bottom:1px solid var(--border);}
+        td{padding:.6rem .8rem;color:var(--t200);font-size:.9rem;border-bottom:1px solid rgba(34,176,144,.12);}
+
+        footer{text-align:center;color:var(--muted);font-size:.78rem;padding:2rem;border-top:1px solid var(--border);}
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="landing.html">← PlanejaEdge</a>
+    <span>/</span>
+    <span>Política de Privacidade</span>
+</header>
+
+<main>
+    <h1>Política de Privacidade</h1>
+    <p class="updated">Última atualização: 21 de junho de 2026</p>
+
+    <p>A <strong>EDS Soluções Inteligentes</strong> — CNPJ <strong>[SEU CNPJ]</strong>, sediada em Pernambuco, Brasil — é a controladora dos dados pessoais tratados pelo serviço <strong>EDS PlanejaEdge</strong> ("Serviço"). Esta Política descreve como coletamos, usamos e protegemos suas informações, em conformidade com a <strong>Lei Geral de Proteção de Dados (Lei nº 13.709/2018 — LGPD)</strong>.</p>
+
+    <h2>1. Dados que coletamos</h2>
+    <table>
+        <thead><tr><th>Dado</th><th>Fonte</th><th>Finalidade</th></tr></thead>
+        <tbody>
+            <tr><td>E-mail</td><td>Cadastro</td><td>Autenticação e comunicação</td></tr>
+            <tr><td>Conteúdo pedagógico</td><td>Uso do chat</td><td>Processamento pela IA para gerar resposta</td></tr>
+            <tr><td>Saldo de créditos e histórico de uso</td><td>Uso do serviço</td><td>Gestão do plano contratado</td></tr>
+            <tr><td>Dados de pagamento (plano, status)</td><td>Kiwify</td><td>Concessão de créditos após pagamento</td></tr>
+            <tr><td>Logs de acesso (IP, data/hora)</td><td>Infraestrutura</td><td>Segurança e resolução de incidentes</td></tr>
+        </tbody>
+    </table>
+    <p>Não coletamos dados sensíveis (raça, saúde, biometria, etc.) nem dados de menores de 18 anos.</p>
+
+    <h2>2. Base legal</h2>
+    <ul>
+        <li><strong>Execução de contrato (art. 7º, V LGPD):</strong> autenticação, concessão de créditos e entrega das funcionalidades.</li>
+        <li><strong>Legítimo interesse (art. 7º, IX LGPD):</strong> segurança da plataforma, prevenção de fraudes e melhoria do serviço.</li>
+        <li><strong>Cumprimento de obrigação legal (art. 7º, II LGPD):</strong> manutenção de registros fiscais e de pagamento.</li>
+    </ul>
+
+    <h2>3. Compartilhamento de dados</h2>
+    <div class="card">
+        <p><strong>Google Gemini API</strong> — os textos enviados ao chat são transmitidos à API da Google para geração de resposta. A Google processa esses dados como suboperadora. Consulte a <a href="https://policies.google.com/privacy" target="_blank">Política da Google</a>.</p>
+        <p><strong>Supabase</strong> — banco de dados e autenticação hospedados na região South America (São Paulo). <a href="https://supabase.com/privacy" target="_blank">Política Supabase</a>.</p>
+        <p><strong>Kiwify</strong> — plataforma de pagamentos. Recebemos apenas o e-mail, o plano e o status do pedido. Nenhum dado de cartão chega aos nossos servidores. <a href="https://kiwify.com.br/politica-de-privacidade" target="_blank">Política Kiwify</a>.</p>
+        <p><strong>Netlify</strong> — hospedagem do frontend. <a href="https://www.netlify.com/privacy/" target="_blank">Política Netlify</a>.</p>
+    </div>
+    <p>Não vendemos, alugamos nem cedemos dados pessoais a terceiros para fins comerciais.</p>
+
+    <h2>4. Retenção de dados</h2>
+    <ul>
+        <li>Dados de conta: mantidos enquanto a conta estiver ativa.</li>
+        <li>Após exclusão da conta: removidos em até <strong>30 dias</strong>, salvo obrigação legal de retenção (ex.: registros fiscais — 5 anos).</li>
+        <li>Conteúdo pedagógico enviado ao chat: não é armazenado pelo PlanejaEdge após o processamento da IA.</li>
+    </ul>
+
+    <h2>5. Seus direitos (art. 18 LGPD)</h2>
+    <ul>
+        <li>Confirmar a existência de tratamento dos seus dados</li>
+        <li>Acessar os dados que possuímos sobre você</li>
+        <li>Corrigir dados incompletos, inexatos ou desatualizados</li>
+        <li>Solicitar anonimização, bloqueio ou eliminação de dados desnecessários</li>
+        <li>Portabilidade dos dados para outro fornecedor</li>
+        <li>Revogar consentimento, quando aplicável</li>
+        <li>Peticionar à Autoridade Nacional de Proteção de Dados (ANPD)</li>
+    </ul>
+    <p>Para exercer qualquer direito, envie e-mail para <a href="mailto:contato@edssolucoesinteligentes.com.br">contato@edssolucoesinteligentes.com.br</a> com o assunto <em>"LGPD – [seu direito]"</em>. Responderemos em até 15 dias úteis.</p>
+
+    <h2>6. Segurança</h2>
+    <p>Utilizamos criptografia em trânsito (HTTPS/TLS), autenticação via Supabase Auth, Row Level Security no banco de dados e credenciais sensíveis (chaves de API) armazenadas exclusivamente em variáveis de ambiente do servidor — nunca expostas no código-fonte ou no navegador.</p>
+
+    <h2>7. Cookies</h2>
+    <p>O PlanejaEdge usa apenas cookies funcionais essenciais (sessão de autenticação). Não usamos cookies de rastreamento, publicidade ou analytics de terceiros.</p>
+
+    <h2>8. Alterações nesta Política</h2>
+    <p>Mudanças relevantes serão comunicadas por e-mail ou aviso na plataforma com antecedência mínima de 10 dias. A data de "última atualização" no topo desta página sempre refletirá a versão vigente.</p>
+
+    <h2>9. Contato — Encarregado de Dados (DPO)</h2>
+    <div class="card">
+        <p><strong>EDS Soluções Inteligentes</strong><br>
+        CNPJ: <strong>[SEU CNPJ]</strong><br>
+        E-mail: <a href="mailto:contato@edssolucoesinteligentes.com.br">contato@edssolucoesinteligentes.com.br</a><br>
+        Pernambuco — Brasil</p>
+    </div>
+</main>
+
+<footer>
+    © 2026 EDS Soluções Inteligentes · <a href="termos.html">Termos de Uso</a> · <a href="privacidade.html">Privacidade</a>
+</footer>
+
+</body>
+</html>
