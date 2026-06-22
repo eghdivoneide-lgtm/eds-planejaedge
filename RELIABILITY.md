@@ -65,10 +65,14 @@ Monitore também a URL pública do Railway para saber se o bot caiu.
 
 > Dados são o ativo mais crítico. Confiança = saber que sobrevive a um acidente.
 
+- **Estado atual (jun/2026):** ambos os projetos no plano Free (Nano) — SEM backup
+  automático. Proteção interina = backup manual periódico (abaixo).
+- **🔴 REGRA-GATILHO:** no dia do **1º cliente pagante** de um app, subir aquele
+  projeto para o plano **Pro** ($25/mês) — backup automático diário + retenção 7 dias.
+  Não é opcional a partir daí: é dado de cliente real em jogo.
 - **Backups automáticos:** ativos no plano Pro (diários, retenção 7 dias).
-  Free tier NÃO tem backup automático — avaliar upgrade antes de escalar.
   Painel: Project → Database → Backups.
-- **Point-in-Time Recovery (PITR):** recomendado quando houver clientes pagantes.
+- **Point-in-Time Recovery (PITR):** recomendado quando o volume de clientes crescer.
 - **Backup manual periódico** (rodar no seu PC, guardar fora do Supabase):
   ```bash
   supabase db dump --db-url "$SUPABASE_DB_URL" -f backup_$(date +%F).sql
