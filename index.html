@@ -2171,17 +2171,16 @@
 
             try {
                 if (file.type.startsWith('image/')) {
-                    const dataUrl = await readFileAsDataURL(file);
-                    const base64 = dataUrl.split(',')[1];
+                    const img = await compressImage(file);
                     selectedFile = {
                         kind: 'image',
                         name: file.name,
-                        mimeType: file.type,
-                        data: base64
+                        mimeType: img.mimeType,
+                        data: img.data
                     };
                     setPreview(`
                         <div class="file-chip">Imagem pronta para envio: <b>${escapeHtml(file.name)}</b></div>
-                        <img src="${dataUrl}" alt="Prévia" style="max-width:220px;margin-top:8px;border-radius:12px;border:2px solid #ffd600;" />
+                        <img src="${img.previewUrl}" alt="Prévia" style="max-width:220px;margin-top:8px;border-radius:12px;border:2px solid #ffd600;" />
                     `);
                     return;
                 }
@@ -2240,6 +2239,50 @@
                 reader.onerror = reject;
                 reader.readAsDataURL(file);
             });
+        }
+
+        // A-07: comprime a imagem no cliente antes do envio (canvas -> JPEG), reduzindo
+        // o payload ao Gemini de vários MB para ~90 KB, sem perder a legibilidade para
+        // correção de provas. Itera em dimensão/qualidade até caber no orçamento.
+        // Em caso de falha, usa o original como fallback (nunca bloqueia o upload).
+        async function compressImage(file, targetChars = 90_000) {
+            const dataUrl = await readFileAsDataURL(file);
+            try {
+                const img = await new Promise((resolve, reject) => {
+                    const image = new Image();
+                    image.onload = () => resolve(image);
+                    image.onerror = reject;
+                    image.src = dataUrl;
+                });
+                const attempts = [
+                    { maxDim: 1600, quality: 0.72 },
+                    { maxDim: 1280, quality: 0.68 },
+                    { maxDim: 1024, quality: 0.62 },
+                    { maxDim: 800,  quality: 0.55 }
+                ];
+                let last = null;
+                for (const { maxDim, quality } of attempts) {
+                    let { width, height } = img;
+                    if (Math.max(width, height) > maxDim) {
+                        const scale = maxDim / Math.max(width, height);
+                        width = Math.round(width * scale);
+                        height = Math.round(height * scale);
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, width, height);
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const outUrl = canvas.toDataURL('image/jpeg', quality);
+                    last = { mimeType: 'image/jpeg', data: outUrl.split(',')[1], previewUrl: outUrl };
+                    if (last.data.length <= targetChars) break;
+                }
+                return last;
+            } catch (_) {
+                return { mimeType: file.type, data: dataUrl.split(',')[1], previewUrl: dataUrl };
+            }
         }
 
         async function extractPdfText(arrayBuffer, maxPages) {
@@ -2701,9 +2744,9 @@
             const clearBtn = document.getElementById('av-clear-file-btn');
             try {
                 if (file.type.startsWith('image/')) {
-                    const dataUrl = await readFileAsDataURL(file);
-                    _avFile = { kind: 'image', name: file.name, mimeType: file.type, data: dataUrl.split(',')[1] };
-                    if (preview) preview.innerHTML = `<div class="file-chip">📷 ${escapeHtml(file.name)}</div><img src="${dataUrl}" style="max-width:200px;margin-top:6px;border-radius:8px;border:1px solid rgba(95,199,197,0.3);display:block">`;
+                    const img = await compressImage(file);
+                    _avFile = { kind: 'image', name: file.name, mimeType: img.mimeType, data: img.data };
+                    if (preview) preview.innerHTML = `<div class="file-chip">📷 ${escapeHtml(file.name)}</div><img src="${img.previewUrl}" style="max-width:200px;margin-top:6px;border-radius:8px;border:1px solid rgba(95,199,197,0.3);display:block">`;
                 } else if (file.type === 'application/pdf') {
                     const text = await extractPdfText(await file.arrayBuffer(), 6);
                     _avFile = { kind: 'text', name: file.name, content: text };
