@@ -1405,6 +1405,7 @@
         let _userCreditos   = null;
         let _isAdmin        = false;
         let _adminRefreshTimer = null;
+        let _creditPollTimer = null;
         let _authMode       = 'login';
 
         async function initAuth() {
@@ -1418,6 +1419,8 @@
                 else if (event === 'SIGNED_OUT')               onLogoutCleanup();
                 else if (event === 'TOKEN_REFRESHED' && session) _currentSession = session;
             });
+
+            startCreditAutoRefresh();
         }
 
         async function onLoginSuccess(session) {
@@ -1481,6 +1484,34 @@
             }
             if (menuEl) menuEl.textContent = v;
             if (credEl) credEl.textContent = `Créditos disponíveis: ${_userCreditos ?? '—'}`;
+        }
+
+        // Atualiza o saldo sozinho (sem F5): busca só os créditos e atualiza a tela se mudou.
+        async function refreshCreditos() {
+            if (!_currentSession) return;
+            try {
+                const { data } = await _sb
+                    .from('profiles')
+                    .select('creditos')
+                    .eq('id', _currentSession.user.id)
+                    .single();
+                if (data && typeof data.creditos === 'number' && data.creditos !== _userCreditos) {
+                    _userCreditos = data.creditos;
+                    updateCreditsDisplay();
+                }
+            } catch (_) { /* silencioso: nunca atrapalha o uso */ }
+        }
+
+        // Dispara o refresh ao voltar pra aba (ex.: depois de pagar no Kiwify) e a cada 45s.
+        function startCreditAutoRefresh() {
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') refreshCreditos();
+            });
+            window.addEventListener('focus', refreshCreditos);
+            clearInterval(_creditPollTimer);
+            _creditPollTimer = setInterval(() => {
+                if (document.visibilityState === 'visible' && _currentSession) refreshCreditos();
+            }, 45000);
         }
 
         function onLogoutCleanup() {
