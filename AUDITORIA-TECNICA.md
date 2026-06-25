@@ -6,7 +6,7 @@
 | **Repositório** | `eghdivoneide-lgtm/eds-planejaedge` |
 | **Auditoria de referência** | Auditoria Técnica de 25/06/2026 — nota **8.5/10** |
 | **Data desta resposta** | 25/06/2026 |
-| **Resultado** | Bloqueador (A-01) **já estava resolvido**; A-02 e A-03 **corrigidos**; A-04/A-05/A-06 planejados para pós-MVP |
+| **Resultado** | Bloqueador (A-01) **já estava resolvido**; A-02 e A-03 **corrigidos**; A-04/A-05/A-06/A-07 planejados para pós-MVP |
 | **Status** | ✅ **Liberado como MVP** |
 
 > Agradecemos a auditoria — criteriosa e bem evidenciada. Verificamos **cada achado contra o código em produção** (a auditoria parece ter rodado sobre um snapshot anterior em alguns pontos). Abaixo, a réplica item a item, com evidência e a indicação do que pedimos para reconferência.
@@ -23,6 +23,7 @@
 | A-04 | 🟢 | Nomenclatura "seduc" | ⏳ Pós-MVP (com plano de migração de chaves) | Não |
 | A-05 | 🟢 | Ausência de CSP | ⏳ Pós-MVP | Não |
 | A-06 | ℹ️ | Raiz serve o app, não a landing | Decisão de produto (confirmada) | Não |
+| A-07 | 🟢 | `MAX_PAYLOAD_CHARS=12M` abre superfície de custo (~12 MB por 1 crédito) | ✅ **Registrado** — mitigação pós-MVP (compressão no cliente + créditos por upload pesado) | Não |
 
 ---
 
@@ -65,6 +66,13 @@ Concordamos. O app usa CDNs (Google Fonts, libs de DOCX/PDF, supabase-js) e esti
 
 ### ℹ️ A-06 — Roteamento raiz/landing (DECISÃO DE PRODUTO)
 A raiz `/` abre o app (login) por decisão de produto. Campanhas e anúncios apontam para `/landing.html`. Sem alteração técnica no momento.
+
+### 🟢 A-07 — Custo do payload de 12 MB (REGISTRADO, pós-MVP)
+O `MAX_PAYLOAD_CHARS` foi elevado para 12.000.000 (`ai-proxy/index.ts:44`) para permitir upload de PDF/imagem. Funciona, mas um único request pode enviar ~12 MB ao Gemini por **1 crédito** (foto crua de celular, PDF grande), criando superfície de custo.
+**Plano (pós-MVP):** (a) comprimir imagem no cliente antes do upload; (b) cobrança proporcional ao tamanho (mais créditos por upload pesado). A compressão de imagem já existe na branch do **PR #7** e pode ser reaproveitada sobre o `master`. **Não bloqueia o MVP** (volume baixo no beta).
+
+### 🔀 Nota sobre o PR #7 (`claude/wonderful-sagan-kz5o7z`)
+A branch divergiu bastante do `master` — o `master` seguiu à frente com outra abordagem de payload (limite 12M) e com as correções da auditoria. **Não recomendamos merge do PR #7 como está** (risco de conflito ou de reverter trabalho mais novo). Vale reaproveitar dele, **reaplicado sobre o `master`**: (1) a **compressão de imagem** (ajuda diretamente o A-07) e (2) o **mockup do app na landing**.
 
 ---
 
