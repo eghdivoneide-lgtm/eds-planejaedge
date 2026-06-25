@@ -1,6 +1,7 @@
 -- ============================================================
--- EDS PlanejaEdge — Schema Supabase
--- Execute no SQL Editor do projeto Supabase
+-- EDS PlanejaEdge — Schema Supabase (SNAPSHOT / REFERÊNCIA)
+-- ⚠️ Fonte de verdade = supabase/migrations/. Este arquivo é apenas
+--    um retrato consolidado e NUNCA deve divergir das migrations.
 -- ============================================================
 
 -- Tabela de perfis (1 por usuário)
