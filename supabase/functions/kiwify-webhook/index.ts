@@ -71,9 +71,10 @@ Deno.serve(async (req) => {
         console.log(`kiwify-webhook: ${result} — ${email} (${plan.nome}, +${plan.creditos})`)
         return new Response(JSON.stringify({ ok: true, result, plano: plan.nome, creditos: plan.creditos }), { headers: { ...CORS, 'Content-Type': 'application/json' } })
     } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err)
-        console.error('kiwify-webhook error:', msg)
+        const e = err as { message?: string; details?: string; hint?: string; code?: string }
+        const msg = e?.message || e?.details || e?.hint || JSON.stringify(err)
+        console.error('kiwify-webhook error:', JSON.stringify(err))
         await alertAdmin(`🚨 PlanejaEdge — FALHA ao creditar.\nE-mail: ${ctxEmail}\nPedido: ${ctxOrder}\nPlano: ${ctxPlano}\nErro: ${msg}`)
-        return new Response(JSON.stringify({ error: 'internal_error' }), { status: 500, headers: { ...CORS, 'Content-Type': 'application/json' } })
+        return new Response(JSON.stringify({ error: 'internal_error', detalhe: msg, raw: JSON.stringify(err) }), { status: 500, headers: { ...CORS, 'Content-Type': 'application/json' } })
     }
 })
