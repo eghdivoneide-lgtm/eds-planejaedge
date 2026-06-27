@@ -37,6 +37,15 @@ Deno.serve(async (req) => {
         const body = await req.json()
         console.log('[kiwify] BODY:', JSON.stringify(body))
 
+        // [B1] valida o segredo do webhook ANTES de qualquer crédito (token via ?token= ou body.webhook_token)
+        const expected = Deno.env.get('KIWIFY_WEBHOOK_TOKEN')
+        const got = (new URL(req.url).searchParams.get('token') || body?.webhook_token || '').toString()
+        if (!expected || got !== expected) {
+            console.warn('[kiwify] webhook REJEITADO: token invalido/ausente')
+            await alertAdmin('🚨 PlanejaEdge — webhook REJEITADO (token inválido/ausente).')
+            return new Response(JSON.stringify({ ok: false, erro: 'nao_autorizado' }), { status: 401, headers: { ...CORS, 'Content-Type': 'application/json' } })
+        }
+
         const status   = (body.order_status || body.status || body.webhook_event_type || '').toString()
         const prodNome = (body.Product?.product_name || body.product?.product_name || body.product_name || '').toString()
         const email    = (body.Customer?.email || body.customer?.email || '').toLowerCase().trim()
@@ -75,6 +84,6 @@ Deno.serve(async (req) => {
         const msg = e?.message || e?.details || e?.hint || JSON.stringify(err)
         console.error('kiwify-webhook error:', JSON.stringify(err))
         await alertAdmin(`🚨 PlanejaEdge — FALHA ao creditar.\nE-mail: ${ctxEmail}\nPedido: ${ctxOrder}\nPlano: ${ctxPlano}\nErro: ${msg}`)
-        return new Response(JSON.stringify({ error: 'internal_error', detalhe: msg, raw: JSON.stringify(err) }), { status: 500, headers: { ...CORS, 'Content-Type': 'application/json' } })
+        return new Response(JSON.stringify({ error: 'internal_error' }), { status: 500, headers: { ...CORS, 'Content-Type': 'application/json' } })
     }
 })
