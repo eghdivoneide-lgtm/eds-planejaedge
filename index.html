@@ -1415,6 +1415,7 @@
         const SUPABASE_URL      = 'https://bebawvpxgcviepkdxtyn.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJlYmF3dnB4Z2N2aWVwa2R4dHluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5OTE2MDYsImV4cCI6MjA5NzU2NzYwNn0.9JBkAfgKaHyg1OQGJshACX9ISl3IIYGkrkRPn1GqxBQ';
         const PROXY_URL = `${SUPABASE_URL}/functions/v1/ai-proxy`;
+        const FEEDBACK_URL = `${SUPABASE_URL}/functions/v1/feedback`;
         const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let _currentSession = null;
         let _userCreditos   = null;
@@ -2699,6 +2700,7 @@
             mt.appendChild(ts);
 
             bbl.appendChild(mt);
+            if (isBot && persist) bbl.appendChild(buildFeedback(text));
             row.appendChild(bbl);
             chatContainer.appendChild(row);
             chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -2708,6 +2710,46 @@
             }
 
             return row;
+        }
+
+        // ─── Feedback do beta (👍/👎 + opinião no fim de cada resposta do bot) ───
+        function enviarFeedbackPE(sentimento, mensagem, contexto) {
+            const tok = _currentSession?.access_token;
+            if (!tok) return Promise.resolve();
+            return fetch(FEEDBACK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tok}` },
+                body: JSON.stringify({ sentimento, mensagem, contexto }),
+            });
+        }
+        function buildFeedback(msgText) {
+            const wrap = document.createElement('div');
+            wrap.style.cssText = 'margin-top:6px;font-size:12px;color:#6e89a7;';
+            const ctx = { tela: 'chat', trecho: (msgText || '').slice(0, 200) };
+            let sent = false;
+            const enviar = (sentimento, mensagem) => {
+                if (sent) return; sent = true;
+                wrap.innerHTML = '<span style="color:#2bb673;">Obrigado pelo feedback! 🙏</span>';
+                try { enviarFeedbackPE(sentimento, mensagem, ctx); } catch (_) {}
+            };
+            const ask = document.createElement('div');
+            ask.style.cssText = 'display:flex;align-items:center;gap:6px;';
+            ask.appendChild(document.createTextNode('Deixe sua opinião:'));
+            const mk = (txt, title) => { const b = document.createElement('button'); b.textContent = txt; if (title) b.title = title; b.style.cssText = 'background:none;border:none;cursor:pointer;font-size:15px;padding:0 2px;line-height:1;'; return b; };
+            const bUp = mk('👍', 'Útil'), bDown = mk('👎', 'Não útil'), bWrite = mk('💬', 'Escrever');
+            ask.appendChild(bUp); ask.appendChild(bDown); ask.appendChild(bWrite);
+            const box = document.createElement('div'); box.style.display = 'none'; box.style.marginTop = '4px';
+            const ta = document.createElement('textarea'); ta.placeholder = 'O que podemos melhorar?'; ta.style.cssText = 'width:100%;min-height:46px;border-radius:8px;border:1px solid rgba(0,0,0,.15);padding:6px;font-size:12px;font-family:inherit;box-sizing:border-box;';
+            const sbtn = document.createElement('button'); sbtn.textContent = 'Enviar'; sbtn.style.cssText = 'margin-top:4px;background:#2bb673;color:#fff;border:none;border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12px;';
+            box.appendChild(ta); box.appendChild(document.createElement('br')); box.appendChild(sbtn);
+            let _s = 'neutro';
+            const open = (s) => { _s = s; ask.style.display = 'none'; box.style.display = 'block'; ta.focus(); };
+            bUp.onclick = () => enviar('positivo', '');
+            bDown.onclick = () => open('negativo');
+            bWrite.onclick = () => open('neutro');
+            sbtn.onclick = () => enviar(_s, ta.value || '');
+            wrap.appendChild(ask); wrap.appendChild(box);
+            return wrap;
         }
 
         document.getElementById('user-input').addEventListener('keydown', function (e) {
